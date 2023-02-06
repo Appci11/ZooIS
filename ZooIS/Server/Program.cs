@@ -3,12 +3,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using ZooIS.Server.Data;
+using ZooIS.Server.Services.UsersService;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<IUsersService, UsersService>();
 
 //swagger thingies start
 builder.Services.AddSwaggerGen(options =>
