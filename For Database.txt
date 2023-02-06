@@ -1,0 +1,10 @@
+1) make sure ef tools are installed
+dotnet tool install --global dotnet-ef
+*if needed update
+dotnet tool update --global dotnet-ef
+
+In server folder
+2) Create migration called "Initial"
+dotnet ef migrations add Initial
+3) Update the database
+dotnet ef database update
