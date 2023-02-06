@@ -11,7 +11,7 @@ using ZooIS.Server.Data;
 namespace ZooIS.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230206165542_Initial")]
+    [Migration("20230206213228_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -29,15 +29,27 @@ namespace ZooIS.Server.Migrations
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("DeletionRequested")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<byte[]>("PasswordHash")
+                        .HasColumnType("BLOB");
+
+                    b.Property<byte[]>("PasswordSalt")
+                        .HasColumnType("BLOB");
+
+                    b.Property<bool>("RequestPasswordReset")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

@@ -17,9 +17,13 @@ namespace ZooIS.Server.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    UserName = table.Column<string>(type: "TEXT", nullable: false),
+                    Username = table.Column<string>(type: "TEXT", nullable: false),
                     Email = table.Column<string>(type: "TEXT", nullable: false),
+                    PasswordHash = table.Column<byte[]>(type: "BLOB", nullable: true),
+                    PasswordSalt = table.Column<byte[]>(type: "BLOB", nullable: true),
                     DateCreated = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    RequestPasswordReset = table.Column<bool>(type: "INTEGER", nullable: false),
+                    DeletionRequested = table.Column<bool>(type: "INTEGER", nullable: false),
                     isDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
                     Role = table.Column<string>(type: "TEXT", nullable: false)
                 },
