@@ -16,7 +16,7 @@ namespace ZooIS.Server.Services.UsersService
         public async Task<RegisteredUser> AddRegisteredUser(UserAddDto userAddDto)
         {
             RegisteredUser registeredUser = new RegisteredUser();
-            registeredUser.Username= userAddDto.Username;
+            registeredUser.Username = userAddDto.Username;
             registeredUser.Email = userAddDto.Email;
             registeredUser.Role = userAddDto.Role;
             registeredUser.RequestPasswordReset = true;
@@ -28,7 +28,7 @@ namespace ZooIS.Server.Services.UsersService
         public async Task<RegisteredUser> DeleteRegisteredUser(int id)
         {
             RegisteredUser? user = await _context.RegisteredUsers.FirstOrDefaultAsync(u => u.Id == id);
-            if(user == null)
+            if (user == null)
             {
                 return null;
             }
@@ -48,7 +48,7 @@ namespace ZooIS.Server.Services.UsersService
             return user;
         }
 
-        public async Task<RegisteredUser> UpdateRegisteredUser(int id, UserUpdateInfoDto userUpdateDto)
+        public async Task<RegisteredUser> UpdateRegisteredUserVVisitor(int id, UserUpdateInfoVisitorDto userUpdateDto)
         {
             RegisteredUser dbUser = await _context.RegisteredUsers.FirstOrDefaultAsync(u => u.Id == id);
             if (dbUser == null)
@@ -57,6 +57,22 @@ namespace ZooIS.Server.Services.UsersService
             }
             dbUser.Username = userUpdateDto.Username;
             dbUser.Email = userUpdateDto.Email;
+            await _context.SaveChangesAsync();
+            return dbUser;
+        }
+        public async Task<RegisteredUser> UpdateRegisteredUserVAdmin(int id, UserUpdateInfoAdminDto userUpdateDto)
+        {
+            RegisteredUser dbUser = await _context.RegisteredUsers.FirstOrDefaultAsync(u => u.Id == id);
+            if (dbUser == null)
+            {
+                return null;
+            }
+            dbUser.Username = userUpdateDto.Username;
+            dbUser.Email = userUpdateDto.Email;
+            dbUser.RequestPasswordReset = userUpdateDto.RequestPasswordReset;
+            dbUser.DeletionRequested = userUpdateDto.DeletionRequested;
+            dbUser.IsDeleted= userUpdateDto.IsDeleted;
+            dbUser.Role = userUpdateDto.Role;
             await _context.SaveChangesAsync();
             return dbUser;
         }

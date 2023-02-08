@@ -11,7 +11,7 @@ using ZooIS.Server.Data;
 namespace ZooIS.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230206213228_Initial")]
+    [Migration("20230208103801_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -36,6 +36,9 @@ namespace ZooIS.Server.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("LastLoginDate")
+                        .HasColumnType("TEXT");
+
                     b.Property<byte[]>("PasswordHash")
                         .HasColumnType("BLOB");
 
@@ -45,9 +48,8 @@ namespace ZooIS.Server.Migrations
                     b.Property<bool>("RequestPasswordReset")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Role")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Username")
                         .IsRequired()

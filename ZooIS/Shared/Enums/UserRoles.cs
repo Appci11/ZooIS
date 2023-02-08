@@ -4,9 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ZooIS.Shared
+namespace ZooIS.Shared.Enums
 {
     public enum UserRoles
     {
+        SysAdmin,
+        Administrator,
+        Maintenance,
+        Visitor
     }
 }

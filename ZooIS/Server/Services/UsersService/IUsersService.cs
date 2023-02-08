@@ -8,7 +8,8 @@ namespace ZooIS.Server.Services.UsersService
         Task<RegisteredUser> AddRegisteredUser(UserAddDto userAddDto);    //change to DTO
         Task<List<RegisteredUser>> GetAllRegisteredUsers();
         Task<RegisteredUser> GetRegisteredUser(int id);
-        Task<RegisteredUser> UpdateRegisteredUser(int id, UserUpdateInfoDto userUpdadteDto);
+        Task<RegisteredUser> UpdateRegisteredUserVVisitor(int id, UserUpdateInfoVisitorDto userUpdadteDto);
+        Task<RegisteredUser> UpdateRegisteredUserVAdmin(int id, UserUpdateInfoAdminDto userUpdadteDto);
         Task<RegisteredUser> DeleteRegisteredUser(int id);
     }
 }

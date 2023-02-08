@@ -33,6 +33,9 @@ namespace ZooIS.Server.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("LastLoginDate")
+                        .HasColumnType("TEXT");
+
                     b.Property<byte[]>("PasswordHash")
                         .HasColumnType("BLOB");
 
@@ -42,9 +45,8 @@ namespace ZooIS.Server.Migrations
                     b.Property<bool>("RequestPasswordReset")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Role")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Username")
                         .IsRequired()

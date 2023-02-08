@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace ZooIS.Shared.Dto
 {
-    public class UserPasswordChangeDto
+    public class UserLoginDto
     {
-        public required string? NewPassword { get; set; }
+        public required string Username { get; set; } = string.Empty;
+        public required string Password { get; set; } = string.Empty;
     }
 }

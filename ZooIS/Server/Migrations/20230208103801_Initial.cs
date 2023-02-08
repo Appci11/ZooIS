@@ -22,10 +22,11 @@ namespace ZooIS.Server.Migrations
                     PasswordHash = table.Column<byte[]>(type: "BLOB", nullable: true),
                     PasswordSalt = table.Column<byte[]>(type: "BLOB", nullable: true),
                     DateCreated = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LastLoginDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     RequestPasswordReset = table.Column<bool>(type: "INTEGER", nullable: false),
                     DeletionRequested = table.Column<bool>(type: "INTEGER", nullable: false),
                     isDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
-                    Role = table.Column<string>(type: "TEXT", nullable: false)
+                    Role = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using ZooIS.Server.Data;
+using ZooIS.Server.Services.LoginRegisterService;
 using ZooIS.Server.Services.UsersService;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IUsersService, UsersService>();
+builder.Services.AddScoped<ILoginRegister, LoginRegister>();
 
 //swagger thingies start
 builder.Services.AddSwaggerGen(options =>
