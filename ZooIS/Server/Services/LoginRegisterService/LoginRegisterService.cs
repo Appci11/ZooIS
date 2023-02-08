@@ -9,12 +9,12 @@ using ZooIS.Shared.Models;
 
 namespace ZooIS.Server.Services.LoginRegisterService
 {
-    public class LoginRegister : ILoginRegister
+    public class LoginRegisterService : ILoginRegisterService
     {
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
 
-        public LoginRegister(DataContext context, IConfiguration configuration)
+        public LoginRegisterService(DataContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;

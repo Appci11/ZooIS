@@ -20,7 +20,7 @@ namespace ZooIS.Server.Services.UsersService
             registeredUser.Email = userAddDto.Email;
             registeredUser.Role = userAddDto.Role;
             registeredUser.RequestPasswordReset = true;
-            
+
             _context.RegisteredUsers.Add(registeredUser);
             await _context.SaveChangesAsync();
             UserSettings settings = new UserSettings() { Id = registeredUser.Id };
@@ -32,10 +32,13 @@ namespace ZooIS.Server.Services.UsersService
         public async Task<RegisteredUser> DeleteRegisteredUser(int id)
         {
             RegisteredUser? user = await _context.RegisteredUsers.FirstOrDefaultAsync(u => u.Id == id);
-            if (user == null)
+            UserSettings? settings = await _context.UserSettings.FirstOrDefaultAsync(s => s.Id == id);
+
+            if (user == null || settings == null)
             {
                 return null;
             }
+            _context.UserSettings.Remove(settings);
             _context.RegisteredUsers.Remove(user);
             await _context.SaveChangesAsync();
             return user;
@@ -75,7 +78,7 @@ namespace ZooIS.Server.Services.UsersService
             dbUser.Email = userUpdateDto.Email;
             dbUser.RequestPasswordReset = userUpdateDto.RequestPasswordReset;
             dbUser.DeletionRequested = userUpdateDto.DeletionRequested;
-            dbUser.IsDeleted= userUpdateDto.IsDeleted;
+            dbUser.IsDeleted = userUpdateDto.IsDeleted;
             dbUser.Role = userUpdateDto.Role;
             await _context.SaveChangesAsync();
             return dbUser;

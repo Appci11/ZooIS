@@ -1,9 +1,12 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using ZooIS.Server.Data;
 using ZooIS.Server.Services.LoginRegisterService;
+using ZooIS.Server.Services.UserSettingsService;
 using ZooIS.Server.Services.UsersService;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,7 +16,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IUsersService, UsersService>();
-builder.Services.AddScoped<ILoginRegister, LoginRegister>();
+builder.Services.AddScoped<ILoginRegisterService, LoginRegisterService>();
+builder.Services.AddScoped<IUserSettingsService,UserSettingsService>();
 
 //swagger thingies start
 builder.Services.AddSwaggerGen(options =>
@@ -32,6 +36,27 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddRazorPages();
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8
+            .GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value!)),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    });
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Policy1", builder =>
+     builder.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader());
+});
 
 var app = builder.Build();
 
@@ -56,15 +81,29 @@ else
 }
 
 app.UseHttpsRedirection();
-
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
-
 app.UseRouting();
+app.UseCors("Policy1");
+app.UseAuthentication();
+app.UseAuthorization();
 
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapRazorPages();
+    endpoints.MapControllers();
+    endpoints.Map("api/{**slug}", HandleApiFallback);
+    endpoints.MapFallbackToFile("{**slug}", "index.html");
+});
 
-app.MapRazorPages();
-app.MapControllers();
+// tam, kad api call'ai nemestu html'o
+// didesniems projektas logiskiau naudot reverse proxy
+Task HandleApiFallback(HttpContext context)
+{
+    context.Response.StatusCode = StatusCodes.Status404NotFound;
+    return Task.CompletedTask;
+}
+
 app.MapFallbackToFile("index.html");
 
 app.Run();

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using ZooIS.Server.Services.LoginRegisterService;
 using ZooIS.Shared.Dto;
 using ZooIS.Shared.Models;
@@ -9,9 +11,9 @@ namespace ZooIS.Server.Controllers
     [ApiController]
     public class LoginRegisterController : ControllerBase
     {
-        private readonly ILoginRegister _loginRegisterService;
+        private readonly ILoginRegisterService _loginRegisterService;
 
-        public LoginRegisterController(ILoginRegister LoginRegisterService)
+        public LoginRegisterController(ILoginRegisterService LoginRegisterService)
         {
             _loginRegisterService = LoginRegisterService;
         }
@@ -38,6 +40,21 @@ namespace ZooIS.Server.Controllers
                 return Ok(token);
             }
             else return NotFound(new { message = "Wrong username or password" });
+        }
+
+        //pasitikrinimui ar veikia
+        [HttpGet("userIsVisitorMsg")]
+        [Authorize(Roles = "Visitor")]
+        public ActionResult<string> GetMessageRegisteredUser()
+        {
+            //var userName = _userService.GetMyName();
+            return Ok("Registered users can read this");
+        }
+        [HttpGet("userIsSysAdminMsg")]
+        [Authorize(Roles = "SysAdmin")]
+        public ActionResult<string> GetMessageAdmin()
+        {
+            return Ok("SysAdmins can read this");
         }
     }
 }

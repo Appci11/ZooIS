@@ -11,7 +11,7 @@ using ZooIS.Server.Data;
 namespace ZooIS.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230208145028_Initial")]
+    [Migration("20230208180226_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -66,6 +66,13 @@ namespace ZooIS.Server.Migrations
                 {
                     b.Property<int>("Id")
                         .HasColumnType("INTEGER");
+
+                    b.Property<bool>("DarkMode")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Language")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 

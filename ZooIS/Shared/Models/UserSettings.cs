@@ -9,5 +9,7 @@ namespace ZooIS.Shared.Models
     public class UserSettings
     {
         public required int Id { get; set; }
+        public string Language { get; set; } = "en";
+        public bool DarkMode { get; set; } = false;
     }
 }
