@@ -11,7 +11,7 @@ using ZooIS.Server.Data;
 namespace ZooIS.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230208103801_Initial")]
+    [Migration("20230208145028_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace ZooIS.Server.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.2");
 
-            modelBuilder.Entity("ZooIS.Shared.RegisteredUser", b =>
+            modelBuilder.Entity("ZooIS.Shared.Models.RegisteredUser", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -36,31 +36,40 @@ namespace ZooIS.Server.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("LastLoginDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<byte[]>("PasswordHash")
-                        .HasColumnType("BLOB");
-
-                    b.Property<byte[]>("PasswordSalt")
-                        .HasColumnType("BLOB");
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("RequestPasswordReset")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Role")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("isDeleted")
+                    b.HasKey("Id");
+
+                    b.ToTable("RegisteredUsers");
+                });
+
+            modelBuilder.Entity("ZooIS.Shared.Models.UserSettings", b =>
+                {
+                    b.Property<int>("Id")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.ToTable("RegisteredUsers");
+                    b.ToTable("UserSettings");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ZooIS.Server.Data;
-using ZooIS.Shared;
 using ZooIS.Shared.Dto;
+using ZooIS.Shared.Models;
 
 namespace ZooIS.Server.Services.UsersService
 {
@@ -16,11 +16,15 @@ namespace ZooIS.Server.Services.UsersService
         public async Task<RegisteredUser> AddRegisteredUser(UserAddDto userAddDto)
         {
             RegisteredUser registeredUser = new RegisteredUser();
-            registeredUser.Username = userAddDto.Username;
+            registeredUser.Username = userAddDto.Username!;
             registeredUser.Email = userAddDto.Email;
             registeredUser.Role = userAddDto.Role;
             registeredUser.RequestPasswordReset = true;
+            
             _context.RegisteredUsers.Add(registeredUser);
+            await _context.SaveChangesAsync();
+            UserSettings settings = new UserSettings() { Id = registeredUser.Id };
+            _context.UserSettings.Add(settings);
             await _context.SaveChangesAsync();
             return registeredUser;
         }

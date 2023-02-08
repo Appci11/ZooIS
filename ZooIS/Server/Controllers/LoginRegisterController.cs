@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ZooIS.Server.Services.LoginRegisterService;
-using ZooIS.Shared;
 using ZooIS.Shared.Dto;
+using ZooIS.Shared.Models;
 
 namespace ZooIS.Server.Controllers
 {
@@ -24,7 +23,7 @@ namespace ZooIS.Server.Controllers
             RegisteredUser response = await _loginRegisterService.RegisterUser(request);
             if(response != null)
             {
-                return Ok(new {Username = response.Username, message = "Successfully registered"});
+                return Created($"/api/users/{response.Id}", response);
             }
             return NotFound(new { message = "Username already exists" });
         }
@@ -35,7 +34,7 @@ namespace ZooIS.Server.Controllers
             string token = await _loginRegisterService.LoginUser(request);
             if (token != null)
             {
-                //return Ok(new { token = token });     // kai bus refresh token'as
+                //return Ok(new { AuthToken = token });     // kai bus refresh token'as
                 return Ok(token);
             }
             else return NotFound(new { message = "Wrong username or password" });

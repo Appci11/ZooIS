@@ -4,8 +4,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using ZooIS.Server.Data;
-using ZooIS.Shared;
 using ZooIS.Shared.Dto;
+using ZooIS.Shared.Models;
 
 namespace ZooIS.Server.Services.LoginRegisterService
 {
@@ -33,6 +33,9 @@ namespace ZooIS.Server.Services.LoginRegisterService
             user.Email = request.Email;
             user.PasswordHash = passwordHash;
             _context.RegisteredUsers.Add(user);
+            await _context.SaveChangesAsync();
+            UserSettings settings = new UserSettings() { Id = user.Id };
+            _context.UserSettings.Add(settings);
             await _context.SaveChangesAsync();
             return user;    //per daug grazinu
             //throw new NotImplementedException();

@@ -1,5 +1,5 @@
-﻿using ZooIS.Shared;
-using ZooIS.Shared.Dto;
+﻿using ZooIS.Shared.Dto;
+using ZooIS.Shared.Models;
 
 namespace ZooIS.Server.Services.UsersService
 {

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using ZooIS.Shared.Enums;
 
-namespace ZooIS.Shared
+namespace ZooIS.Shared.Models
 {
     public class RegisteredUser
     {

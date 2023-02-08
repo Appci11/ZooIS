@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ZooIS.Shared;
+using System.Xml;
+using ZooIS.Shared.Models;
 
 namespace ZooIS.Server.Data
 {
@@ -11,5 +12,13 @@ namespace ZooIS.Server.Data
         }
 
         public DbSet<RegisteredUser> RegisteredUsers => Set<RegisteredUser>();
+        public DbSet<UserSettings> UserSettings => Set<UserSettings>();
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UserSettings>()
+              .Property(e => e.Id)
+              .ValueGeneratedNever();
+        }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ZooIS.Server.Services.UsersService;
-using ZooIS.Shared;
 using ZooIS.Shared.Dto;
+using ZooIS.Shared.Models;
 
 namespace ZooIS.Server.Controllers
 {
