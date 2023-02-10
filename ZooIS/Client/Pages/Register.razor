@@ -1,0 +1,65 @@
+﻿@page "/register"
+@using ZooIS.Shared.Dto;
+
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<body>
+    <h3>Register</h3>
+
+    <EditForm Model="user" OnSubmit="HandleRegister">
+        <div>
+            <InputText id="username" @bind-Value="user.Username" @ref=inputTextForFocus />
+            <label for="username">Name</label>
+        </div>
+        <div>
+            <InputText id="email" @bind-Value="user.Email" type="email" />
+            <label for="email">Email</label>
+        </div>
+        <div>
+            <InputText id="password" @bind-Value="user.Password" type="password" />
+            <label for="password">Password</label>
+        </div>
+        <div>
+            <InputText id="password2" @bind-Value="Pass2" type="password" />
+            <label for="password2">Repeat Password</label>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary">Register</button>
+        </div>
+    </EditForm>
+    <br />
+    <p style="color: red">@ErrorMsg</p>
+    <br />
+</body>
+
+@code {
+    UserRegisterDto user = new UserRegisterDto();
+    private InputText? inputTextForFocus;
+    private string ErrorMsg = string.Empty;
+    private string Pass2 = string.Empty;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+            if (inputTextForFocus?.Element != null)
+                await inputTextForFocus.Element.Value.FocusAsync();
+    }
+
+    async Task HandleRegister()
+    {
+        if (Pass2.CompareTo(user.Password) == 0)
+        {
+            var result = await Http.PostAsJsonAsync("/api/register", user);
+            if (result.IsSuccessStatusCode)
+            {
+                ErrorMsg = string.Empty;
+                NavigationManager.NavigateTo("/");
+            }
+            if (result.StatusCode.Equals(404))
+            {
+                ErrorMsg = "Registration failed. Try again later or contact support.";
+            }
+        }
+    }
+}

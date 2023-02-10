@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZooIS.Server", "ZooIS\Server\ZooIS.Server.csproj", "{32158CC2-8503-4676-8C38-BA20BA73B427}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZooIS.Server", "ZooIS\Server\ZooIS.Server.csproj", "{32158CC2-8503-4676-8C38-BA20BA73B427}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZooIS.Client", "ZooIS\Client\ZooIS.Client.csproj", "{46373483-1381-4FC6-A739-0DC6DD587DC7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZooIS.Client", "ZooIS\Client\ZooIS.Client.csproj", "{46373483-1381-4FC6-A739-0DC6DD587DC7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZooIS.Shared", "ZooIS\Shared\ZooIS.Shared.csproj", "{2F3E104B-7AC4-48E7-9733-AA3596590BE0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZooIS.Shared", "ZooIS\Shared\ZooIS.Shared.csproj", "{2F3E104B-7AC4-48E7-9733-AA3596590BE0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

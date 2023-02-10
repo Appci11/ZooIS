@@ -7,7 +7,7 @@ using ZooIS.Shared.Models;
 
 namespace ZooIS.Server.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api")]
     [ApiController]
     public class LoginRegisterController : ControllerBase
     {

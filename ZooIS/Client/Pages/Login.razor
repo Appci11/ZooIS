@@ -1,0 +1,61 @@
+﻿@page "/login"
+@using ZooIS.Shared.Dto;
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthStateProvider
+@inject ILocalStorageService LocalStorage
+@inject NavigationManager NavigationManager
+
+<body>
+    <h3>Login</h3>
+
+    <EditForm Model="user" OnSubmit="HandleLogin">
+        <div>
+            <InputText id="username" @bind-Value="user.Username" @ref=inputTextForFocus />
+            <label for="username">Name</label>
+        </div>
+        <div>
+            <InputText id="password" @bind-Value="user.Password" type="password" />
+            <label for="password">Password</label>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </div>
+    </EditForm>
+    <br />
+    <p style="color: red">@ErrorMsg</p>
+    <br />
+    <div>
+        Not a member? <a href="register">Register</a>
+    </div>
+</body>
+
+@code {
+    UserLoginDto user = new UserLoginDto();
+    private InputText? inputTextForFocus;
+    private string ErrorMsg = string.Empty;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+            if (inputTextForFocus?.Element != null)
+                await inputTextForFocus.Element.Value.FocusAsync();
+    }
+
+    async Task HandleLogin()
+    {
+        var result = await Http.PostAsJsonAsync("/api/login", user);
+        if (result.IsSuccessStatusCode)
+        {
+            Console.WriteLine("Login SUCCESSFULLLLLLLL!!!!");
+            var token = await result.Content.ReadAsStringAsync();
+            await LocalStorage.SetItemAsync("token", token);
+            await AuthStateProvider.GetAuthenticationStateAsync();
+            ErrorMsg = string.Empty;
+            NavigationManager.NavigateTo($"/");
+        }
+        else
+        {
+            ErrorMsg = "Incorrect username or password!";
+        }
+    }
+}
