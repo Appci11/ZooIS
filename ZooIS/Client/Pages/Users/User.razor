@@ -1,0 +1,14 @@
+﻿@page "/user"
+
+@inject NavigationManager NavigationManager
+
+<button>
+    <button class="btn btn-primary" @onclick="NavigateTo">Create a new user</button>
+</button>
+
+@code{
+    void NavigateTo()
+    {
+        NavigationManager.NavigateTo("/fetchdata");
+    }
+}

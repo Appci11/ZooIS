@@ -1,6 +1,8 @@
 ﻿@page "/fetchdata"
 @using ZooIS.Shared
+
 @inject HttpClient Http
+@inject NavigationManager NavigationManager
 
 <PageTitle>Weather forecast</PageTitle>
 
@@ -35,13 +37,35 @@ else
             }
         </tbody>
     </table>
+
+    <div class="grid">
+        <QuickGrid Items="forecasts.AsQueryable()" Virtualize="true">
+            <PropertyColumn Property="f => f.Date" />
+            <PropertyColumn Property="f => f.TemperatureC" />
+            <PropertyColumn Property="f => f.TemperatureF" />
+            <PropertyColumn Property="f => f.Summary" />
+        </QuickGrid>
+    </div>
+
 }
+
+<button class="btn btn-primary" @onclick="NavigateTo">Create a new user</button>
+
 
 @code {
     private WeatherForecast[]? forecasts;
-
+    bool first = true;
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
+        if (first)
+        {
+            forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
+            first = false;
+        }
+    }
+
+    void NavigateTo()
+    {
+        NavigationManager.NavigateTo("/user");
     }
 }
