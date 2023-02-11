@@ -33,11 +33,11 @@ namespace ZooIS.Server.Controllers
         [HttpPost("login")]
         public async Task<ActionResult> Login (UserLoginDto request)
         {
-            string token = await _loginRegisterService.LoginUser(request);
-            if (token != null)
+            LoginDto response = await _loginRegisterService.LoginUser(request);
+            if (response != null)
             {
-                //return Ok(new { AuthToken = token });     // kai bus refresh token'as
-                return Ok(token);
+                return Ok(response);     // sutvarkyt
+                //return Ok(token);
             }
             else return NotFound(new { message = "Wrong username or password" });
         }

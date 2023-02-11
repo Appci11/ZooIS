@@ -71,5 +71,16 @@ namespace ZooIS.Server.Controllers
             }
             return NotFound(new { message = "User not found" });
         }
+
+        [HttpPatch("passchange")]
+        public async Task<IActionResult> ChangePassword(PasswordChangeDto passChangeDto)
+        {
+            int response = await _registeredUsersService.ChangePassword(passChangeDto);
+            if(response != 0)
+            {
+                return Ok(new { message = "Password change successfull." });
+            }
+            return BadRequest(new { message = "User not found" });
+        }
     }
 }

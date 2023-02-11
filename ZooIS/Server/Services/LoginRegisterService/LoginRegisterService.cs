@@ -41,7 +41,7 @@ namespace ZooIS.Server.Services.LoginRegisterService
             //throw new NotImplementedException();
         }
 
-        public async Task<string> LoginUser(UserLoginDto request)
+        public async Task<LoginDto> LoginUser(UserLoginDto request)
         {
             RegisteredUser? user = await _context.RegisteredUsers.FirstOrDefaultAsync(u => u.Username == request.Username);
             if (user == null)
@@ -53,7 +53,7 @@ namespace ZooIS.Server.Services.LoginRegisterService
                 return null;
             }
             string token = CreateToken(user);
-            return token;
+            return new LoginDto(token, user.RequestPasswordReset);
         }
 
         public string CreateToken(RegisteredUser user)

@@ -83,5 +83,19 @@ namespace ZooIS.Server.Services.UsersService
             await _context.SaveChangesAsync();
             return dbUser;
         }
+
+        public async Task<int> ChangePassword(PasswordChangeDto passwordChangeDto)
+        {
+            RegisteredUser dbUser = await _context.RegisteredUsers.FirstOrDefaultAsync(u => u.Username == passwordChangeDto.Username);
+            if(dbUser == null)
+            {
+                return 0;
+            }
+            dbUser.PasswordHash = BCrypt.Net.BCrypt.HashPassword(passwordChangeDto.Password);
+            dbUser.RequestPasswordReset = false;
+            await _context.SaveChangesAsync();
+
+            return 1;
+        }
     }
 }
