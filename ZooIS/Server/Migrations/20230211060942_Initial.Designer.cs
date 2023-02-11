@@ -11,7 +11,7 @@ using ZooIS.Server.Data;
 namespace ZooIS.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230208180226_Initial")]
+    [Migration("20230211060942_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -40,6 +40,9 @@ namespace ZooIS.Server.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("LastLoginDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("PassChangeTime")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PasswordHash")

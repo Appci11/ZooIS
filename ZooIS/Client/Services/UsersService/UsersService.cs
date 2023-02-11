@@ -18,19 +18,20 @@ namespace ZooIS.Client.Services.UsersService
 
         public async Task CreateUser(RegisteredUser user)
         {
-            var result = await _http.PostAsJsonAsync("/api/users", user);
+            var result = await _http.PostAsJsonAsync($"/api/users", user);
             _navigationManager.NavigateTo("/users");
         }
 
         public async Task DeleteUser(int id)
         {
-            var result = await _http.DeleteAsync("/api/users/{id}");
+            var result = await _http.DeleteAsync($"/api/users/{id}");
             _navigationManager.NavigateTo("/users");
         }
 
         public async Task<RegisteredUser> GetUser(int id)
         {
-            var result = await _http.GetFromJsonAsync<RegisteredUser>("/api/users/{id}");
+            Console.WriteLine($"GOT ID: {id}");
+            var result = await _http.GetFromJsonAsync<RegisteredUser>($"/api/users/{id}");
             if (result != null)
             {
                 return result;
@@ -49,7 +50,7 @@ namespace ZooIS.Client.Services.UsersService
 
         public async Task UpdateUser(RegisteredUser user)
         {
-            var result = await _http.PutAsJsonAsync("/api/users/{user.Id}", user);
+            var result = await _http.PutAsJsonAsync($"/api/users/{user.Id}", user);
             _navigationManager.NavigateTo("/users");
         }
     }

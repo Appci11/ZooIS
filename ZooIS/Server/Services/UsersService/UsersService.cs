@@ -20,7 +20,7 @@ namespace ZooIS.Server.Services.UsersService
             registeredUser.Email = userAddDto.Email;
             registeredUser.Role = userAddDto.Role;
             registeredUser.RequestPasswordReset = true;
-
+            registeredUser.PasswordHash = BCrypt.Net.BCrypt.HashPassword("aaa");  // Sita slapta "default" slaptazodi i appsettings.json ikelt
             _context.RegisteredUsers.Add(registeredUser);
             await _context.SaveChangesAsync();
             UserSettings settings = new UserSettings() { Id = registeredUser.Id };

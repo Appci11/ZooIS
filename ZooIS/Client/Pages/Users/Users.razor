@@ -4,38 +4,15 @@
 @using ZooIS.Shared.Models;
 @inject IUsersService UsersService
 @inject NavigationManager NavigationManager
-
 @*
-@attribute [Authorize(Roles = "Admin")]
+@attribute [Authorize(Roles = "SysAdmin")]
 *@
-
 <PageTitle>Users</PageTitle>
 
 <h3>Users</h3>
 
 @if (Loaded)
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Role</th>
-                <th>Created On</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var user in UsersService.Users)
-            {
-                <tr>
-                    <td>@user.Username</td>
-                    <td>@user.Role</td>
-                    <td>@user.DateCreated</td>
-                    <td><button class="btn btn-primary" @onclick="(() => ShowUser(user.Id))"><i class="oi oi-pencil"></i></button></td>
-                </tr>
-            }
-        </tbody>
-    </table>
     <div>
         <QuickGrid Items="FilteredUsers" ResizableColumns Pagination="@pagination" Class="search">
             <PropertyColumn Property="u => u.Username" Sortable="true">
@@ -55,6 +32,7 @@
             <PropertyColumn Property="u => u.DateCreated" Sortable="true" />
             <TemplateColumn Title="Actions">
                 <button @onclick="@(() => GoToEdit(context))" class="btn btn-primary oi oi-pencil"></button>
+                <button @onclick="@(() => GoToEdit(context))" class="btn btn-danger oi oi-x"></button>
             </TemplateColumn>
         </QuickGrid>
         <Paginator Value="@pagination" />

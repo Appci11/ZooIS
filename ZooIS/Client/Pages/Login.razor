@@ -44,9 +44,13 @@
     async Task HandleLogin()
     {
         var result = await Http.PostAsJsonAsync("/api/login", user);
+        if(result.StatusCode.Equals(204))
+        {
+            Console.WriteLine("KRRRRRRRRRRRIIIIIIUUUUUUUUUUUU");
+        }
+
         if (result.IsSuccessStatusCode)
         {
-            Console.WriteLine("Login SUCCESSFULLLLLLLL!!!!");
             var token = await result.Content.ReadAsStringAsync();
             await LocalStorage.SetItemAsync("token", token);
             await AuthStateProvider.GetAuthenticationStateAsync();

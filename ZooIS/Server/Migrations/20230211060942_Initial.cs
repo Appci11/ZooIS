@@ -20,12 +20,13 @@ namespace ZooIS.Server.Migrations
                     Username = table.Column<string>(type: "TEXT", nullable: false),
                     Email = table.Column<string>(type: "TEXT", nullable: false),
                     PasswordHash = table.Column<string>(type: "TEXT", nullable: false),
+                    Role = table.Column<string>(type: "TEXT", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "TEXT", nullable: false),
                     LastLoginDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    PassChangeTime = table.Column<DateTime>(type: "TEXT", nullable: false),
                     RequestPasswordReset = table.Column<bool>(type: "INTEGER", nullable: false),
                     DeletionRequested = table.Column<bool>(type: "INTEGER", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
-                    Role = table.Column<string>(type: "TEXT", nullable: false)
+                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
