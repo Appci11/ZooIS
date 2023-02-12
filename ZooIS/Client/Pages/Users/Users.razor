@@ -1,5 +1,6 @@
 ﻿@page "/users"
 
+@using ZooIS.Client.Dialogs;
 @using ZooIS.Client.Services.UsersService;
 @using ZooIS.Shared.Models;
 @inject IUsersService UsersService
@@ -32,13 +33,15 @@
             <PropertyColumn Property="u => u.DateCreated" Sortable="true" />
             <TemplateColumn Title="Actions">
                 <button @onclick="@(() => GoToEdit(context))" class="btn btn-primary oi oi-pencil"></button>
-                <button @onclick="@(() => GoToEdit(context))" class="btn btn-danger oi oi-x"></button>
+                <button @onclick="@(() => Delete_Click(context))" class="btn btn-danger oi oi-x"></button>
             </TemplateColumn>
         </QuickGrid>
         <Paginator Value="@pagination" />
 
     </div>
     <button class="btn btn-primary" @onclick="CreateNewUser">Create a new user</button>
+
+    <DeleteConfirmationDialog @ref="confirmationDialog" UserChoice="OnDeletionConfirmed" />
 }
 else
 {
@@ -50,8 +53,12 @@ else
     IQueryable<RegisteredUser>? itemsQueryable;
     string nameFilter;
     string roleFilter;
+    int nrToDelete = -1;
+    protected DeleteConfirmationDialog confirmationDialog { get; set; }
 
     bool Loaded = false;
+
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -90,4 +97,20 @@ else
     }
 
     void GoToEdit(RegisteredUser u) => NavigationManager.NavigateTo($"/user/{u.Id}");
+
+    void Delete_Click(RegisteredUser u)
+    {
+        nrToDelete = u.Id;
+        confirmationDialog.Show();
+    }
+
+    protected async Task OnDeletionConfirmed(bool deleteConfirmed)
+    {
+        if (deleteConfirmed && nrToDelete != -1)
+        {
+            await UsersService.DeleteUser(nrToDelete);
+            nrToDelete = -1;
+            itemsQueryable = UsersService.Users.AsQueryable();
+        }
+    }
 }

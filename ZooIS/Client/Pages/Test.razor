@@ -1,23 +1,35 @@
 ﻿@page "/test"
 
+@using ZooIS.Client.Dialogs;
+
+<PageTitle>Test</PageTitle>
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
 <div>
-    <QuickGrid Items="@people">
-        <PropertyColumn Property="@(p => p.PersonId)" Sortable="true" />
-        <PropertyColumn Property="@(p => p.Name)" Sortable="true" />
-        <PropertyColumn Property="@(p => p.BirthDate)" Format="yyyy-MM-dd" Sortable="true" />
-    </QuickGrid>
+    <button value="DeleteTest" @onclick="Delete_Click">
+        DeleteTest
+    </button>
 </div>
 
-@code {
-    record Person(int PersonId, string Name, DateOnly BirthDate);
+<TestConfirmBox @ref="confirmBox" UserChoice="ConfirmDelete_Click" />
 
-    IQueryable<Person> people = new[]
+@code{
+    protected TestConfirmBox confirmBox { get; set; }
+
+    protected void Delete_Click()
     {
-        new Person(10895, "Jean Martin", new DateOnly(1985, 3, 16)),
-        new Person(10944, "António Langa", new DateOnly(1991, 12, 1)),
-        new Person(11203, "Julie Smith", new DateOnly(1958, 10, 10)),
-        new Person(11205, "Nur Sari", new DateOnly(1922, 4, 27)),
-        new Person(11898, "Jose Hernandez", new DateOnly(2011, 5, 3)),
-        new Person(12130, "Kenji Sato", new DateOnly(2004, 1, 9)),
-    }.AsQueryable();
+        confirmBox.Show("Delete Button is Clicked");
+    }
+
+    protected async Task ConfirmDelete_Click(bool deleteConfirmed)
+    {
+        if(deleteConfirmed)
+        {
+            Console.WriteLine("Got value: " + deleteConfirmed);
+        }
+    }
+
+
 }

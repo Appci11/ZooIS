@@ -57,7 +57,7 @@ else
     <button type="submit" class="btn btn-primary">@btnText</button>
     @if (Id != null)
     {
-        <button type="button" class="btn btn-danger" @onclick="DeleteUser">Delete</button>
+        <button type="button" class=" padded-button btn btn-primary" @onclick="GoBack">Go Back</button>
     }
 </EditForm>
 
@@ -94,8 +94,8 @@ else
         }
     }
 
-    async Task DeleteUser()
+    void GoBack()
     {
-        await UsersService.DeleteUser(user.Id);
+        NavigationManager.NavigateTo("/users");
     }
 }

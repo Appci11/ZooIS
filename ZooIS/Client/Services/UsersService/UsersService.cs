@@ -25,12 +25,15 @@ namespace ZooIS.Client.Services.UsersService
         public async Task DeleteUser(int id)
         {
             var result = await _http.DeleteAsync($"/api/users/{id}");
-            _navigationManager.NavigateTo("/users");
+            RegisteredUser user = Users.FirstOrDefault(u => u.Id == id);
+            if (user != null)
+            {
+                Users.Remove(user);
+            }
         }
 
         public async Task<RegisteredUser> GetUser(int id)
         {
-            Console.WriteLine($"GOT ID: {id}");
             var result = await _http.GetFromJsonAsync<RegisteredUser>($"/api/users/{id}");
             if (result != null)
             {
