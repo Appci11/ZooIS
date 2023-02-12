@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
 
 <div class="page">
     <div class="sidebar">
@@ -8,6 +9,7 @@
     <main>
         <div class="top-row px-4">
             @*<a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>*@
+            <EnterSettings />
             <LoginLogout />
         </div>
         <article class="content px-4">
@@ -15,3 +17,10 @@
         </article>
     </main>
 </div>
+
+@code {
+    void GoToSettings()
+    {
+        NavigationManager.NavigateTo("/settings");
+    }
+}

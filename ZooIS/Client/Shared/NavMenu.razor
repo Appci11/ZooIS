@@ -43,16 +43,21 @@
         </AuthorizeView>
         <AuthorizeView>
             <Authorized>
-                <div class="nav-item px-3 login">
+                <div class="nav-item px-3 hide-on-big">
+                    <NavLink class="nav-link" href="settings">
+                        <span class="oi oi-cog" aria-hidden="true"></span> Settings
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3 hide-on-big">
                     <NavLink class="nav-link" @onclick="Logout">
-                        <span class="oi oi-account-logout" aria-hidden="true"></span>Logout
+                        <span class="oi oi-account-logout" aria-hidden="true"></span> Logout
                     </NavLink>
                 </div>
             </Authorized>
             <NotAuthorized>
-                <div class="nav-item px-3 login">
+                <div class="nav-item px-3 hide-on-big">
                     <NavLink class="nav-link" href="login">
-                        <span class="oi oi-account-login" aria-hidden="true"></span>Login/Register
+                        <span class="oi oi-account-login" aria-hidden="true"></span> Login/Register
                     </NavLink>
                 </div>
             </NotAuthorized>

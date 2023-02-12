@@ -1,9 +1,9 @@
 ﻿@page "/user"
 @page "/user/{id:int}"
 
-
 @inject NavigationManager NavigationManager
 @inject IUsersService UsersService
+
 @*
 @attribute [Authorize(Roles = "Admin")]
 *@
@@ -61,7 +61,12 @@ else
     }
 </EditForm>
 
+
+
 @code {
+
+
+
     [Parameter]
     public int? Id { get; set; }
 

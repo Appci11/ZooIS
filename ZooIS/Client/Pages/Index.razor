@@ -12,21 +12,22 @@ Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
 
+@*
 @if (loaded)
 {
-   @settings.Id;
-   @settings.Language;
-   @settings.DarkMode;
+    @Settings.Id
+    @Settings.Language
+    @Settings.DarkMode
 }
+*@
 
-
-@code{
+@code {
     bool loaded = false;
-    UserSettings settings = null;
+    UserSettings Settings = null;
 
     protected override async Task OnInitializedAsync()
     {
-        settings = await SettingsService.GetSettings(1);
+        Settings = await SettingsService.GetSettings(1);
         loaded = true;
     }
 }

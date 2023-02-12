@@ -1,0 +1,16 @@
+﻿@inject NavigationManager NavigationManager
+@inject ILocalStorageService LocalStorage
+@inject AuthenticationStateProvider AuthStateProvider
+
+<AuthorizeView>
+    <button @onclick="ToSettings" class="btn info">Settings</button>
+</AuthorizeView>
+
+
+
+@code {
+    async Task ToSettings()
+    {
+        NavigationManager.NavigateTo("/settings");
+    }
+}

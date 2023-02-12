@@ -1,0 +1,14 @@
+﻿@page "/settings"
+
+@inject IJSRuntime JSRuntime
+<h3>UserSettings</h3>
+<br />
+<button type="button" class=" padded-button btn btn-primary" @onclick="GoBack">Go Back</button>
+
+
+@code {
+    private async void GoBack()
+    {
+        await JSRuntime.InvokeVoidAsync("history.back");
+    }
+}
