@@ -61,9 +61,9 @@ namespace ZooIS.Server.Services.LoginRegisterService
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, user.Role)
+                new Claim(ClaimTypes.Role, user.Role),
                 // kol tingiu, tol turim ir id
-                //new Claim("id", user.Id.ToString())
+                new Claim("id", user.Id.ToString())
             };
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
                 _configuration.GetSection("AppSettings:Token").Value!));
