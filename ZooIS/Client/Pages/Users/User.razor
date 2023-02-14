@@ -1,8 +1,8 @@
 ﻿@page "/user"
 @page "/user/{id:int}"
 
-@inject NavigationManager NavigationManager
-@inject IUsersService UsersService
+@inject NavigationManager _navigationManager
+@inject IUsersService _usersService
 
 @*
 @attribute [Authorize(Roles = "Admin")]
@@ -83,7 +83,7 @@ else
     {
         if (Id != null)
         {
-            user = await UsersService.GetUser((int)Id);
+            user = await _usersService.GetUser((int)Id);
         }
     }
 
@@ -91,16 +91,18 @@ else
     {
         if (Id == null)
         {
-            await UsersService.CreateUser(user);
+            await _usersService.CreateUser(user);
+            _navigationManager.NavigateTo("/users");
         }
         else
         {
-            await UsersService.UpdateUser(user);
+            await _usersService.UpdateUser(user);
+            _navigationManager.NavigateTo("/users");
         }
     }
 
     void GoBack()
     {
-        NavigationManager.NavigateTo("/users");
+        _navigationManager.NavigateTo("/users");
     }
 }

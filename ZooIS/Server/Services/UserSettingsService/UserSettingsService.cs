@@ -23,6 +23,7 @@ namespace ZooIS.Server.Services.UserSettingsService
             {
                 return settings;
             }
+            
             return null;
         }
 
@@ -36,6 +37,7 @@ namespace ZooIS.Server.Services.UserSettingsService
             settings.Language = userSettings.Language;
             settings.DarkMode= userSettings.DarkMode;
             await _context.SaveChangesAsync();
+            
             return settings;
         }
     }

@@ -7,19 +7,16 @@ namespace ZooIS.Client.Services.UsersService
     public class UsersService : IUsersService
     {
         private readonly HttpClient _http;
-        private readonly NavigationManager _navigationManager;
 
-        public UsersService(HttpClient http, NavigationManager navigationManager)
+        public UsersService(HttpClient http)
         {
             _http = http;
-            _navigationManager = navigationManager;
         }
         public List<RegisteredUser> Users { get; set; } = new List<RegisteredUser>();
 
         public async Task CreateUser(RegisteredUser user)
         {
             var result = await _http.PostAsJsonAsync($"/api/users", user);
-            _navigationManager.NavigateTo("/users");
         }
 
         public async Task DeleteUser(int id)
@@ -54,7 +51,7 @@ namespace ZooIS.Client.Services.UsersService
         public async Task UpdateUser(RegisteredUser user)
         {
             var result = await _http.PutAsJsonAsync($"/api/users/{user.Id}", user);
-            _navigationManager.NavigateTo("/users");
+
         }
     }
 }

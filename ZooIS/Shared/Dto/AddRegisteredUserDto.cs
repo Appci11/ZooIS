@@ -8,7 +8,7 @@ using ZooIS.Shared.Enums;
 
 namespace ZooIS.Shared.Dto
 {
-    public class UserAddDto
+    public class AddRegisteredUserDto
     {
         public required string? Username { get; set; }
         public string Email { get; set; } = string.Empty;

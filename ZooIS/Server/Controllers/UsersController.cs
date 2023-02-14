@@ -18,7 +18,7 @@ namespace ZooIS.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddRegisteredUser(UserAddDto userAddDto)
+        public async Task<IActionResult> AddRegisteredUser(AddRegisteredUserDto userAddDto)
         {
             RegisteredUser response = await _registeredUsersService.AddRegisteredUser(userAddDto);
             if (response != null)

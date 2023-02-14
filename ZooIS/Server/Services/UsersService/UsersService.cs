@@ -13,34 +13,37 @@ namespace ZooIS.Server.Services.UsersService
         {
             _context = context;
         }
-        public async Task<RegisteredUser> AddRegisteredUser(UserAddDto userAddDto)
+        public async Task<RegisteredUser> AddRegisteredUser(AddRegisteredUserDto userAddDto)
         {
             RegisteredUser registeredUser = new RegisteredUser();
+
             registeredUser.Username = userAddDto.Username!;
             registeredUser.Email = userAddDto.Email;
             registeredUser.Role = userAddDto.Role;
             registeredUser.RequestPasswordReset = true;
             registeredUser.PasswordHash = BCrypt.Net.BCrypt.HashPassword("aaa");  // Sita slapta "default" slaptazodi i appsettings.json ikelt
+
             _context.RegisteredUsers.Add(registeredUser);
             await _context.SaveChangesAsync();
+
             UserSettings settings = new UserSettings() { Id = registeredUser.Id };
             _context.UserSettings.Add(settings);
             await _context.SaveChangesAsync();
+
             return registeredUser;
         }
 
         public async Task<RegisteredUser> DeleteRegisteredUser(int id)
         {
             RegisteredUser? user = await _context.RegisteredUsers.FirstOrDefaultAsync(u => u.Id == id);
-            UserSettings? settings = await _context.UserSettings.FirstOrDefaultAsync(s => s.Id == id);
-
-            if (user == null || settings == null)
+            if (user == null)
             {
                 return null;
             }
-            _context.UserSettings.Remove(settings);
+
             _context.RegisteredUsers.Remove(user);
             await _context.SaveChangesAsync();
+
             return user;
         }
 
@@ -52,6 +55,7 @@ namespace ZooIS.Server.Services.UsersService
         public async Task<RegisteredUser> GetRegisteredUser(int id)
         {
             RegisteredUser? user = await _context.RegisteredUsers.FirstOrDefaultAsync(u => u.Id == id);
+            
             return user;
         }
 
@@ -65,6 +69,7 @@ namespace ZooIS.Server.Services.UsersService
             dbUser.Username = userUpdateDto.Username;
             dbUser.Email = userUpdateDto.Email;
             await _context.SaveChangesAsync();
+           
             return dbUser;
         }
         public async Task<RegisteredUser> UpdateRegisteredUserVAdmin(int id, UserUpdateInfoAdminDto userUpdateDto)
@@ -81,13 +86,14 @@ namespace ZooIS.Server.Services.UsersService
             dbUser.IsDeleted = userUpdateDto.IsDeleted;
             dbUser.Role = userUpdateDto.Role;
             await _context.SaveChangesAsync();
+           
             return dbUser;
         }
 
         public async Task<int> ChangePassword(PasswordChangeDto passwordChangeDto)
         {
             RegisteredUser dbUser = await _context.RegisteredUsers.FirstOrDefaultAsync(u => u.Username == passwordChangeDto.Username);
-            if(dbUser == null)
+            if (dbUser == null)
             {
                 return 0;
             }

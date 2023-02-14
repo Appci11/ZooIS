@@ -5,7 +5,7 @@ namespace ZooIS.Server.Services.UsersService
 {
     public interface IUsersService
     {
-        Task<RegisteredUser> AddRegisteredUser(UserAddDto userAddDto);
+        Task<RegisteredUser> AddRegisteredUser(AddRegisteredUserDto userAddDto);
         Task<List<RegisteredUser>> GetAllRegisteredUsers();
         Task<RegisteredUser> GetRegisteredUser(int id);
         Task<RegisteredUser> UpdateRegisteredUserVVisitor(int id, UserUpdateInfoVisitorDto userUpdadteDto);

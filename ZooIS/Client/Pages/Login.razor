@@ -3,7 +3,7 @@
 @inject HttpClient Http
 @inject AuthenticationStateProvider AuthStateProvider
 @inject ILocalStorageService LocalStorage
-@inject NavigationManager NavigationManager
+@inject NavigationManager _navigationManager
 
 <body>
     <h3>Login</h3>
@@ -75,7 +75,7 @@
                 await LocalStorage.SetItemAsync("token", loginDto.AuthToken);
                 await AuthStateProvider.GetAuthenticationStateAsync();
                 ErrorMsg = string.Empty;
-                NavigationManager.NavigateTo($"/");
+                _navigationManager.NavigateTo($"/");
             }
             else
             {

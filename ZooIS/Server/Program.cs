@@ -1,10 +1,10 @@
+global using ZooIS.Server.Data;
+global using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
-using ZooIS.Server.Data;
 using ZooIS.Server.Services.LoginRegisterService;
 using ZooIS.Server.Services.UserSettingsService;
 using ZooIS.Server.Services.UsersService;

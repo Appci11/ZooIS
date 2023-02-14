@@ -3,8 +3,8 @@
 @using ZooIS.Client.Dialogs;
 @using ZooIS.Client.Services.UsersService;
 @using ZooIS.Shared.Models;
-@inject IUsersService UsersService
-@inject NavigationManager NavigationManager
+@inject IUsersService _usersService
+@inject NavigationManager _navigationManager
 @*
 @attribute [Authorize(Roles = "SysAdmin")]
 *@
@@ -62,8 +62,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        await UsersService.GetUsers();
-        itemsQueryable = UsersService.Users.AsQueryable();
+        await _usersService.GetUsers();
+        itemsQueryable = _usersService.Users.AsQueryable();
         Loaded = true;
     }
 
@@ -88,15 +88,15 @@ else
 
     void ShowUser(int id)
     {
-        NavigationManager.NavigateTo($"/user/{id}");
+        _navigationManager.NavigateTo($"/user/{id}");
     }
 
     void CreateNewUser()
     {
-        NavigationManager.NavigateTo("/user");
+        _navigationManager.NavigateTo("/user");
     }
 
-    void GoToEdit(RegisteredUser u) => NavigationManager.NavigateTo($"/user/{u.Id}");
+    void GoToEdit(RegisteredUser u) => _navigationManager.NavigateTo($"/user/{u.Id}");
 
     void Delete_Click(RegisteredUser u)
     {
@@ -108,9 +108,9 @@ else
     {
         if (deleteConfirmed && nrToDelete != -1)
         {
-            await UsersService.DeleteUser(nrToDelete);
+            await _usersService.DeleteUser(nrToDelete);
             nrToDelete = -1;
-            itemsQueryable = UsersService.Users.AsQueryable();
+            itemsQueryable = _usersService.Users.AsQueryable();
         }
     }
 }

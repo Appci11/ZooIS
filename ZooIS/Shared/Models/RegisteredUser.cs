@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using ZooIS.Shared.Enums;
 
 namespace ZooIS.Shared.Models
@@ -17,5 +18,9 @@ namespace ZooIS.Shared.Models
         public bool RequestPasswordReset { get; set; } = false;
         public bool DeletionRequested { get; set; } = false;
         public bool IsDeleted { get; set; } = false;
+
+        //relationships
+        [JsonIgnore]
+        public UserSettings UserSettings { get; set; }
     }
 }
