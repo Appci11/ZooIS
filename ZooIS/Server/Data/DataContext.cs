@@ -14,6 +14,9 @@ namespace ZooIS.Server.Data
 
         public DbSet<RegisteredUser> RegisteredUsers => Set<RegisteredUser>();
         public DbSet<UserSettings> UserSettings => Set<UserSettings>();
+        public DbSet<TBundle> TBundles => Set<TBundle>();
+        public DbSet<Ticket> Tickets=> Set<Ticket>();
+        public DbSet<TBundleTicket> BundleTickets => Set<TBundleTicket>();
 
         // for tutorial purposes
         //public DbSet<User> Users { get; set; }
@@ -30,6 +33,20 @@ namespace ZooIS.Server.Data
             modelBuilder.Entity<UserSettings>()
               .Property(e => e.Id)
               .ValueGeneratedNever();
+
+            modelBuilder.Entity<TBundleTicket>()
+                        .HasKey(bt => new { bt.TBundleId, bt.TicketId });
+
+            modelBuilder.Entity<TBundleTicket>()
+                .HasOne(bt => bt.TBundle)
+                .WithMany(b => b.TBundleTickets)
+                .HasForeignKey(bt => bt.TBundleId);
+
+            modelBuilder.Entity<TBundleTicket>()
+                .HasOne(bt => bt.Ticket)
+                .WithMany(t => t.TBundleTickets)
+                .HasForeignKey(bt => bt.TicketId);
+
 
             //tutorial for n x n
             //modelBuilder.Entity<AuMeu>()

@@ -8,6 +8,8 @@ using Swashbuckle.AspNetCore.Filters;
 using ZooIS.Server.Services.LoginRegisterService;
 using ZooIS.Server.Services.UserSettingsService;
 using ZooIS.Server.Services.UsersService;
+using ZooIS.Server.Services.TicketsService;
+using ZooIS.Server.Services.TBundlesService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<ILoginRegisterService, LoginRegisterService>();
 builder.Services.AddScoped<IUserSettingsService,UserSettingsService>();
+builder.Services.AddScoped<ITicketsService, TicketsService>();
+builder.Services.AddScoped<ITBundlesService, TBundlesService>();
 
 //swagger thingies start
 builder.Services.AddSwaggerGen(options =>
