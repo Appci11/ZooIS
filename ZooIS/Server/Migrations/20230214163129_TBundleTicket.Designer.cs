@@ -11,8 +11,8 @@ using ZooIS.Server.Data;
 namespace ZooIS.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230214163129_TBundleTicket")]
-    partial class TBundleTicket
+    [Migration("20230214163129_BundleTicket")]
+    partial class BundleTicket
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -65,7 +65,7 @@ namespace ZooIS.Server.Migrations
                     b.ToTable("RegisteredUsers");
                 });
 
-            modelBuilder.Entity("ZooIS.Shared.Models.TBundle", b =>
+            modelBuilder.Entity("ZooIS.Shared.Models.Bundle", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -85,12 +85,12 @@ namespace ZooIS.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TBundles");
+                    b.ToTable("Bundles");
                 });
 
-            modelBuilder.Entity("ZooIS.Shared.Models.TBundleTicket", b =>
+            modelBuilder.Entity("ZooIS.Shared.Models.BundleTicket", b =>
                 {
-                    b.Property<int>("TBundleId")
+                    b.Property<int>("BundleId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("TicketId")
@@ -99,7 +99,7 @@ namespace ZooIS.Server.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("TBundleId", "TicketId");
+                    b.HasKey("BundleId", "TicketId");
 
                     b.HasIndex("TicketId");
 
@@ -141,21 +141,21 @@ namespace ZooIS.Server.Migrations
                     b.ToTable("UserSettings");
                 });
 
-            modelBuilder.Entity("ZooIS.Shared.Models.TBundleTicket", b =>
+            modelBuilder.Entity("ZooIS.Shared.Models.BundleTicket", b =>
                 {
-                    b.HasOne("ZooIS.Shared.Models.TBundle", "TBundle")
-                        .WithMany("TBundleTickets")
-                        .HasForeignKey("TBundleId")
+                    b.HasOne("ZooIS.Shared.Models.Bundle", "Bundle")
+                        .WithMany("BundleTickets")
+                        .HasForeignKey("BundleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ZooIS.Shared.Models.Ticket", "Ticket")
-                        .WithMany("TBundleTickets")
+                        .WithMany("BundleTickets")
                         .HasForeignKey("TicketId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("TBundle");
+                    b.Navigation("Bundle");
 
                     b.Navigation("Ticket");
                 });
@@ -177,14 +177,14 @@ namespace ZooIS.Server.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ZooIS.Shared.Models.TBundle", b =>
+            modelBuilder.Entity("ZooIS.Shared.Models.Bundle", b =>
                 {
-                    b.Navigation("TBundleTickets");
+                    b.Navigation("BundleTickets");
                 });
 
             modelBuilder.Entity("ZooIS.Shared.Models.Ticket", b =>
                 {
-                    b.Navigation("TBundleTickets");
+                    b.Navigation("BundleTickets");
                 });
 #pragma warning restore 612, 618
         }

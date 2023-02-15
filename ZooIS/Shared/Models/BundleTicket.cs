@@ -8,17 +8,18 @@ using System.Threading.Tasks;
 namespace ZooIS.Shared.Models
 {
     /// <summary>
-    /// "Tarpine" klase tarp TBundle ir Ticket
+    /// "Tarpine" klase tarp Bundle ir Ticket
     /// </summary>
-    public class TBundleTicket
+    public class BundleTicket
     {
         public int Quantity { get; set; }
 
-        public int TBundleId { get; set; }
+        
+        public int BundleId { get; set; }
         public int TicketId { get; set; }
         [JsonIgnore]
-        public TBundle TBundle { get; set; }
-        [JsonIgnore]
+        public Bundle Bundle { get; set; }
+        
         public Ticket Ticket { get; set; }
     }
 }

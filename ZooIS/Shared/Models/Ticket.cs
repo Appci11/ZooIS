@@ -10,6 +10,6 @@ namespace ZooIS.Shared.Models
 
         //relationships
         [JsonIgnore]
-        public ICollection<TBundleTicket>? TBundleTickets { get; set; }
+        public ICollection<BundleTicket>? BundleTickets { get; set; }
     }
 }

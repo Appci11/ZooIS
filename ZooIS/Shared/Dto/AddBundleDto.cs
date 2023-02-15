@@ -7,8 +7,8 @@ using ZooIS.Shared.Models;
 
 namespace ZooIS.Shared.Dto
 {
-    public class AddTBundleDto
+    public class AddBundleDto
     {
-        public List<AddTBundleTicketDto> TBundleTickets { get; set; } = new List<AddTBundleTicketDto> { new AddTBundleTicketDto() };
+        public List<AddBundleTicketDto> BundleTickets { get; set; } = new List<AddBundleTicketDto> { new AddBundleTicketDto() };
     }
 }

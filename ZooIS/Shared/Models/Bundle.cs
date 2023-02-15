@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace ZooIS.Shared.Models
 {
-    public class TBundle
+    public class Bundle
     {
         public int Id { get; set; }
         public double Price { get; set; } = 0.00;
         public bool PurchaseFinalized { get; set; } = false;
-        public DateTime CreationDate { get; set; } = DateTime.Now;
+        public DateTime CreationDate { get; set; } = DateTime.Now;  //DateModified arba abu makes more sense ?
         public DateTime DateOfUse { get; set; } = DateTime.Now;  //PAKEIST
 
         //relationships
-        public List<TBundleTicket> TBundleTickets { get; set; } = new List<TBundleTicket>();
+        public List<BundleTicket> BundleTickets { get; set; } = new List<BundleTicket>();
     }
 }

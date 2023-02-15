@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ZooIS.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class TBundleTicket : Migration
+    public partial class BundleTicket : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "TBundles",
+                name: "Bundles",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -24,7 +24,7 @@ namespace ZooIS.Server.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TBundles", x => x.Id);
+                    table.PrimaryKey("PK_Bundles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -45,17 +45,17 @@ namespace ZooIS.Server.Migrations
                 name: "BundleTickets",
                 columns: table => new
                 {
-                    TBundleId = table.Column<int>(type: "INTEGER", nullable: false),
+                    BundleId = table.Column<int>(type: "INTEGER", nullable: false),
                     TicketId = table.Column<int>(type: "INTEGER", nullable: false),
                     Quantity = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BundleTickets", x => new { x.TBundleId, x.TicketId });
+                    table.PrimaryKey("PK_BundleTickets", x => new { x.BundleId, x.TicketId });
                     table.ForeignKey(
-                        name: "FK_BundleTickets_TBundles_TBundleId",
-                        column: x => x.TBundleId,
-                        principalTable: "TBundles",
+                        name: "FK_BundleTickets_Bundles_BundleId",
+                        column: x => x.BundleId,
+                        principalTable: "Bundles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -79,7 +79,7 @@ namespace ZooIS.Server.Migrations
                 name: "BundleTickets");
 
             migrationBuilder.DropTable(
-                name: "TBundles");
+                name: "Bundles");
 
             migrationBuilder.DropTable(
                 name: "Tickets");

@@ -14,9 +14,9 @@ namespace ZooIS.Server.Data
 
         public DbSet<RegisteredUser> RegisteredUsers => Set<RegisteredUser>();
         public DbSet<UserSettings> UserSettings => Set<UserSettings>();
-        public DbSet<TBundle> TBundles => Set<TBundle>();
+        public DbSet<Bundle> Bundles => Set<Bundle>();
         public DbSet<Ticket> Tickets=> Set<Ticket>();
-        public DbSet<TBundleTicket> BundleTickets => Set<TBundleTicket>();
+        public DbSet<BundleTicket> BundleTickets => Set<BundleTicket>();
 
         // for tutorial purposes
         //public DbSet<User> Users { get; set; }
@@ -34,17 +34,17 @@ namespace ZooIS.Server.Data
               .Property(e => e.Id)
               .ValueGeneratedNever();
 
-            modelBuilder.Entity<TBundleTicket>()
-                        .HasKey(bt => new { bt.TBundleId, bt.TicketId });
+            modelBuilder.Entity<BundleTicket>()
+                        .HasKey(bt => new { bt.BundleId, bt.TicketId });
 
-            modelBuilder.Entity<TBundleTicket>()
-                .HasOne(bt => bt.TBundle)
-                .WithMany(b => b.TBundleTickets)
-                .HasForeignKey(bt => bt.TBundleId);
+            modelBuilder.Entity<BundleTicket>()
+                .HasOne(bt => bt.Bundle)
+                .WithMany(b => b.BundleTickets)
+                .HasForeignKey(bt => bt.BundleId);
 
-            modelBuilder.Entity<TBundleTicket>()
+            modelBuilder.Entity<BundleTicket>()
                 .HasOne(bt => bt.Ticket)
-                .WithMany(t => t.TBundleTickets)
+                .WithMany(t => t.BundleTickets)
                 .HasForeignKey(bt => bt.TicketId);
 
 
