@@ -11,14 +11,55 @@ using ZooIS.Server.Data;
 namespace ZooIS.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230214163129_BundleTicket")]
-    partial class BundleTicket
+    [Migration("20230218100551_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.2");
+
+            modelBuilder.Entity("ZooIS.Shared.Models.Bundle", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DateOfUse")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("REAL");
+
+                    b.Property<bool>("PurchaseFinalized")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Bundles");
+                });
+
+            modelBuilder.Entity("ZooIS.Shared.Models.BundleTicket", b =>
+                {
+                    b.Property<int>("BundleId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TicketId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("BundleId", "TicketId");
+
+                    b.HasIndex("TicketId");
+
+                    b.ToTable("BundleTickets");
+                });
 
             modelBuilder.Entity("ZooIS.Shared.Models.RegisteredUser", b =>
                 {
@@ -63,47 +104,6 @@ namespace ZooIS.Server.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("RegisteredUsers");
-                });
-
-            modelBuilder.Entity("ZooIS.Shared.Models.Bundle", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("DateOfUse")
-                        .HasColumnType("TEXT");
-
-                    b.Property<double>("Price")
-                        .HasColumnType("REAL");
-
-                    b.Property<bool>("PurchaseFinalized")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Bundles");
-                });
-
-            modelBuilder.Entity("ZooIS.Shared.Models.BundleTicket", b =>
-                {
-                    b.Property<int>("BundleId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("TicketId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("BundleId", "TicketId");
-
-                    b.HasIndex("TicketId");
-
-                    b.ToTable("BundleTickets");
                 });
 
             modelBuilder.Entity("ZooIS.Shared.Models.Ticket", b =>
@@ -171,15 +171,15 @@ namespace ZooIS.Server.Migrations
                     b.Navigation("RegisteredUser");
                 });
 
+            modelBuilder.Entity("ZooIS.Shared.Models.Bundle", b =>
+                {
+                    b.Navigation("BundleTickets");
+                });
+
             modelBuilder.Entity("ZooIS.Shared.Models.RegisteredUser", b =>
                 {
                     b.Navigation("UserSettings")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("ZooIS.Shared.Models.Bundle", b =>
-                {
-                    b.Navigation("BundleTickets");
                 });
 
             modelBuilder.Entity("ZooIS.Shared.Models.Ticket", b =>

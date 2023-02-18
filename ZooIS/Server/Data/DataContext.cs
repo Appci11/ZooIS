@@ -15,8 +15,13 @@ namespace ZooIS.Server.Data
         public DbSet<RegisteredUser> RegisteredUsers => Set<RegisteredUser>();
         public DbSet<UserSettings> UserSettings => Set<UserSettings>();
         public DbSet<Bundle> Bundles => Set<Bundle>();
-        public DbSet<Ticket> Tickets=> Set<Ticket>();
+        public DbSet<Ticket> Tickets => Set<Ticket>();
         public DbSet<BundleTicket> BundleTickets => Set<BundleTicket>();
+        public DbSet<Animal> Animals => Set<Animal>();
+        public DbSet<Tag> Tags => Set<Tag>();
+        public DbSet<Habitat> Habitats => Set<Habitat>();
+        public DbSet<Area> Areas => Set<Area>();
+        public DbSet<Employee> Employees => Set<Employee>();
 
         // for tutorial purposes
         //public DbSet<User> Users { get; set; }
@@ -46,6 +51,35 @@ namespace ZooIS.Server.Data
                 .HasOne(bt => bt.Ticket)
                 .WithMany(t => t.BundleTickets)
                 .HasForeignKey(bt => bt.TicketId);
+
+            //Jokiu papildomu lauku nera, pridet prie DbSet nebutina
+            modelBuilder.Entity<AnimalTagRequire>()
+            .HasKey(at => new { at.AnimalId, at.TagId });
+
+            modelBuilder.Entity<AnimalTagRequire>()
+                .HasOne(at => at.Animal)
+                .WithMany(a => a.TagsRequire)
+                .HasForeignKey(at => at.AnimalId);
+
+            modelBuilder.Entity<AnimalTagRequire>()
+                .HasOne(at => at.Tag)
+                .WithMany(t => t.AnimalsRequire)
+                .HasForeignKey(at => at.TagId);
+
+            //Jokiu papildomu lauku nera, pridet prie DbSet nebutina
+            modelBuilder.Entity<AnimalTagAvoid>()
+                .HasKey(at => new { at.AnimalId, at.TagId });
+
+            modelBuilder.Entity<AnimalTagAvoid>()
+                .HasOne(at => at.Animal)
+                .WithMany(a => a.TagsAvoid)
+                .HasForeignKey(at => at.AnimalId);
+
+            modelBuilder.Entity<AnimalTagAvoid>()
+                .HasOne(at => at.Tag)
+                .WithMany(t => t.AnimalsAvoid)
+                .HasForeignKey(at => at.TagId);
+
 
 
             //tutorial for n x n

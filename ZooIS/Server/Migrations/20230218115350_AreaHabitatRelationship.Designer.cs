@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ZooIS.Server.Data;
 
@@ -10,9 +11,11 @@ using ZooIS.Server.Data;
 namespace ZooIS.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230218115350_AreaHabitatRelationship")]
+    partial class AreaHabitatRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.2");
@@ -103,7 +106,7 @@ namespace ZooIS.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Areas");
+                    b.ToTable("Area");
                 });
 
             modelBuilder.Entity("ZooIS.Shared.Models.Bundle", b =>
@@ -124,13 +127,7 @@ namespace ZooIS.Server.Migrations
                     b.Property<bool>("PurchaseFinalized")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("RegisteredUserId")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("RegisteredUserId")
-                        .IsUnique();
 
                     b.ToTable("Bundles");
                 });
@@ -185,10 +182,6 @@ namespace ZooIS.Server.Migrations
                     b.Property<bool>("DeletionRequested")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -220,10 +213,6 @@ namespace ZooIS.Server.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("RegisteredUsers");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("RegisteredUser");
-
-                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("ZooIS.Shared.Models.Tag", b =>
@@ -278,16 +267,6 @@ namespace ZooIS.Server.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("UserSettings");
-                });
-
-            modelBuilder.Entity("ZooIS.Shared.Models.Employee", b =>
-                {
-                    b.HasBaseType("ZooIS.Shared.Models.RegisteredUser");
-
-                    b.Property<DateTime>("EmploymentDate")
-                        .HasColumnType("TEXT");
-
-                    b.HasDiscriminator().HasValue("Employee");
                 });
 
             modelBuilder.Entity("HabitatTag", b =>
@@ -352,17 +331,6 @@ namespace ZooIS.Server.Migrations
                     b.Navigation("Animal");
 
                     b.Navigation("Tag");
-                });
-
-            modelBuilder.Entity("ZooIS.Shared.Models.Bundle", b =>
-                {
-                    b.HasOne("ZooIS.Shared.Models.RegisteredUser", "RegisteredUser")
-                        .WithOne("Bundle")
-                        .HasForeignKey("ZooIS.Shared.Models.Bundle", "RegisteredUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("RegisteredUser");
                 });
 
             modelBuilder.Entity("ZooIS.Shared.Models.BundleTicket", b =>
@@ -430,8 +398,6 @@ namespace ZooIS.Server.Migrations
 
             modelBuilder.Entity("ZooIS.Shared.Models.RegisteredUser", b =>
                 {
-                    b.Navigation("Bundle");
-
                     b.Navigation("UserSettings")
                         .IsRequired();
                 });

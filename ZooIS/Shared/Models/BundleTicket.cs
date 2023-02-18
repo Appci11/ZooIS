@@ -14,12 +14,11 @@ namespace ZooIS.Shared.Models
     {
         public int Quantity { get; set; }
 
-        
+        //relationships
         public int BundleId { get; set; }
         public int TicketId { get; set; }
         [JsonIgnore]
         public Bundle Bundle { get; set; }
-        
         public Ticket Ticket { get; set; }
     }
 }

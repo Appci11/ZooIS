@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace ZooIS.Shared.Enums
 {
-    public enum UserRoles
+    public enum AnimalState
     {
-        SysAdmin,
-        Administrator,
-        Employee,
-        Visitor
+        Healthy,
+        LightlySick,
+        Sick
     }
 }

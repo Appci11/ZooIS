@@ -32,6 +32,7 @@ namespace ZooIS.Server.Services.LoginRegisterService
             user.Username = request.Username;
             user.Email = request.Email;
             user.PasswordHash = passwordHash;
+            user.PassChangeTime = DateTime.Now;
             _context.RegisteredUsers.Add(user);
             await _context.SaveChangesAsync();
             UserSettings settings = new UserSettings() { Id = user.Id };

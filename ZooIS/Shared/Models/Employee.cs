@@ -4,13 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ZooIS.Shared.Enums
+namespace ZooIS.Shared.Models
 {
-    public enum UserRoles
+    public class Employee : RegisteredUser
     {
-        SysAdmin,
-        Administrator,
-        Employee,
-        Visitor
+        public DateTime? EmploymentDate { get; set; }
     }
 }

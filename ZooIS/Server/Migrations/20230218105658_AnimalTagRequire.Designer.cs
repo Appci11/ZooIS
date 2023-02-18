@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ZooIS.Server.Data;
 
@@ -10,27 +11,14 @@ using ZooIS.Server.Data;
 namespace ZooIS.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230218105658_AnimalTagRequire")]
+    partial class AnimalTagRequire
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.2");
-
-            modelBuilder.Entity("HabitatTag", b =>
-                {
-                    b.Property<int>("HabitatsId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("TagsId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("HabitatsId", "TagsId");
-
-                    b.HasIndex("TagsId");
-
-                    b.ToTable("HabitatTag");
-                });
 
             modelBuilder.Entity("ZooIS.Shared.Models.Animal", b =>
                 {
@@ -47,9 +35,6 @@ namespace ZooIS.Server.Migrations
                     b.Property<DateTime?>("DateOfDeparture")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("HabitatId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -60,24 +45,7 @@ namespace ZooIS.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("HabitatId");
-
                     b.ToTable("Animals");
-                });
-
-            modelBuilder.Entity("ZooIS.Shared.Models.AnimalTagAvoid", b =>
-                {
-                    b.Property<int>("AnimalId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("TagId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("AnimalId", "TagId");
-
-                    b.HasIndex("TagId");
-
-                    b.ToTable("AnimalTagAvoid");
                 });
 
             modelBuilder.Entity("ZooIS.Shared.Models.AnimalTagRequire", b =>
@@ -93,17 +61,6 @@ namespace ZooIS.Server.Migrations
                     b.HasIndex("TagId");
 
                     b.ToTable("AnimalTagRequire");
-                });
-
-            modelBuilder.Entity("ZooIS.Shared.Models.Area", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Areas");
                 });
 
             modelBuilder.Entity("ZooIS.Shared.Models.Bundle", b =>
@@ -124,13 +81,7 @@ namespace ZooIS.Server.Migrations
                     b.Property<bool>("PurchaseFinalized")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("RegisteredUserId")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("RegisteredUserId")
-                        .IsUnique();
 
                     b.ToTable("Bundles");
                 });
@@ -153,26 +104,6 @@ namespace ZooIS.Server.Migrations
                     b.ToTable("BundleTickets");
                 });
 
-            modelBuilder.Entity("ZooIS.Shared.Models.Habitat", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("AreaId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AreaId");
-
-                    b.ToTable("Habitats");
-                });
-
             modelBuilder.Entity("ZooIS.Shared.Models.RegisteredUser", b =>
                 {
                     b.Property<int>("Id")
@@ -184,10 +115,6 @@ namespace ZooIS.Server.Migrations
 
                     b.Property<bool>("DeletionRequested")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -220,10 +147,6 @@ namespace ZooIS.Server.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("RegisteredUsers");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("RegisteredUser");
-
-                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("ZooIS.Shared.Models.Tag", b =>
@@ -280,61 +203,6 @@ namespace ZooIS.Server.Migrations
                     b.ToTable("UserSettings");
                 });
 
-            modelBuilder.Entity("ZooIS.Shared.Models.Employee", b =>
-                {
-                    b.HasBaseType("ZooIS.Shared.Models.RegisteredUser");
-
-                    b.Property<DateTime>("EmploymentDate")
-                        .HasColumnType("TEXT");
-
-                    b.HasDiscriminator().HasValue("Employee");
-                });
-
-            modelBuilder.Entity("HabitatTag", b =>
-                {
-                    b.HasOne("ZooIS.Shared.Models.Habitat", null)
-                        .WithMany()
-                        .HasForeignKey("HabitatsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ZooIS.Shared.Models.Tag", null)
-                        .WithMany()
-                        .HasForeignKey("TagsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ZooIS.Shared.Models.Animal", b =>
-                {
-                    b.HasOne("ZooIS.Shared.Models.Habitat", "Habitat")
-                        .WithMany("Animals")
-                        .HasForeignKey("HabitatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Habitat");
-                });
-
-            modelBuilder.Entity("ZooIS.Shared.Models.AnimalTagAvoid", b =>
-                {
-                    b.HasOne("ZooIS.Shared.Models.Animal", "Animal")
-                        .WithMany("TagsAvoid")
-                        .HasForeignKey("AnimalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ZooIS.Shared.Models.Tag", "Tag")
-                        .WithMany("AnimalsAvoid")
-                        .HasForeignKey("TagId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Animal");
-
-                    b.Navigation("Tag");
-                });
-
             modelBuilder.Entity("ZooIS.Shared.Models.AnimalTagRequire", b =>
                 {
                     b.HasOne("ZooIS.Shared.Models.Animal", "Animal")
@@ -352,17 +220,6 @@ namespace ZooIS.Server.Migrations
                     b.Navigation("Animal");
 
                     b.Navigation("Tag");
-                });
-
-            modelBuilder.Entity("ZooIS.Shared.Models.Bundle", b =>
-                {
-                    b.HasOne("ZooIS.Shared.Models.RegisteredUser", "RegisteredUser")
-                        .WithOne("Bundle")
-                        .HasForeignKey("ZooIS.Shared.Models.Bundle", "RegisteredUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("RegisteredUser");
                 });
 
             modelBuilder.Entity("ZooIS.Shared.Models.BundleTicket", b =>
@@ -384,17 +241,6 @@ namespace ZooIS.Server.Migrations
                     b.Navigation("Ticket");
                 });
 
-            modelBuilder.Entity("ZooIS.Shared.Models.Habitat", b =>
-                {
-                    b.HasOne("ZooIS.Shared.Models.Area", "Area")
-                        .WithMany("Habitats")
-                        .HasForeignKey("AreaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Area");
-                });
-
             modelBuilder.Entity("ZooIS.Shared.Models.UserSettings", b =>
                 {
                     b.HasOne("ZooIS.Shared.Models.RegisteredUser", "RegisteredUser")
@@ -408,14 +254,7 @@ namespace ZooIS.Server.Migrations
 
             modelBuilder.Entity("ZooIS.Shared.Models.Animal", b =>
                 {
-                    b.Navigation("TagsAvoid");
-
                     b.Navigation("TagsRequire");
-                });
-
-            modelBuilder.Entity("ZooIS.Shared.Models.Area", b =>
-                {
-                    b.Navigation("Habitats");
                 });
 
             modelBuilder.Entity("ZooIS.Shared.Models.Bundle", b =>
@@ -423,23 +262,14 @@ namespace ZooIS.Server.Migrations
                     b.Navigation("BundleTickets");
                 });
 
-            modelBuilder.Entity("ZooIS.Shared.Models.Habitat", b =>
-                {
-                    b.Navigation("Animals");
-                });
-
             modelBuilder.Entity("ZooIS.Shared.Models.RegisteredUser", b =>
                 {
-                    b.Navigation("Bundle");
-
                     b.Navigation("UserSettings")
                         .IsRequired();
                 });
 
             modelBuilder.Entity("ZooIS.Shared.Models.Tag", b =>
                 {
-                    b.Navigation("AnimalsAvoid");
-
                     b.Navigation("AnimalsRequire");
                 });
 

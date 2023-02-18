@@ -99,6 +99,7 @@ namespace ZooIS.Server.Services.UsersService
             }
             dbUser.PasswordHash = BCrypt.Net.BCrypt.HashPassword(passwordChangeDto.Password);
             dbUser.RequestPasswordReset = false;
+            dbUser.PassChangeTime = DateTime.Now;
             await _context.SaveChangesAsync();
 
             return 1;

@@ -20,7 +20,10 @@ namespace ZooIS.Shared.Models
         public bool IsDeleted { get; set; } = false;
 
         //relationships
+        //With Settings
         [JsonIgnore]
         public UserSettings UserSettings { get; set; }
+        //With Bundles
+        public Bundle? Bundle { get; set; }
     }
 }
