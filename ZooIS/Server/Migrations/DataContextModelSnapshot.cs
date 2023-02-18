@@ -280,11 +280,30 @@ namespace ZooIS.Server.Migrations
                     b.ToTable("UserSettings");
                 });
 
+            modelBuilder.Entity("ZooIS.Shared.Models.WorkTask", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WorkTasks");
+                });
+
             modelBuilder.Entity("ZooIS.Shared.Models.Employee", b =>
                 {
                     b.HasBaseType("ZooIS.Shared.Models.RegisteredUser");
 
-                    b.Property<DateTime>("EmploymentDate")
+                    b.Property<DateTime?>("EmploymentDate")
                         .HasColumnType("TEXT");
 
                     b.HasDiscriminator().HasValue("Employee");

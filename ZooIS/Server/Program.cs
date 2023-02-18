@@ -10,6 +10,7 @@ using ZooIS.Server.Services.UserSettingsService;
 using ZooIS.Server.Services.UsersService;
 using ZooIS.Server.Services.TicketsService;
 using ZooIS.Server.Services.BundlesService;
+using ZooIS.Server.Services.WorkTasksService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,7 @@ builder.Services.AddScoped<ILoginRegisterService, LoginRegisterService>();
 builder.Services.AddScoped<IUserSettingsService,UserSettingsService>();
 builder.Services.AddScoped<ITicketsService, TicketsService>();
 builder.Services.AddScoped<IBundlesService, BundlesService>();
+builder.Services.AddScoped<IWorkTasksService, WorkTasksService>();
 
 //swagger thingies start
 builder.Services.AddSwaggerGen(options =>

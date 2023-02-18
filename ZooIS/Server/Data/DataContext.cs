@@ -22,6 +22,7 @@ namespace ZooIS.Server.Data
         public DbSet<Habitat> Habitats => Set<Habitat>();
         public DbSet<Area> Areas => Set<Area>();
         public DbSet<Employee> Employees => Set<Employee>();
+        public DbSet<WorkTask> WorkTasks => Set<WorkTask>();
 
         // for tutorial purposes
         //public DbSet<User> Users { get; set; }
