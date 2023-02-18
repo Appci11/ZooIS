@@ -11,7 +11,7 @@ using ZooIS.Server.Data;
 namespace ZooIS.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230218151347_Initial")]
+    [Migration("20230218191448_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -103,6 +103,10 @@ namespace ZooIS.Server.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -306,7 +310,7 @@ namespace ZooIS.Server.Migrations
                 {
                     b.HasBaseType("ZooIS.Shared.Models.RegisteredUser");
 
-                    b.Property<DateTime?>("EmploymentDate")
+                    b.Property<DateTime?>("DateOfEmployment")
                         .HasColumnType("TEXT");
 
                     b.HasDiscriminator().HasValue("Employee");

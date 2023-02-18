@@ -21,6 +21,7 @@ namespace ZooIS.Server.Data
         public DbSet<Tag> Tags => Set<Tag>();
         public DbSet<Habitat> Habitats => Set<Habitat>();
         public DbSet<Area> Areas => Set<Area>();
+        // in DB atrodo kaip RegisteredUsers, nepamirst neieskot "Employees" lenteles in db
         public DbSet<Employee> Employees => Set<Employee>();
         public DbSet<WorkTask> WorkTasks => Set<WorkTask>();
 

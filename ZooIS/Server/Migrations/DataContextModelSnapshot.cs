@@ -101,6 +101,10 @@ namespace ZooIS.Server.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.ToTable("Areas");
@@ -303,7 +307,7 @@ namespace ZooIS.Server.Migrations
                 {
                     b.HasBaseType("ZooIS.Shared.Models.RegisteredUser");
 
-                    b.Property<DateTime?>("EmploymentDate")
+                    b.Property<DateTime?>("DateOfEmployment")
                         .HasColumnType("TEXT");
 
                     b.HasDiscriminator().HasValue("Employee");
