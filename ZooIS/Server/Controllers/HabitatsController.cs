@@ -23,7 +23,7 @@ namespace ZooIS.Server.Controllers
             var response = await _habitatsService.AddHabitat(request);
             if(response != null)
             {
-                return Created($"/api/[controller]/{request.AreaId}", response);
+                return Created($"/api/[controller]/{response.Id}", response);
             }
             return NotFound(new { message = "Failed to add new habitat" });
         }

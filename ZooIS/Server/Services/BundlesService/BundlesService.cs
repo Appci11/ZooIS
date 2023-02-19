@@ -38,6 +38,9 @@ namespace ZooIS.Server.Services.BundlesService
         public async Task<Bundle> AddBundle(AddBundleDto addBundleDto)
         {
             Bundle bundle = new Bundle();
+
+            //KOL KAS PASLAPTINGAI VIS PERKA PIRKEJAS NR 1  PAKEIST!!!!!
+            bundle.RegisteredUserId = 1;
             //BundleTicket tarp = new BundleTicket();
             //tarp.TicketId = 1;
             //tarp.Quantity = 3;

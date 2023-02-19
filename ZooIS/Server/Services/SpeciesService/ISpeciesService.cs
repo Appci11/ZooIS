@@ -5,10 +5,10 @@ namespace ZooIS.Server.Services.SpeciesService
 {
     public interface ISpeciesService
     {
-        Task<SpeciesService> AddSpecies(AddSpeciesDto addSpeciesDto);
-        Task<List<SpeciesService>> GetAllSpecies(bool addTags);
-        Task<SpeciesService> GetSpecies(int id, bool addTags);
-        Task<SpeciesService> UpdateSpecies(UpdateSpeciesDto updateSpeciesDto);
-        Task<SpeciesService> DeleteSpecies(int id);
+        Task<Species> AddSpecies(AddSpeciesDto addSpeciesDto);
+        Task<List<Species>> GetAllSpecies(bool addTags);
+        Task<Species> GetSpecies(int id, bool addTags);
+        Task<Species> UpdateSpecies(UpdateSpeciesDto updateSpeciesDto, int id);
+        Task<Species> DeleteSpecies(int id);
     }
 }

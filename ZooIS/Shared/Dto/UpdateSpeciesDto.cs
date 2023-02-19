@@ -10,7 +10,7 @@ namespace ZooIS.Shared.Dto
     public class UpdateSpeciesDto
     {
         public string Name { get; set; } = string.Empty;
-        public List<SpeciesTagRequire> TagsRequire { get; set; }
-        public List<SpeciesTagAvoid> TagsAvoid { get; set; }
+        public List<Tag> TagsRequire { get; set; }
+        public List<Tag> TagsAvoid { get; set; }
     }
 }

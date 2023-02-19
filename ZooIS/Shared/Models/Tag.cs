@@ -11,6 +11,7 @@ namespace ZooIS.Shared.Models
         //relationships
         [JsonIgnore]
         public List<SpeciesTagRequire>? SpeciesRequire { get; set; }
+
         [JsonIgnore]
         public List<SpeciesTagAvoid>? SpeciesAvoid { get; set; }
         [JsonIgnore]
