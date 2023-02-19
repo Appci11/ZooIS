@@ -17,13 +17,14 @@ namespace ZooIS.Server.Data
         public DbSet<Bundle> Bundles => Set<Bundle>();
         public DbSet<Ticket> Tickets => Set<Ticket>();
         public DbSet<BundleTicket> BundleTickets => Set<BundleTicket>();
-        public DbSet<Animal> Animals => Set<Animal>();
+        public DbSet<Species> Species => Set<Species>();
         public DbSet<Tag> Tags => Set<Tag>();
         public DbSet<Habitat> Habitats => Set<Habitat>();
         public DbSet<Area> Areas => Set<Area>();
         // in DB atrodo kaip RegisteredUsers, nepamirst neieskot "Employees" lenteles in db
         public DbSet<Employee> Employees => Set<Employee>();
         public DbSet<WorkTask> WorkTasks => Set<WorkTask>();
+        public DbSet<Animal> Animals => Set<Animal>();
 
         // for tutorial purposes
         //public DbSet<User> Users { get; set; }
@@ -55,31 +56,31 @@ namespace ZooIS.Server.Data
                 .HasForeignKey(bt => bt.TicketId);
 
             //Jokiu papildomu lauku nera, pridet prie DbSet nebutina
-            modelBuilder.Entity<AnimalTagRequire>()
-            .HasKey(at => new { at.AnimalId, at.TagId });
+            modelBuilder.Entity<SpeciesTagRequire>()
+            .HasKey(at => new { at.SpeciesId, at.TagId });
 
-            modelBuilder.Entity<AnimalTagRequire>()
-                .HasOne(at => at.Animal)
+            modelBuilder.Entity<SpeciesTagRequire>()
+                .HasOne(at => at.Species)
                 .WithMany(a => a.TagsRequire)
-                .HasForeignKey(at => at.AnimalId);
+                .HasForeignKey(at => at.SpeciesId);
 
-            modelBuilder.Entity<AnimalTagRequire>()
+            modelBuilder.Entity<SpeciesTagRequire>()
                 .HasOne(at => at.Tag)
-                .WithMany(t => t.AnimalsRequire)
+                .WithMany(t => t.SpeciesRequire)
                 .HasForeignKey(at => at.TagId);
 
             //Jokiu papildomu lauku nera, pridet prie DbSet nebutina
-            modelBuilder.Entity<AnimalTagAvoid>()
-                .HasKey(at => new { at.AnimalId, at.TagId });
+            modelBuilder.Entity<SpeciesTagAvoid>()
+                .HasKey(at => new { at.SpeciesId, at.TagId });
 
-            modelBuilder.Entity<AnimalTagAvoid>()
-                .HasOne(at => at.Animal)
+            modelBuilder.Entity<SpeciesTagAvoid>()
+                .HasOne(at => at.Species)
                 .WithMany(a => a.TagsAvoid)
-                .HasForeignKey(at => at.AnimalId);
+                .HasForeignKey(at => at.SpeciesId);
 
-            modelBuilder.Entity<AnimalTagAvoid>()
+            modelBuilder.Entity<SpeciesTagAvoid>()
                 .HasOne(at => at.Tag)
-                .WithMany(t => t.AnimalsAvoid)
+                .WithMany(t => t.SpeciesAvoid)
                 .HasForeignKey(at => at.TagId);
 
 

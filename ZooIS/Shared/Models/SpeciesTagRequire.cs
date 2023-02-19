@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace ZooIS.Shared.Models
 {
-    public class AnimalTagAvoid
+    public class SpeciesTagRequire
     {
         //pritdet severity prop??
         //relationship
-        public int AnimalId { get; set; }
+        public int SpeciesId { get; set; }
         public int TagId { get; set; }
-        public Animal Animal { get; set; }
+        public Species Species { get; set; }
         public Tag Tag { get; set; }
     }
 }

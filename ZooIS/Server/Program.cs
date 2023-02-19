@@ -1,18 +1,18 @@
-global using ZooIS.Server.Data;
 global using Microsoft.EntityFrameworkCore;
+global using ZooIS.Server.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using ZooIS.Server.Services.AreasService;
+using ZooIS.Server.Services.BundlesService;
+using ZooIS.Server.Services.EmployeesService;
 using ZooIS.Server.Services.LoginRegisterService;
+using ZooIS.Server.Services.TagsService;
+using ZooIS.Server.Services.TicketsService;
 using ZooIS.Server.Services.UserSettingsService;
 using ZooIS.Server.Services.UsersService;
-using ZooIS.Server.Services.TicketsService;
-using ZooIS.Server.Services.BundlesService;
 using ZooIS.Server.Services.WorkTasksService;
-using ZooIS.Server.Services.EmployeesService;
-using ZooIS.Server.Services.AreasService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +28,7 @@ builder.Services.AddScoped<IBundlesService, BundlesService>();
 builder.Services.AddScoped<IWorkTasksService, WorkTasksService>();
 builder.Services.AddScoped<IEmployeesService, EmployeesService>();
 builder.Services.AddScoped<IAreasService, AreasService>();
+builder.Services.AddScoped<ITagsService, TagsService>();
 
 //swagger thingies start
 builder.Services.AddSwaggerGen(options =>

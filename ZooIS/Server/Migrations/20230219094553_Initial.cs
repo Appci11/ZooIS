@@ -49,6 +49,19 @@ namespace ZooIS.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Species",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Species", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tags",
                 columns: table => new
                 {
@@ -153,6 +166,54 @@ namespace ZooIS.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SpeciesTagAvoid",
+                columns: table => new
+                {
+                    SpeciesId = table.Column<int>(type: "INTEGER", nullable: false),
+                    TagId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SpeciesTagAvoid", x => new { x.SpeciesId, x.TagId });
+                    table.ForeignKey(
+                        name: "FK_SpeciesTagAvoid_Species_SpeciesId",
+                        column: x => x.SpeciesId,
+                        principalTable: "Species",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SpeciesTagAvoid_Tags_TagId",
+                        column: x => x.TagId,
+                        principalTable: "Tags",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SpeciesTagRequire",
+                columns: table => new
+                {
+                    SpeciesId = table.Column<int>(type: "INTEGER", nullable: false),
+                    TagId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SpeciesTagRequire", x => new { x.SpeciesId, x.TagId });
+                    table.ForeignKey(
+                        name: "FK_SpeciesTagRequire_Species_SpeciesId",
+                        column: x => x.SpeciesId,
+                        principalTable: "Species",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SpeciesTagRequire_Tags_TagId",
+                        column: x => x.TagId,
+                        principalTable: "Tags",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Animals",
                 columns: table => new
                 {
@@ -163,7 +224,8 @@ namespace ZooIS.Server.Migrations
                     DateOfDeparture = table.Column<DateTime>(type: "TEXT", nullable: true),
                     DateOfBirth = table.Column<DateTime>(type: "TEXT", nullable: false),
                     State = table.Column<string>(type: "TEXT", nullable: false),
-                    HabitatId = table.Column<int>(type: "INTEGER", nullable: false)
+                    HabitatId = table.Column<int>(type: "INTEGER", nullable: true),
+                    SpeciesId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -172,6 +234,11 @@ namespace ZooIS.Server.Migrations
                         name: "FK_Animals_Habitats_HabitatId",
                         column: x => x.HabitatId,
                         principalTable: "Habitats",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Animals_Species_SpeciesId",
+                        column: x => x.SpeciesId,
+                        principalTable: "Species",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -225,68 +292,15 @@ namespace ZooIS.Server.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "AnimalTagAvoid",
-                columns: table => new
-                {
-                    AnimalId = table.Column<int>(type: "INTEGER", nullable: false),
-                    TagId = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AnimalTagAvoid", x => new { x.AnimalId, x.TagId });
-                    table.ForeignKey(
-                        name: "FK_AnimalTagAvoid_Animals_AnimalId",
-                        column: x => x.AnimalId,
-                        principalTable: "Animals",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AnimalTagAvoid_Tags_TagId",
-                        column: x => x.TagId,
-                        principalTable: "Tags",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AnimalTagRequire",
-                columns: table => new
-                {
-                    AnimalId = table.Column<int>(type: "INTEGER", nullable: false),
-                    TagId = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AnimalTagRequire", x => new { x.AnimalId, x.TagId });
-                    table.ForeignKey(
-                        name: "FK_AnimalTagRequire_Animals_AnimalId",
-                        column: x => x.AnimalId,
-                        principalTable: "Animals",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AnimalTagRequire_Tags_TagId",
-                        column: x => x.TagId,
-                        principalTable: "Tags",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Animals_HabitatId",
                 table: "Animals",
                 column: "HabitatId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AnimalTagAvoid_TagId",
-                table: "AnimalTagAvoid",
-                column: "TagId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AnimalTagRequire_TagId",
-                table: "AnimalTagRequire",
-                column: "TagId");
+                name: "IX_Animals_SpeciesId",
+                table: "Animals",
+                column: "SpeciesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bundles_RegisteredUserId",
@@ -308,16 +322,23 @@ namespace ZooIS.Server.Migrations
                 name: "IX_HabitatTag_TagsId",
                 table: "HabitatTag",
                 column: "TagsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SpeciesTagAvoid_TagId",
+                table: "SpeciesTagAvoid",
+                column: "TagId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SpeciesTagRequire_TagId",
+                table: "SpeciesTagRequire",
+                column: "TagId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AnimalTagAvoid");
-
-            migrationBuilder.DropTable(
-                name: "AnimalTagRequire");
+                name: "Animals");
 
             migrationBuilder.DropTable(
                 name: "BundleTickets");
@@ -326,13 +347,16 @@ namespace ZooIS.Server.Migrations
                 name: "HabitatTag");
 
             migrationBuilder.DropTable(
+                name: "SpeciesTagAvoid");
+
+            migrationBuilder.DropTable(
+                name: "SpeciesTagRequire");
+
+            migrationBuilder.DropTable(
                 name: "UserSettings");
 
             migrationBuilder.DropTable(
                 name: "WorkTasks");
-
-            migrationBuilder.DropTable(
-                name: "Animals");
 
             migrationBuilder.DropTable(
                 name: "Bundles");
@@ -341,10 +365,13 @@ namespace ZooIS.Server.Migrations
                 name: "Tickets");
 
             migrationBuilder.DropTable(
-                name: "Tags");
+                name: "Habitats");
 
             migrationBuilder.DropTable(
-                name: "Habitats");
+                name: "Species");
+
+            migrationBuilder.DropTable(
+                name: "Tags");
 
             migrationBuilder.DropTable(
                 name: "RegisteredUsers");

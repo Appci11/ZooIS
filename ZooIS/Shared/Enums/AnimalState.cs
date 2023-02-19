@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ZooIS.Shared.Enums
 {
-    public enum AnimalState
+    public enum SpeciesState
     {
         Healthy,
         LightlySick,

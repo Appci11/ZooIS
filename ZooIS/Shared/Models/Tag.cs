@@ -10,9 +10,9 @@ namespace ZooIS.Shared.Models
 
         //relationships
         [JsonIgnore]
-        public List<AnimalTagRequire>? AnimalsRequire { get; set; }
+        public List<SpeciesTagRequire>? SpeciesRequire { get; set; }
         [JsonIgnore]
-        public List<AnimalTagAvoid>? AnimalsAvoid { get; set; }
+        public List<SpeciesTagAvoid>? SpeciesAvoid { get; set; }
         [JsonIgnore]
         public List<Habitat>? Habitats { get; set; } = new List<Habitat>();
     }
