@@ -18,11 +18,11 @@ namespace ZooIS.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddTbundle(AddBundleDto request)
+        public async Task<IActionResult> Addbundle(AddBundleDto request)
         {
             var response = await _bundlesService.AddBundle(request);
             if (response == null) return NotFound(new { message = "Bundle was not created" });
-            return Created($"/api/tbundles/{response.Id}", response);
+            return Created($"/api/bundles/{response.Id}", response);
         }
 
         [HttpGet]
@@ -68,7 +68,7 @@ namespace ZooIS.Server.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> AddTbundle(AddBundleDto request, int id)
+        public async Task<IActionResult> UpdateBundle(AddBundleDto request, int id)
         {
             Bundle response = await _bundlesService.UpdateBundle(request, id);
             if (response == null)

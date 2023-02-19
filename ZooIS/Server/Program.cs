@@ -7,6 +7,7 @@ using Swashbuckle.AspNetCore.Filters;
 using ZooIS.Server.Services.AreasService;
 using ZooIS.Server.Services.BundlesService;
 using ZooIS.Server.Services.EmployeesService;
+using ZooIS.Server.Services.HabitatsService;
 using ZooIS.Server.Services.LoginRegisterService;
 using ZooIS.Server.Services.TagsService;
 using ZooIS.Server.Services.TicketsService;
@@ -29,6 +30,7 @@ builder.Services.AddScoped<IWorkTasksService, WorkTasksService>();
 builder.Services.AddScoped<IEmployeesService, EmployeesService>();
 builder.Services.AddScoped<IAreasService, AreasService>();
 builder.Services.AddScoped<ITagsService, TagsService>();
+builder.Services.AddScoped<IHabitatsService, HabitatsService>();
 
 //swagger thingies start
 builder.Services.AddSwaggerGen(options =>

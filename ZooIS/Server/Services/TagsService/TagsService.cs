@@ -15,7 +15,7 @@ namespace ZooIS.Server.Services.TagsService
         {
             Tag tag = new Tag();
 
-            tag.Name= addTagDto.Name;
+            tag.Name= addTagDto.Name.ToLower();
 
             _context.Tags.Add(tag);
             await _context.SaveChangesAsync();
@@ -54,7 +54,7 @@ namespace ZooIS.Server.Services.TagsService
             {
                 return null;
             }
-            tag.Name = updateTagDto.Name;
+            tag.Name = updateTagDto.Name.ToLower();
             tag.Description= updateTagDto.Description;
             await _context.SaveChangesAsync();
 

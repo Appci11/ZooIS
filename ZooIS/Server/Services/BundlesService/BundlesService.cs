@@ -115,7 +115,7 @@ namespace ZooIS.Server.Services.BundlesService
 
         public async Task<Bundle> UpdateBundle(AddBundleDto addBundleDto, int id)
         {
-            Bundle bundle = await GetBundle(id);
+            Bundle bundle = await _context.Bundles.FirstOrDefaultAsync(i => i.Id == id);
 
             // kol bilietu rusiu nedaug(taip kol kas tikimasi)
             // tol turetu buti greiciau senuosius saraso irasus pasalinti
