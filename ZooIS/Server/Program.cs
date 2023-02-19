@@ -9,6 +9,7 @@ using ZooIS.Server.Services.BundlesService;
 using ZooIS.Server.Services.EmployeesService;
 using ZooIS.Server.Services.HabitatsService;
 using ZooIS.Server.Services.LoginRegisterService;
+using ZooIS.Server.Services.SpeciesService;
 using ZooIS.Server.Services.TagsService;
 using ZooIS.Server.Services.TicketsService;
 using ZooIS.Server.Services.UserSettingsService;
@@ -31,6 +32,7 @@ builder.Services.AddScoped<IEmployeesService, EmployeesService>();
 builder.Services.AddScoped<IAreasService, AreasService>();
 builder.Services.AddScoped<ITagsService, TagsService>();
 builder.Services.AddScoped<IHabitatsService, HabitatsService>();
+builder.Services.AddScoped<ISpeciesService, SpeciesService>();
 
 //swagger thingies start
 builder.Services.AddSwaggerGen(options =>
