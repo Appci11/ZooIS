@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using ZooIS.Server.Services.AnimalsService;
 using ZooIS.Server.Services.AreasService;
 using ZooIS.Server.Services.BundlesService;
 using ZooIS.Server.Services.EmployeesService;
@@ -33,6 +34,7 @@ builder.Services.AddScoped<IAreasService, AreasService>();
 builder.Services.AddScoped<ITagsService, TagsService>();
 builder.Services.AddScoped<IHabitatsService, HabitatsService>();
 builder.Services.AddScoped<ISpeciesService, SpeciesService>();
+builder.Services.AddScoped<IAnimalsService, AnimalsService>();
 
 //swagger thingies start
 builder.Services.AddSwaggerGen(options =>

@@ -12,19 +12,19 @@ namespace ZooIS.Server.Data
 
         }
 
-        public DbSet<RegisteredUser> RegisteredUsers => Set<RegisteredUser>();
-        public DbSet<UserSettings> UserSettings => Set<UserSettings>();
-        public DbSet<Bundle> Bundles => Set<Bundle>();
-        public DbSet<Ticket> Tickets => Set<Ticket>();
-        public DbSet<BundleTicket> BundleTickets => Set<BundleTicket>();
-        public DbSet<Species> Species => Set<Species>();
-        public DbSet<Tag> Tags => Set<Tag>();
-        public DbSet<Habitat> Habitats => Set<Habitat>();
+        public DbSet<Animal> Animals => Set<Animal>();
         public DbSet<Area> Areas => Set<Area>();
+        public DbSet<Bundle> Bundles => Set<Bundle>();
+        public DbSet<BundleTicket> BundleTickets => Set<BundleTicket>();
         // in DB atrodo kaip RegisteredUsers, nepamirst neieskot "Employees" lenteles in db
         public DbSet<Employee> Employees => Set<Employee>();
+        public DbSet<Habitat> Habitats => Set<Habitat>();
+        public DbSet<RegisteredUser> RegisteredUsers => Set<RegisteredUser>();
+        public DbSet<Species> Species => Set<Species>();
+        public DbSet<Tag> Tags => Set<Tag>();
+        public DbSet<Ticket> Tickets => Set<Ticket>();
+        public DbSet<UserSettings> UserSettings => Set<UserSettings>();
         public DbSet<WorkTask> WorkTasks => Set<WorkTask>();
-        public DbSet<Animal> Animals => Set<Animal>();
 
         // for tutorial purposes
         //public DbSet<User> Users { get; set; }

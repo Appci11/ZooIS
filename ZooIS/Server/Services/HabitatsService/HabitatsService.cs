@@ -50,7 +50,7 @@ namespace ZooIS.Server.Services.HabitatsService
                                     .Include(h => h.Tags)
                                     .FirstOrDefaultAsync();
             }
-            return await _context.Habitats.FirstOrDefaultAsync();
+            return await _context.Habitats.FirstOrDefaultAsync(h => h.Id == id);
         }
 
         public async Task<Habitat> UpdateHabitat(UpdateHabitatDto updateHabitatDto, int id)
