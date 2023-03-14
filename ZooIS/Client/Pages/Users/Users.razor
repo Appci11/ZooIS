@@ -15,6 +15,7 @@
 @if (Loaded)
 {
     <div>
+@*
         <QuickGrid Items="FilteredUsers" ResizableColumns Pagination="@pagination" Class="search">
             <PropertyColumn Property="u => u.Username" Sortable="true">
                 <ColumnOptions>
@@ -37,7 +38,7 @@
             </TemplateColumn>
         </QuickGrid>
         <Paginator Value="@pagination" />
-
+*@
     </div>
     <button class="btn btn-primary" @onclick="CreateNewUser">Create a new user</button>
 
@@ -84,10 +85,10 @@ else
         }
     }
 
-    void ShowUser(int id)
-    {
-        _navigationManager.NavigateTo($"/user/{id}");
-    }
+    //void ShowUser(int id)
+    //{
+    //    _navigationManager.NavigateTo($"/user/{id}");
+    //}
 
     void CreateNewUser()
     {

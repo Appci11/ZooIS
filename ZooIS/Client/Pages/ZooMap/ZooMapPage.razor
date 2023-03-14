@@ -1,0 +1,30 @@
+﻿@page "/map"
+@using MudBlazor
+<PageTitle>Map</PageTitle>
+
+<MudAlert Severity="Severity.Normal">The reactor type is RBMK-1000</MudAlert>
+
+@*
+<InputCheckbox @bind-Value="showMap"></InputCheckbox><label>Show map</label>
+<br />
+<InputCheckbox @bind-Value="showAreas"></InputCheckbox><label>Show areas</label>
+<br />
+<InputCheckbox @bind-Value="showAreaNumbers"></InputCheckbox><label>Show area numbers</label>
+<br />
+*@
+<InputNumber @bind-Value="zoom"></InputNumber>
+<br />
+<ZooMapComponent ShowMap="@showMap" ShowAreas="@showAreas" ShowAreaNumbers="@showAreaNumbers" ZoomLevel="@zoom" MapPartId="MapResponse"></ZooMapComponent>
+
+@code {
+    bool showMap = true;
+    bool showAreas = true;
+    bool showAreaNumbers = true;
+    double zoom = 1.0;
+
+    // informacijos lango atidarymui
+    void MapResponse(int nr)
+    {
+        Console.WriteLine("Hello from piece nr: " + nr);
+    }
+}

@@ -37,16 +37,6 @@ else
             }
         </tbody>
     </table>
-
-    <div class="grid">
-        <QuickGrid Items="forecasts.AsQueryable()" Virtualize="true">
-            <PropertyColumn Property="f => f.Date" />
-            <PropertyColumn Property="f => f.TemperatureC" />
-            <PropertyColumn Property="f => f.TemperatureF" />
-            <PropertyColumn Property="f => f.Summary" />
-        </QuickGrid>
-    </div>
-
 }
 
 <button class="btn btn-primary" @onclick="NavigateTo">Create a new user</button>
