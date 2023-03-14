@@ -2,25 +2,25 @@
 @using MudBlazor
 <PageTitle>Map</PageTitle>
 
-<MudAlert Severity="Severity.Normal">The reactor type is RBMK-1000</MudAlert>
+<div style="position:center; top:100%">
+    <MudCheckBox Class="d-inline-flex pa-4" Dense="true" DisableRipple="true" @bind-Checked="@showMap" Label="Žemėlapis"></MudCheckBox>
+    <MudCheckBox Class="d-inline-flex pa-4" Dense="true" DisableRipple="true" @bind-Checked="@showAreas" Label="Zonos"></MudCheckBox>
+    <MudCheckBox Class="d-inline-flex pa-4" Dense="true" DisableRipple="true" @bind-Checked="@showAreaNumbers" Label="Numeracija"></MudCheckBox>
+</div>
 
-@*
-<InputCheckbox @bind-Value="showMap"></InputCheckbox><label>Show map</label>
-<br />
-<InputCheckbox @bind-Value="showAreas"></InputCheckbox><label>Show areas</label>
-<br />
-<InputCheckbox @bind-Value="showAreaNumbers"></InputCheckbox><label>Show area numbers</label>
-<br />
-*@
-<InputNumber @bind-Value="zoom"></InputNumber>
-<br />
-<ZooMapComponent ShowMap="@showMap" ShowAreas="@showAreas" ShowAreaNumbers="@showAreaNumbers" ZoomLevel="@zoom" MapPartId="MapResponse"></ZooMapComponent>
+<div>
+    <MudSlider @bind-Value="@zoomValue" Step="0.01" Min="0.0" Max="1.0" Size="Size.Small" />
+</div>
+
+<div style="max-width:100%; max-height:100%; overflow:scroll;">
+    <ZooMapComponent ShowMap="@showMap" ShowAreas="@showAreas" ShowAreaNumbers="@showAreaNumbers" ZoomLevel="@zoomValue" MapPartId="MapResponse"></ZooMapComponent>
+</div>
 
 @code {
     bool showMap = true;
     bool showAreas = true;
     bool showAreaNumbers = true;
-    double zoom = 1.0;
+    double zoomValue = 0.0;
 
     // informacijos lango atidarymui
     void MapResponse(int nr)
