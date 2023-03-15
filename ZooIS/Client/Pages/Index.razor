@@ -4,22 +4,20 @@
 @inject IUserSettingsService SettingsService
 
 <h3>Main Screen...</h3>
-
-@*
-@if (loaded)
-{
-    @Settings.Id
-    @Settings.Language
-    @Settings.DarkMode
-}
-*@
-
+<div>
+<MudText Typo="Typo.h1">DYYYYDELIS uzrasas</MudText>
+</div>
+<br />
+<AuthorizeView>
+    <h3>
+        Logged in as: @context.User.Identity!.Name
+    </h3>
+</AuthorizeView>
+<hr />
 
 @code {
     bool loaded = false;
-    UserSettings Settings = null;
-
-
+    UserSettings? Settings;
 
     protected override async Task OnInitializedAsync()
     {

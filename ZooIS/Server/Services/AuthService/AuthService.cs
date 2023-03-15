@@ -1,26 +1,25 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using ZooIS.Server.Data;
 using ZooIS.Shared.Dto;
 using ZooIS.Shared.Models;
 
-namespace ZooIS.Server.Services.LoginRegisterService
+namespace ZooIS.Server.Services.AuthService
 {
-    public class LoginRegisterService : ILoginRegisterService
+    public class AuthService : IAuthService
     {
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
 
-        public LoginRegisterService(DataContext context, IConfiguration configuration)
+        const string REFRESH_TOKEN = "TOTALLY_LEGIT-refresh-token"; //Sutvarkyt + data saugot pakeitimui
+
+        public AuthService(DataContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
         }
 
-        public async Task<RegisteredUser> RegisterUser(UserRegisterDto request)
+        public async Task<AuthResponseDto> RegisterUser(RegisterUserDto request)
         {
             RegisteredUser? user = await _context.RegisteredUsers.FirstOrDefaultAsync(u => u.Username == request.Username);
             if (user != null)
@@ -38,11 +37,19 @@ namespace ZooIS.Server.Services.LoginRegisterService
             UserSettings settings = new UserSettings() { Id = user.Id };
             _context.UserSettings.Add(settings);
             await _context.SaveChangesAsync();
-            return user;    //per daug grazinu
+            AuthResponseDto response = new AuthResponseDto();
+            response.Username = request.Username;
+            response.IdToken = CreateToken(user);
+            response.RefreshToken = REFRESH_TOKEN;
+            response.ExpiresIn = DateTime.Now.AddHours(24);
+            response.PassResetRequest = user.RequestPasswordReset;
+            response.UserId= user.Id;
+            return response;
+
             //throw new NotImplementedException();
         }
 
-        public async Task<LoginDto> LoginUser(UserLoginDto request)
+        public async Task<AuthResponseDto> LoginUser(AuthUserDto request)
         {
             RegisteredUser? user = await _context.RegisteredUsers.FirstOrDefaultAsync(u => u.Username == request.Username);
             if (user == null)
@@ -53,8 +60,16 @@ namespace ZooIS.Server.Services.LoginRegisterService
             {
                 return null;
             }
-            string token = CreateToken(user);
-            return new LoginDto(token, user.RequestPasswordReset);
+            string idToken = CreateToken(user);
+            return new AuthResponseDto
+            {
+                Username = user.Username,
+                IdToken = idToken,
+                ExpiresIn= DateTime.Now.AddHours(24),
+                RefreshToken = REFRESH_TOKEN,
+                UserId = user.Id,
+                PassResetRequest= user.RequestPasswordReset
+            };
         }
 
         public string CreateToken(RegisteredUser user)
@@ -71,7 +86,7 @@ namespace ZooIS.Server.Services.LoginRegisterService
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddHours(1),
+                expires: DateTime.Now.AddHours(24), //kol refresh tokeno nera,  tol 24h
                 signingCredentials: creds);
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 

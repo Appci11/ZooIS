@@ -1,28 +1,23 @@
 ﻿@page "/login"
+@using ZooIS.Client.Services.AuthService;
 @using ZooIS.Shared.Dto;
-@inject HttpClient Http
-@inject AuthenticationStateProvider AuthStateProvider
-@inject ILocalStorageService LocalStorage
+
 @inject NavigationManager _navigationManager
+@inject IAuthService _authService
 
+<MudItem xs="12" sm="7">
+    <MudForm @bind-IsValid="@Success">
+        <MudTextField @bind-Value="user.Username" T="string" Label="Vartotojo vardas" Required="true" RequiredError="Neįvestas vartotojo vardas." @ref="focusTarget" />
+        <MudTextField @bind-Value="user.Password" T="string" Label="Slaptažodis" InputType="InputType.Password" Required="true" RequiredError="Neįvestas slaptažodis." />
+        <br />
+        <MudButton OnClick="HandleLogin" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto">Prisijungti</MudButton>
+    </MudForm>
+    <MudText Color="@Color.Error">@errorMsg</MudText>
+</MudItem>
+
+
+@*
 <body>
-    <h3>Login</h3>
-
-    <EditForm Model="user" OnSubmit="HandleLogin">
-        <div>
-            <InputText id="username" @bind-Value="user.Username" @ref=inputTextForFocus />
-            <label for="username">Name</label>
-        </div>
-        <div>
-            <InputText id="password" @bind-Value="user.Password" type="password" />
-            <label for="password">Password</label>
-        </div>
-        <div>
-            <button type="submit" class="btn btn-primary">Login</button>
-        </div>
-    </EditForm>
-    <br />
-
     @if (passChangeRequired)
     {
         <EditForm Model="password" OnSubmit="HandlePasswordChange">
@@ -40,72 +35,73 @@
         </EditForm>
     }
     <br />
-    <p style="color: @msgColor">@ErrorMsg</p>
+    <p style="color: @msgColor">@errorMsg</p>
     <br />
     <div>
         Not a member? <a href="register">Register</a>
     </div>
 </body>
-
+*@
 
 @code {
-    UserLoginDto user = new UserLoginDto();
-    private InputText? inputTextForFocus;
-    private string ErrorMsg = string.Empty;
-    string password = string.Empty;
-    string password2 = string.Empty;
+    public bool kriu { get; set; }
+    AuthUserDto user = new AuthUserDto();
+    private MudTextField<string>? focusTarget;
+    bool success;
+    bool Success
+    {
+        get { return success; }
+        set { success = value;
+            //if(value == true)
+            //{
+            //    HandleLogin();
+            //}
+        }
+    }
+    private string errorMsg = string.Empty;
     bool passChangeRequired = false;
-    string msgColor = "red";
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
-            if (inputTextForFocus?.Element != null)
-                await inputTextForFocus.Element.Value.FocusAsync();
+            if (focusTarget != null)
+                await focusTarget.SelectAsync();
     }
 
     async Task HandleLogin()
     {
-        HttpResponseMessage result = await Http.PostAsJsonAsync("/api/login", user);
-        if (result.IsSuccessStatusCode)
+        Console.WriteLine("WILL SOO HANDLE LOGGING INT");
+        bool stayLogged = true; //sutvarkyt
+        if (await _authService.Login(user, stayLogged))
         {
-            LoginDto? loginDto = await result.Content.ReadFromJsonAsync<LoginDto>();
-            if (!loginDto.PassResetRequest)
-            {
-                await LocalStorage.SetItemAsync("token", loginDto.AuthToken);
-                await AuthStateProvider.GetAuthenticationStateAsync();
-                ErrorMsg = string.Empty;
-                _navigationManager.NavigateTo($"/");
-            }
-            else
-            {
-                ErrorMsg = "Password change required. Please change your password.";
-                passChangeRequired = true;
-            }
+            errorMsg = string.Empty;
+            _navigationManager.NavigateTo("/");
+            Console.WriteLine("Login success...!!!!");
         }
         else
         {
-            ErrorMsg = "Incorrect username or password!";
-        }
-    }
-    async Task HandlePasswordChange()
-    {
-        if(password.CompareTo(password2) != 0)
-        {
-            ErrorMsg = "New passwords do not match. Please enter identical passwords in both fields.";
-        }
-        PasswordChangeDto dto = new PasswordChangeDto(user.Username, password);
-        HttpResponseMessage result = await Http.PatchAsJsonAsync("/api/users/passchange", dto);
-        if (result.IsSuccessStatusCode)
-        {
-            passChangeRequired = false;
-            msgColor = "black";
-            ErrorMsg = "Password successfully changed. You can now login again using new password.";
-        }
-        else
-        {
-            ErrorMsg = "Password change failed. Please try again.";
+            errorMsg = "Nesutampa vartotojo vardas ir slaptažodis";
+            // and the rest of possible errors... in real programs or later
         }
 
     }
+    //async Task HandlePasswordChange()
+    //{
+    //    if (password.CompareTo(password2) != 0)
+    //    {
+    //        errorMsg = "New passwords do not match. Please enter identical passwords in both fields.";
+    //    }
+    //    PasswordChangeDto dto = new PasswordChangeDto(user.Username, password);
+    //    HttpResponseMessage result = await Http.PatchAsJsonAsync("/api/users/passchange", dto);
+    //    if (result.IsSuccessStatusCode)
+    //    {
+    //        passChangeRequired = false;
+    //        msgColor = "black";
+    //        errorMsg = "Password successfully changed. You can now login again using new password.";
+    //    }
+    //    else
+    //    {
+    //        errorMsg = "Password change failed. Please try again.";
+    //    }
+    //}
 }

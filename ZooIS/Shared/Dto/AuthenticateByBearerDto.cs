@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace ZooIS.Shared.Dto
 {
-    public class LoginDto
+    // Sutvarkyt, taip kad neliktu
+    public class AuthenticateByBearerDto
     {
-        public LoginDto(string authToken, bool passResetRequest)
+        public AuthenticateByBearerDto(string authToken, bool passResetRequest)
         {
             AuthToken = authToken;
             PassResetRequest = passResetRequest;

@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace ZooIS.Shared.Dto
 {
-    public class UserRegisterDto
+    public class AuthUserDto
     {
         public string Username { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
+        public bool returnSecureToken { get; set; } = true;
     }
 }

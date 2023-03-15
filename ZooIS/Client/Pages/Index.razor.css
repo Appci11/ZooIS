@@ -1,0 +1,9 @@
+﻿/*
+    Need "::deep" for .razor components and wrap in html element(div, span)
+    for css isolation to work.
+    Example:
+::deep .mud-typography {
+    color:aqua;
+}
+*/
+

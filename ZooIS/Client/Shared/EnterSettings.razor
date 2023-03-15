@@ -1,16 +1,12 @@
-﻿@inject NavigationManager NavigationManager
-@inject ILocalStorageService LocalStorage
-@inject AuthenticationStateProvider AuthStateProvider
+﻿@inject NavigationManager _navigationManager
 
 <AuthorizeView>
-    <button @onclick="ToSettings" class="btn info">Settings</button>
+    <MudButton Variant="Variant.Text" Color="Color.Inherit">Nustatymai</MudButton>
 </AuthorizeView>
 
-
-
 @code {
-    async Task ToSettings()
+    void ToSettings()
     {
-        NavigationManager.NavigateTo("/settings");
+        _navigationManager.NavigateTo("/settings");
     }
 }

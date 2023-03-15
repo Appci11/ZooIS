@@ -51,9 +51,9 @@ namespace ZooIS.Server.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<Employee>> UpdateEmployee(EmployeeUpdateDto employeeUpdateDto, int id)
+        public async Task<ActionResult<Employee>> UpdateEmployee(UpdateEmployeeDto UpdateEmployeeDto, int id)
         {
-            Employee response = await _employeesService.UpdateEmployee(employeeUpdateDto, id);
+            Employee response = await _employeesService.UpdateEmployee(UpdateEmployeeDto, id);
             if(response != null)
             {
                 return Ok(response);

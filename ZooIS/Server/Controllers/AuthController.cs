@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
-using ZooIS.Server.Services.LoginRegisterService;
+using ZooIS.Server.Services.AuthService;
 using ZooIS.Shared.Dto;
 using ZooIS.Shared.Models;
 
@@ -9,35 +9,34 @@ namespace ZooIS.Server.Controllers
 {
     [Route("api")]
     [ApiController]
-    public class LoginRegisterController : ControllerBase
+    public class AuthController : ControllerBase
     {
-        private readonly ILoginRegisterService _loginRegisterService;
+        private readonly IAuthService _loginRegisterService;
 
-        public LoginRegisterController(ILoginRegisterService LoginRegisterService)
+        public AuthController(IAuthService LoginRegisterService)
         {
             _loginRegisterService = LoginRegisterService;
         }
 
         // Leidziama registruotis su jau anksciau uzregistruotu email'u
         [HttpPost("register")]
-        public async Task<ActionResult> Register (UserRegisterDto request)
+        public async Task<ActionResult> Register (RegisterUserDto request)
         {
-            RegisteredUser response = await _loginRegisterService.RegisterUser(request);
-            if(response != null)
+            AuthResponseDto response = await _loginRegisterService.RegisterUser(request);
+            if (response != null)
             {
-                return Created($"/api/users/{response.Id}", response);
+                return Created($"/api/users/{response.UserId}", response);
             }
             return NotFound(new { message = "Username already exists" });
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult> Login (UserLoginDto request)
+        public async Task<ActionResult> Login (AuthUserDto request)
         {
-            LoginDto response = await _loginRegisterService.LoginUser(request);
+            AuthResponseDto response = await _loginRegisterService.LoginUser(request);
             if (response != null)
             {
-                return Ok(response);     // sutvarkyt
-                //return Ok(token);
+                return Ok(response);
             }
             else return NotFound(new { message = "Wrong username or password" });
         }

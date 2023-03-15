@@ -9,7 +9,7 @@ using ZooIS.Server.Services.AreasService;
 using ZooIS.Server.Services.BundlesService;
 using ZooIS.Server.Services.EmployeesService;
 using ZooIS.Server.Services.HabitatsService;
-using ZooIS.Server.Services.LoginRegisterService;
+using ZooIS.Server.Services.AuthService;
 using ZooIS.Server.Services.SpeciesService;
 using ZooIS.Server.Services.TagsService;
 using ZooIS.Server.Services.TicketsService;
@@ -24,7 +24,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IUsersService, UsersService>();
-builder.Services.AddScoped<ILoginRegisterService, LoginRegisterService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserSettingsService,UserSettingsService>();
 builder.Services.AddScoped<ITicketsService, TicketsService>();
 builder.Services.AddScoped<IBundlesService, BundlesService>();

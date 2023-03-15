@@ -59,7 +59,7 @@ namespace ZooIS.Server.Services.UsersService
             return user;
         }
 
-        public async Task<RegisteredUser> UpdateRegisteredUserVVisitor(int id, UserUpdateInfoVisitorDto userUpdateDto)
+        public async Task<RegisteredUser> UpdateRegisteredUserVVisitor(int id, UpdateUserInfoVisitorDto userUpdateDto)
         {
             RegisteredUser dbUser = await _context.RegisteredUsers.FirstOrDefaultAsync(u => u.Id == id);
             if (dbUser == null)
@@ -72,7 +72,7 @@ namespace ZooIS.Server.Services.UsersService
            
             return dbUser;
         }
-        public async Task<RegisteredUser> UpdateRegisteredUserVAdmin(int id, UserUpdateInfoAdminDto userUpdateDto)
+        public async Task<RegisteredUser> UpdateRegisteredUserVAdmin(int id, UpdateUserInfoAdminDto userUpdateDto)
         {
             RegisteredUser dbUser = await _context.RegisteredUsers.FirstOrDefaultAsync(u => u.Id == id);
             if (dbUser == null)

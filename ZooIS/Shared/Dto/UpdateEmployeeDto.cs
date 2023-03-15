@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ZooIS.Shared.Enums;
 
 namespace ZooIS.Shared.Dto
 {
-    public class UserUpdateInfoAdminDto
+    public class UpdateEmployeeDto
     {
         public required string? Username { get; set; }
         public required string? Email { get; set; }
@@ -16,5 +14,7 @@ namespace ZooIS.Shared.Dto
         public required bool DeletionRequested { get; set; }
         public required bool IsDeleted { get; set; }
         public required string Role { get; set; }
+        // Potencialus Ooooooops.... Sutvarkyt kai UI client'e bus.
+        public DateTime DateOfEmployment { get; set; } = DateTime.Now;
     }
 }

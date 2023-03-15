@@ -1,28 +1,29 @@
-﻿@inject NavigationManager NavigationManager
-@inject ILocalStorageService LocalStorage
-@inject AuthenticationStateProvider AuthStateProvider
+﻿@using ZooIS.Client.Services.AuthService;
+@inject NavigationManager _navigationManager
+@inject ILocalStorageService _localStorage
+@inject IAuthService _authService
+@inject AuthenticationStateProvider _authStateProvider
 
 <AuthorizeView>
     <Authorized>
-        <button @onclick="Logout" class="btn danger">Logout</button>
+        <MudButton OnClick="Logout" Variant="Variant.Text" Color="Color.Inherit">Atsijungti</MudButton>
     </Authorized>
     <NotAuthorized>
-        <button @onclick="Login" class="btn info">Login/Register</button>
+        <MudButton Href="login" Variant="Variant.Text" Color="Color.Inherit">Prisijungti</MudButton>
     </NotAuthorized>
 </AuthorizeView>
 
-
-
 @code {
-    void Login()
-    {
-        NavigationManager.NavigateTo("login");
-    }
+    // Potencialiai nebereikia, nepamirst istrint
+    //void Login()
+    //{
+    //    _navigationManager.NavigateTo("login");
+    //}
 
     async Task Logout()
     {
-        await LocalStorage.RemoveItemAsync("token");
-        await AuthStateProvider.GetAuthenticationStateAsync();
-        NavigationManager.NavigateTo("/");
+        await _authService.Logout();
+        //await _authStateProvider.GetAuthenticationStateAsync();  // pasikeitimui "onLogout" nebereikia lyg ir
+        _navigationManager.NavigateTo("/");
     }
 }

@@ -57,7 +57,7 @@ namespace ZooIS.Server.Services.EmployeesService
             return employee;
         }
 
-        public async Task<Employee> UpdateEmployee(EmployeeUpdateDto employeeUpdateDto, int id)
+        public async Task<Employee> UpdateEmployee(UpdateEmployeeDto UpdateEmployeeDto, int id)
         {
             Employee dbEmployee = await _context.Employees.FirstOrDefaultAsync(e => e.Id == id);
             {
@@ -65,13 +65,13 @@ namespace ZooIS.Server.Services.EmployeesService
                 {
                     return null;
                 }
-                dbEmployee.Username = employeeUpdateDto.Username;
-                dbEmployee.Email = employeeUpdateDto.Email;
-                dbEmployee.RequestPasswordReset = employeeUpdateDto.RequestPasswordReset;
-                dbEmployee.DeletionRequested = employeeUpdateDto.DeletionRequested;
-                dbEmployee.IsDeleted = employeeUpdateDto.IsDeleted;
-                dbEmployee.Role = employeeUpdateDto.Role;
-                dbEmployee.DateOfEmployment = employeeUpdateDto.DateOfEmployment;
+                dbEmployee.Username = UpdateEmployeeDto.Username;
+                dbEmployee.Email = UpdateEmployeeDto.Email;
+                dbEmployee.RequestPasswordReset = UpdateEmployeeDto.RequestPasswordReset;
+                dbEmployee.DeletionRequested = UpdateEmployeeDto.DeletionRequested;
+                dbEmployee.IsDeleted = UpdateEmployeeDto.IsDeleted;
+                dbEmployee.Role = UpdateEmployeeDto.Role;
+                dbEmployee.DateOfEmployment = UpdateEmployeeDto.DateOfEmployment;
                 await _context.SaveChangesAsync();
 
                 return dbEmployee;

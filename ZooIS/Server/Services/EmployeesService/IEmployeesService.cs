@@ -8,7 +8,7 @@ namespace ZooIS.Server.Services.EmployeesService
         Task<Employee> AddEmployee(AddEmployeeDto addEmployeeDto);
         Task<List<Employee>> GetAllEmployees();
         Task<Employee> GetEmployee(int id);
-        Task<Employee> UpdateEmployee(EmployeeUpdateDto employeeUpdateDto, int id);
+        Task<Employee> UpdateEmployee(UpdateEmployeeDto UpdateEmployeeDto, int id);
         Task<Employee> DeleteEmployee(int id);
     }
 }

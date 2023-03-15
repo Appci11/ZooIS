@@ -1,24 +1,14 @@
 ﻿@page "/counter"
 
-<PageTitle>Counter</PageTitle>
-
-<h1>Counter</h1>
-
-<p role="status">Current count: @currentCount</p>
+@inject HttpClient _http
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
-
-<AuthorizeView>
-    <span>Do you see this?</span>
-</AuthorizeView>
-
-<img src="titled.png" />
 
 @code {
     private int currentCount = 0;
 
-    private void IncrementCount()
+    private async void IncrementCount()
     {
-        currentCount++;
+        await _http.PostAsJsonAsync("/api/register", new {message = "asdf"});
     }
 }
