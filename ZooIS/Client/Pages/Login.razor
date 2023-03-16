@@ -1,65 +1,63 @@
 ﻿@page "/login"
+@using System.Text.RegularExpressions;
 @using ZooIS.Client.Services.AuthService;
 @using ZooIS.Shared.Dto;
 
 @inject NavigationManager _navigationManager
 @inject IAuthService _authService
+@inject IUsersService _usersService
 
-<MudItem xs="12" sm="7">
+<MudItem xs="12" sm="7" Style="padding-bottom:5px;">
     <MudForm @bind-IsValid="@Success">
         <MudTextField @bind-Value="user.Username" T="string" Label="Vartotojo vardas" Required="true" RequiredError="Neįvestas vartotojo vardas." @ref="focusTarget" />
         <MudTextField @bind-Value="user.Password" T="string" Label="Slaptažodis" InputType="InputType.Password" Required="true" RequiredError="Neįvestas slaptažodis." />
         <br />
-        <MudButton OnClick="HandleLogin" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto">Prisijungti</MudButton>
+        <MudButton OnClick="HandleLogin" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!Success)" Class="ml-auto">Prisijungti</MudButton>
     </MudForm>
-    <MudText Color="@Color.Error">@errorMsg</MudText>
+    <MudText Color="errorMsgColor" Style="padding-top:10px;">@errorMsg</MudText>
 </MudItem>
 
-
-@*
-<body>
-    @if (passChangeRequired)
-    {
-        <EditForm Model="password" OnSubmit="HandlePasswordChange">
-            <div>
-                <InputText id="password" @bind-Value="password" type="password" />
-                <label for="password">New password</label>
-            </div>
-            <div>
-                <InputText id="password2" @bind-Value="password2" type="password" />
-                <label for="password2">Repeat new password</label>
-            </div>
-            <div>
-                <button type="submit" class="btn btn-primary">Change</button>
-            </div>
-        </EditForm>
-    }
-    <br />
-    <p style="color: @msgColor">@errorMsg</p>
-    <br />
-    <div>
-        Not a member? <a href="register">Register</a>
-    </div>
-</body>
-*@
+@if (passChange)
+{
+    <MudItem xs="12" sm="7">
+        <MudForm @bind-IsValid="@success2">
+            <MudTextField @bind-Value="pass2_1" T="string" Label="Naujas slaptažodis" InputType="InputType.Password" Required="true" RequiredError="Neįvestas slaptažodis pakeitimui."
+                      Validation="@(new Func<string, IEnumerable<string>>(PasswordCheck))"/>
+            <MudTextField @bind-Value="pass2_2" T="string" Label="Naujo slaptažodžio pakartojimas" InputType="InputType.Password" Required="true" RequiredError="Neįvestas pakartotinis slaptažodis."
+                      Validation="@(new Func<string, string>(PasswordMatch))" />
+            <br />
+            <MudButton OnClick="HandlePassChange" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success2)" Class="ml-auto" Style="padding-bottom:10px;">Keisti slaptažodį</MudButton>
+        </MudForm>
+        <MudText Color="@Color.Error">@errorMsg2</MudText>
+    </MudItem>
+}
 
 @code {
     public bool kriu { get; set; }
     AuthUserDto user = new AuthUserDto();
-    private MudTextField<string>? focusTarget;
+    MudTextField<string>? focusTarget;
     bool success;
     bool Success
     {
         get { return success; }
-        set { success = value;
-            //if(value == true)
-            //{
+        set
+        {
+            success = value;
+            //if(value == true)     // gal pratestavus iseis naudot
+            //{                     // kol kas negrazu ui sukuria sekanciam psl
             //    HandleLogin();
             //}
         }
     }
-    private string errorMsg = string.Empty;
-    bool passChangeRequired = false;
+    string errorMsg = string.Empty;
+    Color errorMsgColor = Color.Error;
+
+    bool passChange = false;
+    AuthUserDto? user2; // atsarginei kopija, pries isvalant "login" formos slaptazodi
+    bool success2;
+    string pass2_1 = string.Empty;
+    string pass2_2 = string.Empty;
+    private string errorMsg2 = string.Empty;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -70,38 +68,71 @@
 
     async Task HandleLogin()
     {
-        Console.WriteLine("WILL SOO HANDLE LOGGING INT");
-        bool stayLogged = true; //sutvarkyt
-        if (await _authService.Login(user, stayLogged))
+        bool stayLogged = true; //Sutvarkyt
+        int loginResponse = await _authService.Login(user, stayLogged);
+        switch (loginResponse)
         {
-            errorMsg = string.Empty;
-            _navigationManager.NavigateTo("/");
-            Console.WriteLine("Login success...!!!!");
+            case 0:     //sutartine reiksme, login failed
+                errorMsgColor = Color.Error;
+                errorMsg = "Neteisingas vartotojo vardas arba slaptažodis";
+                break;
+            case 1:     //sutartine reiksme, login success
+                _navigationManager.NavigateTo("/");
+                break;
+            case 2:     //sutartine reiksme, require password change
+                errorMsgColor = Color.Dark;
+                RequestPasswordChange();
+                break;
         }
-        else
-        {
-            errorMsg = "Nesutampa vartotojo vardas ir slaptažodis";
-            // and the rest of possible errors... in real programs or later
-        }
-
     }
-    //async Task HandlePasswordChange()
-    //{
-    //    if (password.CompareTo(password2) != 0)
-    //    {
-    //        errorMsg = "New passwords do not match. Please enter identical passwords in both fields.";
-    //    }
-    //    PasswordChangeDto dto = new PasswordChangeDto(user.Username, password);
-    //    HttpResponseMessage result = await Http.PatchAsJsonAsync("/api/users/passchange", dto);
-    //    if (result.IsSuccessStatusCode)
-    //    {
-    //        passChangeRequired = false;
-    //        msgColor = "black";
-    //        errorMsg = "Password successfully changed. You can now login again using new password.";
-    //    }
-    //    else
-    //    {
-    //        errorMsg = "Password change failed. Please try again.";
-    //    }
-    //}
+
+    void RequestPasswordChange()
+    {
+        user2 = new AuthUserDto();
+        user2.Username = user.Username;
+        user2.Password = user.Password;
+        user.Password = string.Empty;
+        errorMsg = "Reikalingas slaptažodžio pakeitimas. Prašome užpildyti naujus slaptažodžio duomenis.";
+        passChange = true;
+    }
+
+    async Task HandlePassChange()
+    {
+        UpdatePasswordDto dto = new UpdatePasswordDto(user2.Username, pass2_1);
+        if(await _usersService.UpdatePassword(dto))
+        {
+            passChange = false;
+            errorMsg = "Slaptažodis pakeistas sėkmingai. Prašome jungtis naudojant naująjį slaptažodį.";
+        }
+            else
+            {
+                errorMsg2 = "Slaptažodis nepakeistas. Bandykite dar kartą arba kreipkitės į administraciją.";
+            }
+    }
+
+    private IEnumerable<string> PasswordCheck(string pass)
+    {
+        if (string.IsNullOrWhiteSpace(pass))
+        {
+            yield return "Prašome įvesti naują slaptažodį";
+            yield break;
+        }
+        if (pass.Length < 4)
+            yield return "Reikalingi bent 4 simboliai";
+        if (!Regex.IsMatch(pass, @"[A-Z]"))
+            yield return "Bent viena didžioji raidė";
+        if (!Regex.IsMatch(pass, @"[a-z]"))
+            yield return "Bent viena mažoji raidė";
+        if (!Regex.IsMatch(pass, @"[0-9]"))
+            yield return "Bent vienas skaitmuo";
+    }
+
+    private string PasswordMatch(string arg)
+    {
+        if (pass2_1 != arg)
+            return "Nesutampa slaptažodžiai.";
+        if (user2!.Password == arg)
+            return "Naujas slaptažodis negali sutapti su senuoju";
+        return null;
+    }
 }

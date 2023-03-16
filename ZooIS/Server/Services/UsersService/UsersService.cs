@@ -90,14 +90,14 @@ namespace ZooIS.Server.Services.UsersService
             return dbUser;
         }
 
-        public async Task<int> ChangePassword(PasswordChangeDto passwordChangeDto)
+        public async Task<int> ChangePassword(UpdatePasswordDto UpdatePasswordDto)
         {
-            RegisteredUser dbUser = await _context.RegisteredUsers.FirstOrDefaultAsync(u => u.Username == passwordChangeDto.Username);
+            RegisteredUser dbUser = await _context.RegisteredUsers.FirstOrDefaultAsync(u => u.Username == UpdatePasswordDto.Username);
             if (dbUser == null)
             {
                 return 0;
             }
-            dbUser.PasswordHash = BCrypt.Net.BCrypt.HashPassword(passwordChangeDto.Password);
+            dbUser.PasswordHash = BCrypt.Net.BCrypt.HashPassword(UpdatePasswordDto.Password);
             dbUser.RequestPasswordReset = false;
             dbUser.PassChangeTime = DateTime.Now;
             await _context.SaveChangesAsync();

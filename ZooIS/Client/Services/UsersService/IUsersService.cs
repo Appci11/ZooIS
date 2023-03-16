@@ -1,4 +1,5 @@
-﻿using ZooIS.Shared.Models;
+﻿using ZooIS.Shared.Dto;
+using ZooIS.Shared.Models;
 
 namespace ZooIS.Client.Services.UsersService
 {
@@ -11,5 +12,6 @@ namespace ZooIS.Client.Services.UsersService
         Task CreateUser(RegisteredUser user);
         Task UpdateUser(RegisteredUser user);
         Task DeleteUser(int id);
+        Task<bool> UpdatePassword(UpdatePasswordDto updatePasswordDto);
     }
 }

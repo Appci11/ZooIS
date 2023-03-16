@@ -72,10 +72,10 @@ namespace ZooIS.Server.Controllers
         }
 
         [HttpPatch("passchange")]
-        public async Task<IActionResult> ChangePassword(PasswordChangeDto passChangeDto)
+        public async Task<IActionResult> ChangePassword(UpdatePasswordDto updatePassDto)
         {
-            int response = await _registeredUsersService.ChangePassword(passChangeDto);
-            if(response != 0)
+            int response = await _registeredUsersService.ChangePassword(updatePassDto);
+            if (response != 0)
             {
                 return Ok(new { message = "Password change successfull." });
             }

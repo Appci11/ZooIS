@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;
+using ZooIS.Shared.Dto;
 using ZooIS.Shared.Models;
 
 namespace ZooIS.Client.Services.UsersService
@@ -16,7 +17,7 @@ namespace ZooIS.Client.Services.UsersService
 
         public async Task CreateUser(RegisteredUser user)
         {
-            var result = await _http.PostAsJsonAsync($"/api/users", user);
+            await _http.PostAsJsonAsync($"/api/users", user);
         }
 
         public async Task DeleteUser(int id)
@@ -50,8 +51,18 @@ namespace ZooIS.Client.Services.UsersService
 
         public async Task UpdateUser(RegisteredUser user)
         {
-            var result = await _http.PutAsJsonAsync($"/api/users/{user.Id}", user);
+            await _http.PutAsJsonAsync($"/api/users/{user.Id}", user);
+        }
 
+        public async Task<bool> UpdatePassword(UpdatePasswordDto dto)
+        {
+            Console.WriteLine("asdf");
+            HttpResponseMessage result = await _http.PatchAsJsonAsync("/api/users/passchange", dto);
+            if (result.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

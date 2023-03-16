@@ -5,9 +5,8 @@ namespace ZooIS.Client.Services.AuthService
     public interface IAuthService
     {
         Task<bool> Register(RegisterUserDto registerUserDto);
-        Task<bool> Login(AuthUserDto authUserDto, bool stayLoggedIn);
+        Task<int> Login(AuthUserDto authUserDto, bool stayLoggedIn);
         Task<bool> Logout();
         Task<bool> RefreshTokens();
-
     }
 }

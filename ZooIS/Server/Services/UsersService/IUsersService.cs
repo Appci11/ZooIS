@@ -11,6 +11,6 @@ namespace ZooIS.Server.Services.UsersService
         Task<RegisteredUser> UpdateRegisteredUserVVisitor(int id, UpdateUserInfoVisitorDto userUpdadteDto);
         Task<RegisteredUser> UpdateRegisteredUserVAdmin(int id, UpdateUserInfoAdminDto userUpdadteDto);
         Task<RegisteredUser> DeleteRegisteredUser(int id);
-        Task<int> ChangePassword(PasswordChangeDto passwordChangeDto);
+        Task<int> ChangePassword(UpdatePasswordDto UpdatePasswordDto);
     }
 }

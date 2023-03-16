@@ -38,7 +38,7 @@ namespace ZooIS.Client.Services.AuthService
             }
             return false;
         }
-        public async Task<bool> Login(AuthUserDto authUserDto, bool stayLoggedIn)
+        public async Task<int> Login(AuthUserDto authUserDto, bool stayLoggedIn)
         {
             HttpResponseMessage response = await _http.PostAsJsonAsync("/api/login", authUserDto);
             if (response.IsSuccessStatusCode)
@@ -46,6 +46,10 @@ namespace ZooIS.Client.Services.AuthService
                 AuthResponseDto responseDto = await response.Content.ReadFromJsonAsync<AuthResponseDto>();
                 if (responseDto != null)
                 {
+                    if(responseDto.PassResetRequest)
+                    {
+                        return 2;
+                    }
                     await _localStorage.SetItemAsync<string>("idToken", responseDto.IdToken);
                     await _localStorage.SetItemAsync<DateTime>("idTokenExpirationDate", responseDto.ExpiresIn);
                     await _localStorage.SetItemAsync<string>("username", responseDto.Username);
@@ -53,10 +57,10 @@ namespace ZooIS.Client.Services.AuthService
                     await _localStorage.SetItemAsync<string>("refreshToken", responseDto.RefreshToken);
                     if (stayLoggedIn) await _localStorage.SetItemAsync<bool>("stayLoggedIn", true);
                     await _authProvider.GetAuthenticationStateAsync();
-                    return true;
+                    return 1;
                 }
             }
-            return false;
+            return 0;
         }
 
         public async Task<bool> Logout()

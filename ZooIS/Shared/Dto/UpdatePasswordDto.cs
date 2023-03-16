@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace ZooIS.Shared.Dto
 {
-    public class PasswordChangeDto
+    public class UpdatePasswordDto
     {
-        public PasswordChangeDto(string username, string password)
+        public UpdatePasswordDto(string username, string password)
         {
             Username = username;
             Password = password;
