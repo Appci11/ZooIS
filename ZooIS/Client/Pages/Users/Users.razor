@@ -16,7 +16,7 @@
     <MudTable Items="@_usersService.Users" Dense="@true" Filter="new Func<RegisteredUser, bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
         <ToolBarContent>
             <MudText Typo="Typo.h6">Registruoti vartotojai</MudText>
-            <MudIconButton Href="/user" Icon="@Icons.Material.Filled.Add" Color="Color.Primary"/>
+            <MudIconButton Href="/user" Icon="@Icons.Material.Filled.PersonAdd" Color="Color.Primary"/>
             <MudSpacer />
             <MudTextField @bind-Value="searchString" Placeholder="Ieškoti" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
@@ -24,13 +24,16 @@
             <MudTh><MudTableSortLabel SortBy="new Func<RegisteredUser, object>(u=>u.Username)">Username</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortBy="new Func<RegisteredUser, object>(u=>u.Role)">Rolė</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortBy="new Func<RegisteredUser, object>(u=>u.DateCreated)">Registracijos data</MudTableSortLabel></MudTh>
-            <MudTh></MudTh>
+            <MudTh>Redaguoti / Šalinti</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd @onclick="((x) => Kriu(context.Username))" DataLabel="Vardas">@context.Username</MudTd>
             <MudTd DataLabel="Rolė">@context.Role</MudTd>
             <MudTd DataLabel="Registracijos data">@context.DateCreated</MudTd>
-            <MudTd><MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" @onclick="(() => Kriu(context.Username))" /></MudTd>
+            <MudTd>
+                <MudIconButton @onclick="(() => Kriu(context.Username))" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Color="Color.Primary" />
+                <MudIconButton @onclick="(() => Kriu(context.Username))" Size="@Size.Small" Icon="@Icons.Material.Filled.RemoveCircleOutline" Color="Color.Warning"/>
+                </MudTd>
         </RowTemplate>
         <PagerContent>
             <MudTablePager RowsPerPageString="Įrašai per puslapį" />
