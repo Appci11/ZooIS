@@ -7,6 +7,7 @@ using ZooIS.Client;
 using ZooIS.Client.Services.AuthService;
 using ZooIS.Client.Services.UserSettingsService;
 using ZooIS.Client.Services.UsersService;
+using ZooIS.Client.Services.ZooMapService;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -21,5 +22,6 @@ builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<IUserSettingsService, UserSettingsService>();
+builder.Services.AddScoped<IZooMapService, ZooMapService>();
 
 await builder.Build().RunAsync();

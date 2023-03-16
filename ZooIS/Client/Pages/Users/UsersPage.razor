@@ -8,14 +8,33 @@
 @*
 @attribute [Authorize(Roles = "SysAdmin")]
 *@
-<PageTitle>Users</PageTitle>
 
-<h3>Users</h3>
+<PageTitle>Vartotojai</PageTitle>
 
 @if (Loaded)
 {
+    <MudDataGrid Items="@_usersService.Users" Dense="true" Elevation="0" QuickFilter="@quickFilter">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Registruoti sistemos vartotojai</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="searchString" Placeholder="Ieškoti" Adornment="Adornment.Start" Immediate="true"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <Columns>
+            <PropertyColumn Title="Vardas" Property="u => u.Username" />
+            <PropertyColumn Title="Rolė" Property="u => u.Role" />
+            <PropertyColumn Title="Registracijos data" Property="u => u.DateCreated" />
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="RegisteredUser" />
+        </PagerContent>
+    </MudDataGrid>
+
+
+
+
+    @*
     <div>
-@*
         <QuickGrid Items="FilteredUsers" ResizableColumns Pagination="@pagination" Class="search">
             <PropertyColumn Property="u => u.Username" Sortable="true">
                 <ColumnOptions>
@@ -38,8 +57,9 @@
             </TemplateColumn>
         </QuickGrid>
         <Paginator Value="@pagination" />
-*@
     </div>
+*@
+
     <button class="btn btn-primary" @onclick="CreateNewUser">Create a new user</button>
 
     <DeleteConfirmationDialog @ref="confirmationDialog" UserChoice="OnDeletionConfirmed" />
@@ -56,8 +76,23 @@ else
     string roleFilter;
     int nrToDelete = -1;
     protected DeleteConfirmationDialog confirmationDialog { get; set; }
+    private string searchString;
 
     bool Loaded = false;
+
+    // quick filter - filter gobally across multiple columns with the same input
+    private Func<RegisteredUser, bool> quickFilter => u =>
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (u.Username.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (u.Role.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        //if ($"{x.Number} {x.Position} {x.Molar}".Contains(_searchString))
+        //    return true;
+        return false;
+    };
 
     protected override async Task OnInitializedAsync()
     {
