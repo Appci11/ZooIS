@@ -13,23 +13,32 @@
 
 @if (Loaded)
 {
-    <MudDataGrid Items="@_usersService.Users" Dense="true" Elevation="0" QuickFilter="@quickFilter">
+    <MudTable Items="@_usersService.Users" Dense="@true" Filter="new Func<RegisteredUser, bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
         <ToolBarContent>
-            <MudText Typo="Typo.h6">Registruoti sistemos vartotojai</MudText>
+            <MudText Typo="Typo.h6">Registruoti vartotojai</MudText>
+            <MudIconButton Href="/user" Icon="@Icons.Material.Filled.Add" Color="Color.Primary"/>
             <MudSpacer />
-            <MudTextField @bind-Value="searchString" Placeholder="Ieškoti" Adornment="Adornment.Start" Immediate="true"
-                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudTextField @bind-Value="searchString" Placeholder="Ieškoti" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
-        <Columns>
-            <PropertyColumn Title="Vardas" Property="u => u.Username" />
-            <PropertyColumn Title="Rolė" Property="u => u.Role" />
-            <PropertyColumn Title="Registracijos data" Property="u => u.DateCreated" />
-        </Columns>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortBy="new Func<RegisteredUser, object>(u=>u.Username)">Username</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<RegisteredUser, object>(u=>u.Role)">Rolė</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<RegisteredUser, object>(u=>u.DateCreated)">Registracijos data</MudTableSortLabel></MudTh>
+            <MudTh></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd @onclick="((x) => Kriu(context.Username))" DataLabel="Vardas">@context.Username</MudTd>
+            <MudTd DataLabel="Rolė">@context.Role</MudTd>
+            <MudTd DataLabel="Registracijos data">@context.DateCreated</MudTd>
+            <MudTd><MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" @onclick="(() => Kriu(context.Username))" /></MudTd>
+        </RowTemplate>
         <PagerContent>
-            <MudDataGridPager T="RegisteredUser" />
+            <MudTablePager RowsPerPageString="Įrašai per puslapį" />
         </PagerContent>
-    </MudDataGrid>
-
+    </MudTable>
+    <div style="min-width:200px;">
+        <MudText Inline="true" Class="align-self-center">Selected1: @selectedItem1?.Username</MudText>
+    </div>
 
 
 
@@ -70,60 +79,36 @@ else
 }
 
 @code {
-    //PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
-    IQueryable<RegisteredUser>? itemsQueryable;
-    string nameFilter;
-    string roleFilter;
     int nrToDelete = -1;
     protected DeleteConfirmationDialog confirmationDialog { get; set; }
-    private string searchString;
-
     bool Loaded = false;
 
-    // quick filter - filter gobally across multiple columns with the same input
-    private Func<RegisteredUser, bool> quickFilter => u =>
+    void Kriu(string vardas)
     {
-        if (string.IsNullOrWhiteSpace(searchString))
+        Console.WriteLine(vardas);
+    }
+
+    private string searchString = "";
+    private RegisteredUser selectedItem1 = null;
+
+    private bool FilterFunc1(RegisteredUser element) => FilterFunc(element, searchString);
+
+    private bool FilterFunc(RegisteredUser element, string searchStr)
+    {
+        if (string.IsNullOrWhiteSpace(searchStr))
             return true;
-        if (u.Username.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+        if (element.Username.Contains(searchStr, StringComparison.OrdinalIgnoreCase))
             return true;
-        if (u.Role.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+        if (element.Role.Contains(searchStr, StringComparison.OrdinalIgnoreCase))
             return true;
-        //if ($"{x.Number} {x.Position} {x.Molar}".Contains(_searchString))
-        //    return true;
         return false;
-    };
+    }
 
     protected override async Task OnInitializedAsync()
     {
         await _usersService.GetUsers();
-        itemsQueryable = _usersService.Users.AsQueryable();
         Loaded = true;
     }
-
-    IQueryable<RegisteredUser> FilteredUsers
-    {
-        get
-        {
-            var result = itemsQueryable;
-
-            if (!string.IsNullOrEmpty(nameFilter))
-            {
-                result = result.Where(u => u.Username.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase));
-            }
-            if (!string.IsNullOrEmpty(roleFilter))
-            {
-                result = result.Where(u => u.Role.Contains(roleFilter, StringComparison.CurrentCultureIgnoreCase));
-            }
-
-            return result;
-        }
-    }
-
-    //void ShowUser(int id)
-    //{
-    //    _navigationManager.NavigateTo($"/user/{id}");
-    //}
 
     void CreateNewUser()
     {
@@ -144,7 +129,6 @@ else
         {
             await _usersService.DeleteUser(nrToDelete);
             nrToDelete = -1;
-            itemsQueryable = _usersService.Users.AsQueryable();
         }
     }
 }

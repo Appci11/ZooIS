@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using System.Xml.Linq;
 using ZooIS.Shared.Enums;
 
 namespace ZooIS.Shared.Models
@@ -25,5 +26,10 @@ namespace ZooIS.Shared.Models
         public UserSettings UserSettings { get; set; }
         //With Bundles
         public Bundle? Bundle { get; set; }
+
+        public override string ToString()
+        {
+            return $"Petras";
+        }
     }
 }
