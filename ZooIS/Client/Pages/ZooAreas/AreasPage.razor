@@ -1,0 +1,86 @@
+﻿@page "/areas"
+@using ZooIS.Client.Services.AreasService;
+
+@inject IAreasService _areasService
+@inject NavigationManager _navigationManager
+@inject IDialogService _dialogService
+@*
+@attribute [Authorize(Roles = "Administrator")]
+*@
+<PageTitle>Zonos</PageTitle>
+
+@if(loaded)
+{
+<MudTable Items="@_areasService.Areas" Dense="true" Filter="new Func<Area, bool>(FilterFunc)">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Zoologijos solo zonos</MudText>
+        <MudIconButton Href="/area" Icon="@Icons.Material.Filled.AddCircleOutline" Color="Color.Primary" />
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString" Placeholder="Ieškoti" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortBy="new Func<RegisteredUser, object>(u=>u.Username)">Username</MudTableSortLabel></MudTh>
+        <MudTh>Gyvūnų buveinės</MudTh>
+        <MudTh>Redaguoti / Šalinti</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd @onclick="((x) => Kriu(context.Name))" DataLabel="Vardas">@context.Name</MudTd>
+        <MudTd DataLabel="Rolė">Yra (2)</MudTd>
+        <MudTd>
+            <MudIconButton @onclick="(() => GoToEdit(context))" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Color="Color.Primary" />
+            <MudIconButton OnClick="(() => DeleteArea(context.Id))" Size="@Size.Small" Icon="@Icons.Material.Filled.RemoveCircleOutline" Color="Color.Warning" />
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager RowsPerPageString="Įrašai per puslapį" />
+    </PagerContent>
+</MudTable>
+}
+else
+{
+<div class="loader">Loading...</div>
+}
+@code {
+    bool loaded;
+    private string searchString = "";
+    protected DeleteConfirmationDialog confirmationDialog { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await _areasService.GetAreas();
+        loaded = true;
+    }
+
+    // Sutvarkyt - "Priskirtos buveinės" dinamiska varianta padaryt kai jau bus imanoma
+    // Sutvarkyt  ... pasalint kriu
+    void Kriu(string eil)
+    {
+        Console.WriteLine(eil);
+    }
+
+    private bool FilterFunc(Area element) => FilterFunc1(element, searchString);
+
+    private bool FilterFunc1(Area element, string searchStr)
+    {
+        if (string.IsNullOrWhiteSpace(searchStr))
+            return true;
+        if (element.Name.Contains(searchStr, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+    void GoToEdit(Area u) => _navigationManager.NavigateTo($"/area/{u.Id}");
+
+    async Task DeleteArea(int id)
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("BodyText", "Ar tikrai norite pašalinti zoną?");
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+        var dialog = _dialogService.Show<ConfirmDeletionDialog>("Delete", parameters, options);
+
+        if (!(await dialog.Result).Canceled)
+        {
+            await _areasService.DeleteArea(id);
+        }
+    }
+}

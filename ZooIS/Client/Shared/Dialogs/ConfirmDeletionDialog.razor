@@ -1,0 +1,16 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudText>@BodyText</MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Atšaukti</MudButton>
+        <MudButton Color="Color.Error" Variant="Variant.Filled" OnClick="Submit">Šąlinti</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code{
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string BodyText { get; set; }
+    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void Cancel() => MudDialog.Cancel();
+}

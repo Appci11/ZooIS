@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
 using ZooIS.Client;
+using ZooIS.Client.Services.AreasService;
 using ZooIS.Client.Services.AuthService;
 using ZooIS.Client.Services.UserSettingsService;
 using ZooIS.Client.Services.UsersService;
@@ -23,5 +24,6 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<IUserSettingsService, UserSettingsService>();
 builder.Services.AddScoped<IZooMapService, ZooMapService>();
+builder.Services.AddScoped<IAreasService, AreasService>();
 
 await builder.Build().RunAsync();

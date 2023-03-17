@@ -1,0 +1,63 @@
+﻿@page "/area"
+@page "/area/{id:int}"
+
+@using ZooIS.Client.Services.AreasService;
+@inject NavigationManager _navigationManager
+@inject IAreasService _areasService
+
+@if (Id == null)
+{
+    <PageTitle>Kūrimas</PageTitle>
+    <h3>Naujos zonos kūrimas</h3>
+}
+else
+{
+    <PageTitle>Redaguoti</PageTitle>
+    <h3>Zonos @area.Name duomenų redagavimas</h3>
+}
+@if (loaded)
+{
+    <MudContainer MaxWidth="MaxWidth.Medium">
+        <MudTextField @bind-Value="area.Name" Required="true" RequiredError="Neįvestas pavadinimas." Label="Zonos pavadinimas" Variant="Variant.Text"></MudTextField>
+        <MudButton OnClick="HandleSubmit" Variant="Variant.Filled" Color="Color.Primary" Style="margin-top:10px;">@submitBtnText</MudButton>
+    </MudContainer>
+    <MudButton Href="/areas" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.ArrowBack" Color="Color.Primary" Style="margin-top:5px;">Gryžti</MudButton>
+
+}
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+    bool loaded;
+    string submitBtnText = string.Empty;
+
+    Area area = new Area();
+
+    protected override async Task OnInitializedAsync()
+    {
+        submitBtnText = Id == null ? "Pridėti" : "Redaguoti";
+        loaded = true;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id != null)
+        {
+            area = await _areasService.GetArea((int)Id);
+        }
+    }
+
+    async Task HandleSubmit()
+    {
+        if (Id == null)
+        {
+            await _areasService.CreateArea(area);
+            _navigationManager.NavigateTo("/areas");
+        }
+        else
+        {
+            await _areasService.UpdateArea(area);
+            _navigationManager.NavigateTo("/areas");
+        }
+    }
+}

@@ -1,0 +1,99 @@
+﻿@page "/users"
+
+@using ZooIS.Client.Services.UsersService;
+
+@inject IUsersService _usersService
+@inject NavigationManager _navigationManager
+@inject IDialogService _dialogService
+@*
+@attribute [Authorize(Roles = "SysAdmin")]
+*@
+
+<PageTitle>Naudotojai</PageTitle>
+
+@if (loaded)
+{
+    <MudTable Items="@_usersService.Users" Dense="true" Filter="new Func<RegisteredUser, bool>(FilterFunc)">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Registruoti sistemos naudotojai</MudText>
+            <MudIconButton Href="/user" Icon="@Icons.Material.Filled.PersonAdd" Color="Color.Primary" />
+            <MudSpacer />
+            <MudTextField @bind-Value="searchString" Placeholder="Ieškoti" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortBy="new Func<RegisteredUser, object>(u=>u.Username)">Username</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<RegisteredUser, object>(u=>u.Role)">Rolė</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<RegisteredUser, object>(u=>u.DateCreated)">Registracijos data</MudTableSortLabel></MudTh>
+            <MudTh>Redaguoti / Šalinti</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd @onclick="((x) => Kriu(context.Username))" DataLabel="Vardas">@context.Username</MudTd>
+            <MudTd DataLabel="Rolė">@context.Role</MudTd>
+            <MudTd DataLabel="Registracijos dataaa">@context.DateCreated</MudTd>
+            <MudTd>
+                <MudIconButton @onclick="(() => GoToEdit(context))" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Color="Color.Primary" />
+                <MudIconButton OnClick="(() => DeleteUser(context.Id))" Size="@Size.Small" Icon="@Icons.Material.Filled.RemoveCircleOutline" Color="Color.Warning" />
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager RowsPerPageString="Įrašai per puslapį" />
+        </PagerContent>
+    </MudTable>
+}
+else
+{
+    <div class="loader">Loading...</div>
+}
+
+@code {
+    bool loaded;
+    private string searchString = "";
+    protected DeleteConfirmationDialog confirmationDialog { get; set; }
+    // Sutvarkyt , jei niekas nelus pasalint, lyg ir nebereikia
+    //int nrToDelete = -1;
+
+
+    void Kriu(string vardas)
+    {
+        Console.WriteLine(vardas);
+    }
+
+    private bool FilterFunc(RegisteredUser element) => FilterFunc1(element, searchString);
+
+    private bool FilterFunc1(RegisteredUser element, string searchStr)
+    {
+        if (string.IsNullOrWhiteSpace(searchStr))
+            return true;
+        if (element.Username.Contains(searchStr, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Role.Contains(searchStr, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await _usersService.GetUsers();
+        loaded = true;
+    }
+
+    void CreateNewUser()
+    {
+        _navigationManager.NavigateTo("/user");
+    }
+
+    void GoToEdit(RegisteredUser u) => _navigationManager.NavigateTo($"/user/{u.Id}");
+
+    async Task DeleteUser(int id)
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("BodyText", "Ar tikrai norite pašalinti vartotoją?");
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+        var dialog = _dialogService.Show<ConfirmDeletionDialog>("Delete", parameters, options);
+
+        if (!(await dialog.Result).Canceled)
+        {
+            await _usersService.DeleteUser(id);
+        }
+    }
+}

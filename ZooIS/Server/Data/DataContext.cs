@@ -16,8 +16,7 @@ namespace ZooIS.Server.Data
         public DbSet<Area> Areas => Set<Area>();
         public DbSet<Bundle> Bundles => Set<Bundle>();
         public DbSet<BundleTicket> BundleTickets => Set<BundleTicket>();
-        // in DB atrodo kaip RegisteredUsers, nepamirst neieskot "Employees" lenteles in db
-        public DbSet<Employee> Employees => Set<Employee>();
+        public DbSet<Employee> Employees => Set<Employee>(); // in DB yra RegisteredUsers dalis, neieskot "Employees" lenteles in DB
         public DbSet<Habitat> Habitats => Set<Habitat>();
         public DbSet<RegisteredUser> RegisteredUsers => Set<RegisteredUser>();
         public DbSet<Species> Species => Set<Species>();

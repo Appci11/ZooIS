@@ -5,6 +5,8 @@ using ZooIS.Shared.Models;
 
 namespace ZooIS.Client.Services.UsersService
 {
+    // Sutvarkyt
+    // ankstyvas, "naivus" variantas, turint laiko daugia patikrinimu idet, pagrinde respopnse patikrint
     public class UsersService : IUsersService
     {
         private readonly HttpClient _http;

@@ -1,0 +1,83 @@
+﻿@page "/user"
+@page "/user/{id:int}"
+
+@using ZooIS.Client.Services.UsersService;
+@inject NavigationManager _navigationManager
+@inject IUsersService _usersService
+
+@*
+@attribute [Authorize(Roles = "Admin")]
+*@
+
+@if (Id == null)
+{
+    <PageTitle>Naujas naudotojas</PageTitle>
+    <h3>Naujo sistemos naudotojo kūrimas</h3>
+}
+else
+{
+    <PageTitle>Redaguoti</PageTitle>
+    <h3>Vartotojo @user.Username duomenų redagavimas</h3>
+}
+@if (loaded)
+{
+    <MudContainer MaxWidth="MaxWidth.Medium">
+        <MudTextField @bind-Value="user.Username" Label="Vartotojo vardas" Variant="Variant.Text"></MudTextField>
+        <MudTextField @bind-Value="user.Email" Label="Elektroninis Paštas" Variant="Variant.Text"></MudTextField>
+        <MudSelect @bind-Value="user.Role" T="string" Label="Rolė" AnchorOrigin="Origin.BottomCenter">
+            @foreach (string item in Enum.GetNames(typeof(UserRoles)))
+            {
+                <MudSelectItem Value="item" />
+            }
+        </MudSelect>
+        @if (Id != null)
+        {
+            <MudCheckBox @bind-Checked="user.RequestPasswordReset" Label="Keisti slaptažodį"></MudCheckBox>
+            <MudCheckBox @bind-Checked="user.DeletionRequested" Label="Šalinimo užklausa"></MudCheckBox>
+            <MudCheckBox @bind-Checked="user.IsDeleted" Label="Pašalintas"></MudCheckBox>
+        }
+        <MudButton OnClick="HandleSubmit" Variant="Variant.Filled" Color="Color.Primary" Style="margin-top:10px;">@submitBtnText</MudButton>
+    </MudContainer>
+    <MudButton OnClick="GoBack" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.ArrowBack" Color="Color.Primary" Style="margin-top:5px;">Gryžti</MudButton>
+}
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+    bool loaded;
+    string submitBtnText = string.Empty;
+
+    RegisteredUser user = new RegisteredUser();
+
+    protected override async Task OnInitializedAsync()
+    {
+        submitBtnText = Id == null ? "Pridėti" : "Redaguoti";
+        loaded = true;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id != null)
+        {
+            user = await _usersService.GetUser((int)Id);
+        }
+    }
+
+    async Task HandleSubmit()
+    {
+        if (Id == null)
+        {
+            await _usersService.CreateUser(user);
+            _navigationManager.NavigateTo("/users");
+        }
+        else
+        {
+            await _usersService.UpdateUser(user);
+            _navigationManager.NavigateTo("/users");
+        }
+    }
+
+    void GoBack()
+    {
+        _navigationManager.NavigateTo("/users");
+    }
+}
