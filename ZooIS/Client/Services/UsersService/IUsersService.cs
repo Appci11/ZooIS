@@ -9,9 +9,9 @@ namespace ZooIS.Client.Services.UsersService
 
         Task GetUsers();
         Task<RegisteredUser> GetUser(int id);
-        Task CreateUser(RegisteredUser user);
-        Task UpdateUser(RegisteredUser user);
-        Task DeleteUser(int id);
+        Task<bool> CreateUser(RegisteredUser user);
+        Task<bool> UpdateUser(RegisteredUser user);
+        Task<bool> DeleteUser(int id);
         Task<bool> UpdatePassword(UpdatePasswordDto updatePasswordDto);
     }
 }

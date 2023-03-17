@@ -22,9 +22,9 @@ namespace ZooIS.Server.Controllers
         public async Task<IActionResult> AddArea(AddAreaDto addAreaDto)
         {
             Area response = await _areasService.AddArea(addAreaDto);
-            if(response == null)
+            if (response == null)
             {
-                return NotFound(new {message = "Failed to add new area"});
+                return NotFound(new { message = "Failed to add new area" });
             }
             return Created($"/api/[controller]/{response.Id}", response);
         }
@@ -33,18 +33,20 @@ namespace ZooIS.Server.Controllers
         public async Task<IActionResult> GetAllAreas()
         {
             List<Area> response = await _areasService.GetAllAreas();
-            if(response.Count > 0)
+            if (response.Count > 0)
             {
                 return Ok(response);
             }
-            return NotFound(new { message = "No areas found" });
+            return NoContent();
         }
+
+
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Area>> GetArea(int id)
         {
             Area response = await _areasService.GetArea(id);
-            if(response != null) 
+            if (response != null)
             {
                 return Ok(response);
             }
@@ -55,7 +57,7 @@ namespace ZooIS.Server.Controllers
         public async Task<ActionResult<Area>> UpdateArea(UpdateAreaDto request, int id)
         {
             Area response = await _areasService.UpdateArea(request, id);
-            if(response != null)
+            if (response != null)
             {
                 return Ok(response);
             }
@@ -66,7 +68,7 @@ namespace ZooIS.Server.Controllers
         public async Task<IActionResult> DeleteArea(int id)
         {
             Area response = await _areasService.DeleteArea(id);
-            if(response != null)
+            if (response != null)
             {
                 return Ok(response);
             }

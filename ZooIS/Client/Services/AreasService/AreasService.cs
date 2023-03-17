@@ -43,13 +43,18 @@ namespace ZooIS.Client.Services.AreasService
             {
                 return result;
             }
-            throw new Exception("User not found");
+            throw new Exception("Area not found");
         }
 
         public async Task GetAreas()
         {
-            var result = await _http.GetFromJsonAsync<List<Area>>("/api/areas");
-            if(result != null)
+            List<Area> result = new List<Area>();
+            try
+            {
+                result = await _http.GetFromJsonAsync<List<Area>>("/api/Areas");
+            }
+            catch { }
+            if (result != null && result.Count > 0)
             {
                 Areas = result;
             }

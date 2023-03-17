@@ -9,6 +9,7 @@ namespace ZooIS.Shared.Dto
 {
     public class AddBundleDto
     {
+        public int UserId { get; set; }
         public List<AddBundleTicketDto> BundleTickets { get; set; } = new List<AddBundleTicketDto> { new AddBundleTicketDto() };
     }
 }

@@ -38,7 +38,9 @@ namespace ZooIS.Server.Services.TagsService
 
         public async Task<List<Tag>> GetAllTags()
         {
-            return await _context.Tags.ToListAsync();
+            return await _context.Tags
+                .Include(t => t.Habitats)
+                .ToListAsync();
         }
 
         public async Task<Tag> GetTag(int id)

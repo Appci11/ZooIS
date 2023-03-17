@@ -39,12 +39,8 @@ namespace ZooIS.Server.Services.BundlesService
         {
             Bundle bundle = new Bundle();
 
-            //KOL KAS PASLAPTINGAI VIS PERKA PIRKEJAS NR 1  PAKEIST!!!!!
-            bundle.RegisteredUserId = 1;
-            //BundleTicket tarp = new BundleTicket();
-            //tarp.TicketId = 1;
-            //tarp.Quantity = 3;
-            //bundle.BundleTickets.Add(tarp);
+            bundle.RegisteredUserId = addBundleDto.UserId;
+
             foreach (var item in addBundleDto.BundleTickets)
             {
                 BundleTicket toAdd = new BundleTicket();
@@ -54,23 +50,6 @@ namespace ZooIS.Server.Services.BundlesService
             }
             _context.Bundles.Add(bundle);
             await _context.SaveChangesAsync();
-
-            //List<Ticket> tickets = await _context.Tickets.ToListAsync();
-            //if (tickets == null)
-            //{
-            //    // paieskot kaip ismest error'a, kad nepavyko prie ticket'u prieit
-            //    return null;
-            //}
-            //double totalPrice = 0;
-            //foreach(var item in bundle.BundleTickets)
-            //{
-            //    double price = tickets.FirstOrDefault(p => p.Id == item.TicketId).Price;
-            //    if(price != 0) //siek tiek sumazinam rizika
-            //    {
-            //        totalPrice += price * item.Quantity;
-            //    }
-
-            //}
 
             bundle.Price = await CalculatePrice(bundle);
             await _context.SaveChangesAsync();

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace ZooIS.Shared.Models
@@ -14,6 +15,7 @@ namespace ZooIS.Shared.Models
         //kol kas bus naudojama tik zemelapio sudaryme
 
         //relationship
+        [JsonIgnore]
         public List<Habitat>? Habitats { get; set; } = new List<Habitat>();
     }
 }

@@ -39,11 +39,12 @@ namespace ZooIS.Server.Services.AuthService
             await _context.SaveChangesAsync();
             AuthResponseDto response = new AuthResponseDto();
             response.Username = request.Username;
-            response.IdToken = CreateToken(user);
+            if (request.returnSecureToken)
+                response.IdToken = CreateToken(user);
             response.RefreshToken = REFRESH_TOKEN;
             response.ExpiresIn = DateTime.Now.AddHours(24);
             response.PassResetRequest = user.RequestPasswordReset;
-            response.UserId= user.Id;
+            response.UserId = user.Id;
             return response;
 
             //throw new NotImplementedException();
@@ -65,10 +66,10 @@ namespace ZooIS.Server.Services.AuthService
             {
                 Username = user.Username,
                 IdToken = idToken,
-                ExpiresIn= DateTime.Now.AddHours(24),
+                ExpiresIn = DateTime.Now.AddHours(24),
                 RefreshToken = REFRESH_TOKEN,
                 UserId = user.Id,
-                PassResetRequest= user.RequestPasswordReset
+                PassResetRequest = user.RequestPasswordReset
             };
         }
 

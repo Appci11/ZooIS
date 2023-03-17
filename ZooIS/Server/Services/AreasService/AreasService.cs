@@ -39,7 +39,9 @@ namespace ZooIS.Server.Services.AreasService
 
         public async Task<List<Area>> GetAllAreas()
         {
-            return await _context.Areas.ToListAsync();
+            return await _context.Areas
+                .Include(a => a.Habitats)
+                .ToListAsync();
         }
 
         public async Task<Area> GetArea(int id)

@@ -1,0 +1,76 @@
+﻿@page "/tags"
+
+@using ZooIS.Client.Services.TagsService;
+
+@inject NavigationManager _navigationManager
+@inject IDialogService _dialogService
+@inject ITagsService _tagsService
+
+<PageTitle>Žymės</PageTitle>
+
+@if (loaded)
+{
+    <MudTable Items="@_tagsService.Tags" Dense="true" Filter="new Func<Tag, bool>(FilterFunc)">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Gyvūnų ir jų buveinių žymės</MudText>
+            <MudIconButton Href="/tag" Icon="@Icons.Material.Filled.AddCircleOutline" Color="Color.Primary" />
+            <MudSpacer />
+            <MudTextField @bind-Value="searchString" Placeholder="Ieškoti" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortBy="new Func<Tag, object>(t=>t.Name)">Žymės</MudTableSortLabel></MudTh>
+            <MudTh>Naudotojų kiekis</MudTh>
+            <MudTh>Redaguoti / Šalinti</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Pavadinimas">@context.Name</MudTd>
+            <MudTd DataLabel="Naudotojų kiekis">@context.Habitats.Count</MudTd>
+            <MudTd>
+                <MudIconButton @onclick="(() => GoToEdit(context))" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Color="Color.Primary" />
+                <MudIconButton OnClick="(() => DeleteTag(context.Id))" Size="@Size.Small" Icon="@Icons.Material.Filled.RemoveCircleOutline" Color="Color.Warning" />
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+}
+else
+{
+    <div class="loader">Loading...</div>
+}
+
+@code {
+    bool loaded;
+    string searchString = string.Empty;
+    protected DeleteConfirmationDialog confirmationDialog { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await _tagsService.GetTags();
+        loaded = true;
+    }
+
+    private bool FilterFunc(Tag element) => FilterFunc1(element, searchString);
+
+    private bool FilterFunc1(Tag element, string searchStr)
+    {
+        if (string.IsNullOrWhiteSpace(searchStr))
+            return true;
+        if (element.Name.Contains(searchStr, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+    void GoToEdit(Tag t) => _navigationManager.NavigateTo($"/tag/{t.Id}");
+
+    async Task DeleteTag(int id)
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("BodyText", "Tikrai šąlinti žymę?");
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+        var dialog = _dialogService.Show<ConfirmDeletionDialog>("Delete", parameters, options);
+
+        if (!(await dialog.Result).Canceled)
+        {
+            await _tagsService.DeleteTag(id);
+        }
+    }
+}

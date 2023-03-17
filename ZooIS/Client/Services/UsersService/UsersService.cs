@@ -17,19 +17,25 @@ namespace ZooIS.Client.Services.UsersService
         }
         public List<RegisteredUser> Users { get; set; } = new List<RegisteredUser>();
 
-        public async Task CreateUser(RegisteredUser user)
+        public async Task<bool> CreateUser(RegisteredUser user)
         {
-            await _http.PostAsJsonAsync($"/api/users", user);
+            HttpResponseMessage response = await _http.PostAsJsonAsync($"/api/users", user);
+            return response.IsSuccessStatusCode;
         }
 
-        public async Task DeleteUser(int id)
+        public async Task<bool> DeleteUser(int id)
         {
-            var result = await _http.DeleteAsync($"/api/users/{id}");
-            RegisteredUser user = Users.FirstOrDefault(u => u.Id == id);
-            if (user != null)
+            var response = await _http.DeleteAsync($"/api/users/{id}");
+            if (response.IsSuccessStatusCode)
             {
-                Users.Remove(user);
+                RegisteredUser user = Users.FirstOrDefault(u => u.Id == id);
+                if (user != null)
+                {
+                    Users.Remove(user);
+                    return true;
+                }
             }
+            return false;
         }
 
         public async Task<RegisteredUser> GetUser(int id)
@@ -44,27 +50,29 @@ namespace ZooIS.Client.Services.UsersService
 
         public async Task GetUsers()
         {
-            var result = await _http.GetFromJsonAsync<List<RegisteredUser>>("/api/users");
-            if (result != null)
+            List<RegisteredUser> result = new List<RegisteredUser>();
+            try
+            {
+                result = await _http.GetFromJsonAsync<List<RegisteredUser>>("/api/users");
+            }
+            catch { }
+            if (result != null && result.Count > 0)
             {
                 Users = result;
             }
+            // else, pagal plana, matys tuscia sarasa
         }
 
-        public async Task UpdateUser(RegisteredUser user)
+        public async Task<bool> UpdateUser(RegisteredUser user)
         {
-            await _http.PutAsJsonAsync($"/api/users/{user.Id}", user);
+            HttpResponseMessage response = await _http.PutAsJsonAsync($"/api/users/{user.Id}", user);
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> UpdatePassword(UpdatePasswordDto dto)
         {
-            Console.WriteLine("asdf");
             HttpResponseMessage result = await _http.PatchAsJsonAsync("/api/users/passchange", dto);
-            if (result.IsSuccessStatusCode)
-            {
-                return true;
-            }
-            return false;
+            return result.IsSuccessStatusCode;
         }
     }
 }

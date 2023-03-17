@@ -9,40 +9,40 @@
 *@
 <PageTitle>Zonos</PageTitle>
 
-@if(loaded)
+@if (loaded)
 {
-<MudTable Items="@_areasService.Areas" Dense="true" Filter="new Func<Area, bool>(FilterFunc)">
-    <ToolBarContent>
-        <MudText Typo="Typo.h6">Zoologijos solo zonos</MudText>
-        <MudIconButton Href="/area" Icon="@Icons.Material.Filled.AddCircleOutline" Color="Color.Primary" />
-        <MudSpacer />
-        <MudTextField @bind-Value="searchString" Placeholder="Ieškoti" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-    </ToolBarContent>
-    <HeaderContent>
-        <MudTh><MudTableSortLabel SortBy="new Func<RegisteredUser, object>(u=>u.Username)">Username</MudTableSortLabel></MudTh>
-        <MudTh>Gyvūnų buveinės</MudTh>
-        <MudTh>Redaguoti / Šalinti</MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd @onclick="((x) => Kriu(context.Name))" DataLabel="Vardas">@context.Name</MudTd>
-        <MudTd DataLabel="Rolė">Yra (2)</MudTd>
-        <MudTd>
-            <MudIconButton @onclick="(() => GoToEdit(context))" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Color="Color.Primary" />
-            <MudIconButton OnClick="(() => DeleteArea(context.Id))" Size="@Size.Small" Icon="@Icons.Material.Filled.RemoveCircleOutline" Color="Color.Warning" />
-        </MudTd>
-    </RowTemplate>
-    <PagerContent>
-        <MudTablePager RowsPerPageString="Įrašai per puslapį" />
-    </PagerContent>
-</MudTable>
+    <MudTable Items="@_areasService.Areas" Dense="true" Filter="new Func<Area, bool>(FilterFunc)">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Zoologijos solo zonos</MudText>
+            <MudIconButton Href="/area" Icon="@Icons.Material.Filled.AddCircleOutline" Color="Color.Primary" />
+            <MudSpacer />
+            <MudTextField @bind-Value="searchString" Placeholder="Ieškoti" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortBy="new Func<Area, object>(a=>a.Name)">Username</MudTableSortLabel></MudTh>
+            <MudTh>Gyvūnų buveinės</MudTh>
+            <MudTh>Redaguoti / Šalinti</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd @onclick="((x) => Kriu(context.Name))" DataLabel="Vardas">@context.Name</MudTd>
+            <MudTd DataLabel="Rolė">Yra (2)</MudTd>
+            <MudTd>
+                <MudIconButton @onclick="(() => GoToEdit(context))" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Color="Color.Primary" />
+                <MudIconButton OnClick="(() => DeleteArea(context.Id))" Size="@Size.Small" Icon="@Icons.Material.Filled.RemoveCircleOutline" Color="Color.Warning" />
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager RowsPerPageString="Įrašai per puslapį" />
+        </PagerContent>
+    </MudTable>
 }
 else
 {
-<div class="loader">Loading...</div>
+    <div class="loader">Loading...</div>
 }
 @code {
     bool loaded;
-    private string searchString = "";
+    string searchString = string.Empty;
     protected DeleteConfirmationDialog confirmationDialog { get; set; }
 
     protected override async Task OnInitializedAsync()

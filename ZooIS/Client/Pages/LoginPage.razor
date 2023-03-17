@@ -8,12 +8,15 @@
 @inject IUsersService _usersService
 
 <MudItem xs="12" sm="7" Style="padding-bottom:5px;">
-    <MudForm @bind-IsValid="@Success">
+    <EditForm Model="@user" OnValidSubmit="HandleLogin">
         <MudTextField @bind-Value="user.Username" T="string" Label="Vartotojo vardas" Required="true" RequiredError="Neįvestas vartotojo vardas." @ref="focusTarget" />
-        <MudTextField @bind-Value="user.Password" T="string" Label="Slaptažodis" InputType="InputType.Password" Required="true" RequiredError="Neįvestas slaptažodis." />
+        <MudTextField @bind-Value="user.Password" T="string" Label="Slaptažodis" InputType="InputType.Password" Required="true" RequiredError="Neįvestas slaptažodis." @ref="focusTarget2" />
         <br />
-        <MudButton OnClick="HandleLogin" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!Success)" Class="ml-auto">Prisijungti</MudButton>
-    </MudForm>
+
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Prisijungti</MudButton>
+
+
+    </EditForm>
     <MudText Color="errorMsgColor" Style="padding-top:10px;">@errorMsg</MudText>
 </MudItem>
 
@@ -22,7 +25,7 @@
     <MudItem xs="12" sm="7">
         <MudForm @bind-IsValid="@success2">
             <MudTextField @bind-Value="pass2_1" T="string" Label="Naujas slaptažodis" InputType="InputType.Password" Required="true" RequiredError="Neįvestas slaptažodis pakeitimui."
-                      Validation="@(new Func<string, IEnumerable<string>>(PasswordCheck))"/>
+                      Validation="@(new Func<string, IEnumerable<string>>(PasswordCheck))" @ref="focusTarget3" />
             <MudTextField @bind-Value="pass2_2" T="string" Label="Naujo slaptažodžio pakartojimas" InputType="InputType.Password" Required="true" RequiredError="Neįvestas pakartotinis slaptažodis."
                       Validation="@(new Func<string, string>(PasswordMatch))" />
             <br />
@@ -31,24 +34,12 @@
         <MudText Color="@Color.Error">@errorMsg2</MudText>
     </MudItem>
 }
-
 @code {
-    public bool kriu { get; set; }
     AuthUserDto user = new AuthUserDto();
     MudTextField<string>? focusTarget;
-    bool success;
-    bool Success
-    {
-        get { return success; }
-        set
-        {
-            success = value;
-            //if(value == true)     // gal pratestavus iseis naudot
-            //{                     // kol kas negrazu ui sukuria sekanciam psl
-            //    HandleLogin();
-            //}
-        }
-    }
+    MudTextField<string>? focusTarget2;
+    MudTextField<string>? focusTarget3;
+
     string errorMsg = string.Empty;
     Color errorMsgColor = Color.Error;
 
@@ -81,6 +72,7 @@
                 break;
             case 2:     //sutartine reiksme, require password change
                 errorMsgColor = Color.Dark;
+                await focusTarget3.SelectAsync();
                 RequestPasswordChange();
                 break;
         }
@@ -88,10 +80,10 @@
 
     void RequestPasswordChange()
     {
+
         user2 = new AuthUserDto();
         user2.Username = user.Username;
         user2.Password = user.Password;
-        user.Password = string.Empty;
         errorMsg = "Reikalingas slaptažodžio pakeitimas. Prašome užpildyti naujus slaptažodžio duomenis.";
         passChange = true;
     }
@@ -99,15 +91,17 @@
     async Task HandlePassChange()
     {
         UpdatePasswordDto dto = new UpdatePasswordDto(user2.Username, pass2_1);
-        if(await _usersService.UpdatePassword(dto))
+        if (await _usersService.UpdatePassword(dto))
         {
             passChange = false;
             errorMsg = "Slaptažodis pakeistas sėkmingai. Prašome jungtis naudojant naująjį slaptažodį.";
+            user.Password = string.Empty;
+            await focusTarget2.SelectAsync();
         }
-            else
-            {
-                errorMsg2 = "Slaptažodis nepakeistas. Bandykite dar kartą arba kreipkitės į administraciją.";
-            }
+        else
+        {
+            errorMsg2 = "Slaptažodis nepakeistas. Bandykite dar kartą arba kreipkitės į administraciją.";
+        }
     }
 
     private IEnumerable<string> PasswordCheck(string pass)

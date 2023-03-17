@@ -6,6 +6,7 @@ using MudBlazor.Services;
 using ZooIS.Client;
 using ZooIS.Client.Services.AreasService;
 using ZooIS.Client.Services.AuthService;
+using ZooIS.Client.Services.TagsService;
 using ZooIS.Client.Services.UserSettingsService;
 using ZooIS.Client.Services.UsersService;
 using ZooIS.Client.Services.ZooMapService;
@@ -25,5 +26,6 @@ builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<IUserSettingsService, UserSettingsService>();
 builder.Services.AddScoped<IZooMapService, ZooMapService>();
 builder.Services.AddScoped<IAreasService, AreasService>();
+builder.Services.AddScoped<ITagsService, TagsService>();
 
 await builder.Build().RunAsync();
