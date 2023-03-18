@@ -9,7 +9,7 @@ namespace ZooIS.Server.Data
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
-
+            
         }
 
         public DbSet<Animal> Animals => Set<Animal>();

@@ -14,8 +14,7 @@ namespace ZooIS.Shared.Models
         //gal dar koki tipa ar dar ka pridesiu
         //kol kas bus naudojama tik zemelapio sudaryme
 
-        //relationship
-        [JsonIgnore]
+        //relationship        
         public List<Habitat>? Habitats { get; set; } = new List<Habitat>();
     }
 }

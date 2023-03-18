@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,7 +21,7 @@ namespace ZooIS.Shared.Models
         [JsonIgnore]
         public List<Animal>? Animals { get; set; }
         //with area
-        [JsonIgnore]
+        
         public Area Area { get; set; }
         public int AreaId { get; set; }
     }

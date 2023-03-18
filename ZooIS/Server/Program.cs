@@ -16,12 +16,17 @@ using ZooIS.Server.Services.TicketsService;
 using ZooIS.Server.Services.UserSettingsService;
 using ZooIS.Server.Services.UsersService;
 using ZooIS.Server.Services.WorkTasksService;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddJsonOptions(options =>
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+//builder.Services.AddControllersWithViews();
+
+
 
 builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
