@@ -36,10 +36,18 @@ namespace ZooIS.Server.Services.TagsService
             return tag;
         }
 
-        public async Task<List<Tag>> GetAllTags()
+        public async Task<List<Tag>> GetAllTags(bool includeRelated)
         {
-            return await _context.Tags
+            if(includeRelated)
+            {
+                return await _context.Tags
                 .Include(t => t.Habitats)
+                .Include(t => t.SpeciesRequire)
+                .Include(t => t.SpeciesAvoid)
+
+                .ToListAsync();
+            }
+            return await _context.Tags
                 .ToListAsync();
         }
 

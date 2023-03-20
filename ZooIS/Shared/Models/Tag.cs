@@ -9,12 +9,12 @@ namespace ZooIS.Shared.Models
         public string Description { get; set; } = string.Empty;
 
         //relationships
-        [JsonIgnore]
+        //[JsonIgnore]
         public List<SpeciesTagRequire>? SpeciesRequire { get; set; }
 
-        [JsonIgnore]
+        //[JsonIgnore]
         public List<SpeciesTagAvoid>? SpeciesAvoid { get; set; }
-        [JsonIgnore]
+        //[JsonIgnore]
         public List<Habitat>? Habitats { get; set; } = new List<Habitat>();
     }
 }

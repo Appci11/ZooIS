@@ -18,7 +18,7 @@ namespace ZooIS.Client.Services.UserSettingsService
             {
                 return result;
             }
-            throw new Exception($"Failed to get user settings. ID - {id}");
+            return null;
         }
 
         public Task UpdateSettings(UserSettings userSettings)

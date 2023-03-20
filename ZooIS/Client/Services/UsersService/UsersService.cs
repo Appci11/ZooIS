@@ -45,7 +45,7 @@ namespace ZooIS.Client.Services.UsersService
             {
                 return result;
             }
-            throw new Exception("User not found");
+            return null;
         }
 
         public async Task GetUsers()

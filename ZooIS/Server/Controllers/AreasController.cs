@@ -32,7 +32,7 @@ namespace ZooIS.Server.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllAreas()
         {
-            List<Area> response = await _areasService.GetAllAreas();
+            List<Area> response = await _areasService.GetAllAreas(true);
             if (response.Count > 0)
             {
                 return Ok(response);

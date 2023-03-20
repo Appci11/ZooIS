@@ -20,8 +20,6 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllersWithViews().AddJsonOptions(options =>
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 //builder.Services.AddControllersWithViews();
@@ -41,7 +39,7 @@ builder.Services.AddScoped<IHabitatsService, HabitatsService>();
 builder.Services.AddScoped<ISpeciesService, SpeciesService>();
 builder.Services.AddScoped<IAnimalsService, AnimalsService>();
 
-//swagger thingies start
+//adding swagget info start
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
@@ -53,7 +51,7 @@ builder.Services.AddSwaggerGen(options =>
     });
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
-//swagger thingies end
+//adding swagget info end
 
 builder.Services.AddRazorPages();
 builder.Services.AddDbContext<DataContext>(options =>

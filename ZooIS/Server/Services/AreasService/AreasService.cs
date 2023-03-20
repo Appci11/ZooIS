@@ -37,10 +37,15 @@ namespace ZooIS.Server.Services.AreasService
             return area;
         }
 
-        public async Task<List<Area>> GetAllAreas()
+        public async Task<List<Area>> GetAllAreas(bool includeReleated)
         {
+            if (includeReleated)
+            {
+                return await _context.Areas
+                    .Include(a => a.Habitats)
+                    .ToListAsync();
+            }
             return await _context.Areas
-                .Include(a => a.Habitats)
                 .ToListAsync();
         }
 

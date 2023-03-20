@@ -30,7 +30,7 @@ namespace ZooIS.Server.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllTags()
         {
-            List<Tag> response= await _tagsService.GetAllTags();
+            List<Tag> response= await _tagsService.GetAllTags(true);
             if(response.Count > 0)
             {
                 return Ok(response);

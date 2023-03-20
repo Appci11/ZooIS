@@ -24,7 +24,7 @@
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Pavadinimas">@context.Name</MudTd>
-            <MudTd DataLabel="Naudotojų kiekis">@context.Habitats.Count</MudTd>
+            <MudTd DataLabel="Naudotojų kiekis">@(@context.SpeciesRequire.Count + @context.SpeciesAvoid.Count + @context.Habitats.Count)</MudTd>
             <MudTd>
                 <MudIconButton @onclick="(() => GoToEdit(context))" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Color="Color.Primary" />
                 <MudIconButton OnClick="(() => DeleteTag(context.Id))" Size="@Size.Small" Icon="@Icons.Material.Filled.RemoveCircleOutline" Color="Color.Warning" />
@@ -73,4 +73,4 @@ else
             await _tagsService.DeleteTag(id);
         }
     }
-}
+    }

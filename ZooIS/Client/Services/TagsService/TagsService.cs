@@ -16,13 +16,13 @@ namespace ZooIS.Client.Services.TagsService
 
         public async Task<bool> CreateTag(Tag tag)
         {
-            HttpResponseMessage response = await _http.PostAsJsonAsync($"/api/Tags", tag);
-            return response.IsSuccessStatusCode ? true : false;
+            HttpResponseMessage response = await _http.PostAsJsonAsync($"/api/tags", tag);
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> DeleteTag(int id)
         {
-            HttpResponseMessage response = await _http.DeleteAsync($"/api/Tags/{id}");
+            HttpResponseMessage response = await _http.DeleteAsync($"/api/tags/{id}");
             if(response.IsSuccessStatusCode)
             {
                 Tag tag = Tags.FirstOrDefault(t => t.Id == id);
@@ -38,12 +38,12 @@ namespace ZooIS.Client.Services.TagsService
 
         public async Task<Tag> GetTag(int id)
         {
-            var result = await _http.GetFromJsonAsync<Tag>($"/api/aread/{id}");
+            var result = await _http.GetFromJsonAsync<Tag>($"/api/tags/{id}");
             if(result != null)
             {
                 return result;
             }
-            throw new Exception("Tag not found");
+            return null;
         }
 
         public async Task GetTags()
@@ -63,7 +63,7 @@ namespace ZooIS.Client.Services.TagsService
         public async Task<bool> UpdateTag(Tag tag)
         {
             HttpResponseMessage response = await _http.PutAsJsonAsync($"/api/tags/{tag.Id}", tag);
-            return response.IsSuccessStatusCode ? true : false;
+            return response.IsSuccessStatusCode;
         }
     }
 }

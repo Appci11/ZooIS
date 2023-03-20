@@ -11,7 +11,7 @@ using ZooIS.Server.Data;
 namespace ZooIS.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230318102226_Initial")]
+    [Migration("20230318181707_Initial")]
     partial class Initial
     {
         /// <inheritdoc />

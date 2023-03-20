@@ -18,10 +18,10 @@ namespace ZooIS.Shared.Models
         //with tags
         public List<Tag> Tags { get; set; } = new List<Tag>();
         //with animal
-        [JsonIgnore]
+        //[JsonIgnore]
         public List<Animal>? Animals { get; set; }
         //with area
-        
+        [JsonIgnore]
         public Area Area { get; set; }
         public int AreaId { get; set; }
     }

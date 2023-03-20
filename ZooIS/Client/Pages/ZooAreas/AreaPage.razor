@@ -44,6 +44,12 @@ else
         if (Id != null)
         {
             area = await _areasService.GetArea((int)Id);
+            if(area == null)
+            {
+                // Sutvarkyt
+                // write some error
+                area = new Area();
+            }
         }
     }
 

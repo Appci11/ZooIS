@@ -25,7 +25,7 @@
         </HeaderContent>
         <RowTemplate>
             <MudTd @onclick="((x) => Kriu(context.Name))" DataLabel="Vardas">@context.Name</MudTd>
-            <MudTd DataLabel="Rolė">Yra (2)</MudTd>
+            <MudTd>@context.Habitats.Count</MudTd>
             <MudTd>
                 <MudIconButton @onclick="(() => GoToEdit(context))" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Color="Color.Primary" />
                 <MudIconButton OnClick="(() => DeleteArea(context.Id))" Size="@Size.Small" Icon="@Icons.Material.Filled.RemoveCircleOutline" Color="Color.Warning" />
