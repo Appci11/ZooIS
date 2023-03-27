@@ -23,14 +23,19 @@
             <MudTh>Redaguoti / Šalinti</MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Pavadinimas">@context.Name</MudTd>
+            <MudTooltip Text="@context.Description">
+                <MudTd DataLabel="Pavadinimas">@context.Name</MudTd>
+            </MudTooltip>
             <MudTd DataLabel="Naudotojų kiekis">@(@context.SpeciesRequire.Count + @context.SpeciesAvoid.Count + @context.Habitats.Count)</MudTd>
-            <MudTd>
-                <MudIconButton @onclick="(() => GoToEdit(context))" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Color="Color.Primary" />
-                <MudIconButton OnClick="(() => DeleteTag(context.Id))" Size="@Size.Small" Icon="@Icons.Material.Filled.RemoveCircleOutline" Color="Color.Warning" />
-            </MudTd>
-        </RowTemplate>
-    </MudTable>
+                <MudTd>
+                    <MudIconButton @onclick="(() => GoToEdit(context))" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Color="Color.Primary" />
+                    <MudIconButton OnClick="(() => DeleteTag(context.Id))" Size="@Size.Small" Icon="@Icons.Material.Filled.RemoveCircleOutline" Color="Color.Warning" />
+                </MudTd>
+            </RowTemplate>
+            <PagerContent>
+                <MudTablePager RowsPerPageString="Įrašai per puslapį" />
+            </PagerContent>
+        </MudTable>
 }
 else
 {
@@ -66,11 +71,11 @@ else
         var parameters = new DialogParameters();
         parameters.Add("BodyText", "Tikrai šąlinti žymę?");
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
-        var dialog = _dialogService.Show<ConfirmDeletionDialog>("Delete", parameters, options);
+        var dialog = _dialogService.Show<ConfirmDeletionDialog>("Šalinimas", parameters, options);
 
         if (!(await dialog.Result).Canceled)
         {
             await _tagsService.DeleteTag(id);
         }
     }
-    }
+}

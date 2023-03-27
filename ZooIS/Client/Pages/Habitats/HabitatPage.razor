@@ -1,5 +1,24 @@
-﻿<h3>HabitatPage</h3>
+﻿@page "/habitat"
+@page "/habitat/{id:int}"
+
+@using ZooIS.Client.Services.HabitatsService;
+@inject NavigationManager _navigationManager
+@inject IHabitatsService _habitatsService
+
+@if (Id == null)
+{
+    <PageTitle>Kūrimas</PageTitle>
+    <h3>Naujos buveinės kūrimas</h3>
+}
+else
+{
+    <PageTitle>Redaguoti</PageTitle>
+    @*<h3>Zonos @area.Name duomenų redagavimas</h3>*@
+}
 
 @code {
-
+    [Parameter]
+    public int? Id { get; set; }
+    bool loaded;
+    string submitBtnText = string.Empty;
 }

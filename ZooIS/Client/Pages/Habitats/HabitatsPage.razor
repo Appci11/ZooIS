@@ -1,5 +1,80 @@
-﻿<h3>HabitatsPage</h3>
+﻿@page "/habitats"
+
+@using ZooIS.Client.Services.AreasService;
+@using ZooIS.Client.Services.HabitatsService;
+@inject IHabitatsService _habitatsService
+@inject IAreasService _areasService
+@inject NavigationManager _navigationManager
+@inject IDialogService _dialogService
+
+<PageTitle>Gyvūnų buveinės</PageTitle>
+
+@if(loaded)
+{
+    <MudTable Items="@_habitatsService.Habitats" Dense="true" Filter="new Func<Habitat, bool>(FilterFunc)">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Gyvūnų buveinės</MudText>
+            <MudIconButton Href="/habitat" Icon="@Icons.Material.Filled.AddCircleOutline" Color="Color.Primary" />
+            <MudSpacer />
+            <MudTextField @bind-Value="searchString" Placeholder="Ieškoti" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortBy="new Func<Habitat, object>(h=>h.Name!)">Pavadinimas</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<Habitat, object>(h=>h.AreaId)">Priklauso zonai</MudTableSortLabel></MudTh>
+            <MudTh>Aprašymas</MudTh>
+            <MudTh>Redaguoti / Šalinti</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd>@context.Name</MudTd>
+            @if (AreaNames.ContainsKey(context.AreaId))
+            {
+                <MudTd>@AreaNames[context.AreaId]</MudTd>
+            }
+            <MudTd>@context.Description</MudTd>
+            <MudTd>
+                <MudIconButton @onclick="(() => GoToEdit(context))" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Color="Color.Primary" />
+                <MudIconButton OnClick="(() => DeleteHabitat(context.Id))" Size="@Size.Small" Icon="@Icons.Material.Filled.RemoveCircleOutline" Color="Color.Warning" />
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+}
+
 
 @code {
+    bool loaded;
+    string searchString = string.Empty;
+    protected DeleteConfirmationDialog confirmationDialog { get; set; }
+    Dictionary<int, string> AreaNames;
 
+    protected override async Task OnInitializedAsync()
+    {
+        await _habitatsService.GetHabitats();
+        AreaNames = await _areasService.GetAreaNames();
+        loaded = true;
+    }
+
+    private bool FilterFunc(Habitat element) => FilterFunc1(element, searchString);
+
+    private bool FilterFunc1(Habitat element, string searchStr)
+    {
+        if (string.IsNullOrWhiteSpace(searchStr))
+            return true;
+        if (element.Name.Contains(searchStr, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+    void GoToEdit(Habitat h) => _navigationManager.NavigateTo($"/habitat/{h.Id}");
+
+    async Task DeleteHabitat(int id)
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("BodyText", "Tikrai pašalinti buveinę?");
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+        var dialog = _dialogService.Show<ConfirmDeletionDialog>("Šalinimas", parameters, options);
+        if (!(await dialog.Result).Canceled)
+        {
+            await _habitatsService.DeleteHabitat(id);
+        }
+    }
 }

@@ -21,24 +21,26 @@ else
 }
 @if (loaded)
 {
-    <MudContainer MaxWidth="MaxWidth.Medium">
-        <MudTextField @bind-Value="user.Username" Label="Vartotojo vardas" Variant="Variant.Text"></MudTextField>
-        <MudTextField @bind-Value="user.Email" Label="Elektroninis Paštas" Variant="Variant.Text"></MudTextField>
-        <MudSelect @bind-Value="user.Role" T="string" Label="Rolė" AnchorOrigin="Origin.BottomCenter">
-            @foreach (string item in Enum.GetNames(typeof(UserRoles)))
+    <MudContainer MaxWidth="MaxWidth.Large">
+        <EditForm Model="@user" OnValidSubmit="HandleSubmit">
+            <MudTextField @bind-Value="user.Username" Label="Vartotojo vardas" Variant="Variant.Text"></MudTextField>
+            <MudTextField @bind-Value="user.Email" Label="Elektroninis Paštas" Variant="Variant.Text"></MudTextField>
+            <MudSelect @bind-Value="user.Role" T="string" Label="Rolė" AnchorOrigin="Origin.BottomCenter">
+                @foreach (string item in Enum.GetNames(typeof(UserRoles)))
+                {
+                    <MudSelectItem Value="item" />
+                }
+            </MudSelect>
+            @if (Id != null)
             {
-                <MudSelectItem Value="item" />
+                <MudCheckBox @bind-Checked="user.RequestPasswordReset" Label="Keisti slaptažodį"></MudCheckBox>
+                <MudCheckBox @bind-Checked="user.DeletionRequested" Label="Šalinimo užklausa"></MudCheckBox>
+                <MudCheckBox @bind-Checked="user.IsDeleted" Label="Pašalintas"></MudCheckBox>
             }
-        </MudSelect>
-        @if (Id != null)
-        {
-            <MudCheckBox @bind-Checked="user.RequestPasswordReset" Label="Keisti slaptažodį"></MudCheckBox>
-            <MudCheckBox @bind-Checked="user.DeletionRequested" Label="Šalinimo užklausa"></MudCheckBox>
-            <MudCheckBox @bind-Checked="user.IsDeleted" Label="Pašalintas"></MudCheckBox>
-        }
-        <MudButton OnClick="HandleSubmit" Variant="Variant.Filled" Color="Color.Primary" Style="margin-top:10px;">@submitBtnText</MudButton>
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Style="margin-top:10px;">@submitBtnText</MudButton>
+        </EditForm>
+        <MudButton OnClick="GoBack" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.ArrowBack" Color="Color.Primary" Style="margin-top:15px;">Gryžti</MudButton>
     </MudContainer>
-    <MudButton OnClick="GoBack" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.ArrowBack" Color="Color.Primary" Style="margin-top:15px;">Gryžti</MudButton>
 }
 @code {
     [Parameter]
@@ -59,7 +61,7 @@ else
         if (Id != null)
         {
             user = await _usersService.GetUser((int)Id);
-            if(user == null)
+            if (user == null)
             {
                 // Sutvarkyt
                 // write some error

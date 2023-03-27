@@ -11,5 +11,7 @@ namespace ZooIS.Client.Services.AreasService
         Task<bool> CreateArea(Area area);
         Task<bool> UpdateArea(Area area);
         Task<bool> DeleteArea(int id);
+
+        Task<Dictionary<int, string>> GetAreaNames();
     }
 }

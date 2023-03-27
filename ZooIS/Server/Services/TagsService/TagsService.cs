@@ -16,6 +16,7 @@ namespace ZooIS.Server.Services.TagsService
             Tag tag = new Tag();
 
             tag.Name= addTagDto.Name.ToLower();
+            tag.Description = addTagDto.Description;
 
             _context.Tags.Add(tag);
             await _context.SaveChangesAsync();

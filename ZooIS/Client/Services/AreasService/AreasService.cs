@@ -65,5 +65,22 @@ namespace ZooIS.Client.Services.AreasService
             HttpResponseMessage response =  await _http.PutAsJsonAsync($"/api/areas/{area.Id}", area);
             return response.IsSuccessStatusCode ? true : false;
         }
+
+        public async Task<Dictionary<int, string>> GetAreaNames()
+        {
+            Dictionary<int, string> result = new Dictionary<int, string>();
+            if(Areas == null || Areas.Count == 0)
+            {
+                await GetAreas();
+            }
+            if(Areas != null)
+            {
+                foreach (var item in Areas)
+                {
+                    result.Add(item.Id, item.Name);
+                }
+            }
+            return result;
+        }
     }
 }

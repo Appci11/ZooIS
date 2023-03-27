@@ -16,7 +16,7 @@
     <MudTable Items="@_usersService.Users" Dense="true" Filter="new Func<RegisteredUser, bool>(FilterFunc)">
         <ToolBarContent>
             <MudText Typo="Typo.h6">Registruoti sistemos naudotojai</MudText>
-            <MudIconButton Href="/user" Icon="@Icons.Material.Filled.PersonAdd" Color="Color.Primary" />
+            <MudIconButton Href="/user" Icon="@Icons.Material.Filled.AddCircleOutline" Color="Color.Primary" />
             <MudSpacer />
             <MudTextField @bind-Value="searchString" Placeholder="Ieškoti" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
@@ -89,7 +89,7 @@ else
         var parameters = new DialogParameters();
         parameters.Add("BodyText", "Ar tikrai norite pašalinti vartotoją?");
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
-        var dialog = _dialogService.Show<ConfirmDeletionDialog>("Delete", parameters, options);
+        var dialog = _dialogService.Show<ConfirmDeletionDialog>("Šalinimas", parameters, options);
 
         if (!(await dialog.Result).Canceled)
         {

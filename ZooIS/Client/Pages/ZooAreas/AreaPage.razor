@@ -17,12 +17,13 @@ else
 }
 @if (loaded)
 {
-    <MudContainer MaxWidth="MaxWidth.Medium">
-        <MudTextField @bind-Value="area.Name" Required="true" RequiredError="Neįvestas pavadinimas." Label="Zonos pavadinimas" Variant="Variant.Text"></MudTextField>
-        <MudButton OnClick="HandleSubmit" Variant="Variant.Filled" Color="Color.Primary" Style="margin-top:10px;">@submitBtnText</MudButton>
+    <MudContainer MaxWidth="MaxWidth.Large">
+        <EditForm Model="@area" OnValidSubmit="HandleSubmit">
+            <MudTextField @bind-Value="area.Name" Required="true" RequiredError="Neįvestas pavadinimas." Label="Zonos pavadinimas" Variant="Variant.Text"></MudTextField>
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Style="margin-top:10px;">@submitBtnText</MudButton>
+        </EditForm>
+        <MudButton Href="/areas" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.ArrowBack" Color="Color.Primary" Style="margin-top:15px;">Gryžti</MudButton>
     </MudContainer>
-    <MudButton Href="/areas" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.ArrowBack" Color="Color.Primary" Style="margin-top:5px;">Gryžti</MudButton>
-
 }
 
 @code {
@@ -44,7 +45,7 @@ else
         if (Id != null)
         {
             area = await _areasService.GetArea((int)Id);
-            if(area == null)
+            if (area == null)
             {
                 // Sutvarkyt
                 // write some error

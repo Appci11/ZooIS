@@ -13,8 +13,17 @@
 else
 {
     <PageTitle>Redaguoti</PageTitle>
-    @*<h3>Zonos @area.Name duomenų redagavimas</h3>*@
+    <h3>Zonos @tag.Name duomenų redagavimas</h3>
 }
+
+<MudContainer MaxWidth="MaxWidth.Large">
+    <EditForm Model="@tag" OnValidSubmit="HandleSubmit">
+        <MudTextField @bind-Value="tag.Name" Required="true" RequiredError="Neįvestas pavadinimas." Label="Žymos pavadinimas" Variant="Variant.Text"></MudTextField>
+        <MudTextField @bind-Value="tag.Description" Lines="5" Required="true" RequiredError="Neįvestas aprašas." Label="Žymos aprašas" Variant="Variant.Text"></MudTextField>
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Style="margin-top:10px;">@submitBtnText</MudButton>
+    </EditForm>
+    <MudButton Href="/areas" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.ArrowBack" Color="Color.Primary" Style="margin-top:15px;">Gryžti</MudButton>
+</MudContainer>
 
 @code {
     [Parameter]
@@ -23,6 +32,37 @@ else
     string submitBtnText = string.Empty;
 
     Tag tag = new();
-    
-    
+
+    protected override async Task OnInitializedAsync()
+    {
+        submitBtnText = Id == null ? "Pridėti" : "Redaguoti";
+        loaded = true;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if(Id != null)
+        {
+            tag = await _tagsService.GetTag((int)Id);
+            if(tag == null)
+            {
+                // Sutvarkyt add some error kai zinosiu kur 
+                tag = new();
+            }
+        }
+    }
+
+    async Task HandleSubmit()
+    {
+        if(Id == null)
+        {
+            await _tagsService.CreateTag(tag);
+            _navigationManager.NavigateTo("/tags");
+        }
+        else
+        {
+            await _tagsService.UpdateTag(tag);
+            _navigationManager.NavigateTo("/tags");
+        }
+    }
 }

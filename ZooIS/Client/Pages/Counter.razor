@@ -20,4 +20,9 @@
     {
         await _http.PostAsJsonAsync("/api/register", new {message = "asdf"});
     }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+    }
 }
