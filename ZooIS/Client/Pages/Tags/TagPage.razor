@@ -1,8 +1,28 @@
 ﻿@page "/tag"
 @page "/tag/{id:int}"
 
-<h3>TagPage</h3>
+@using ZooIS.Client.Services.TagsService
+@inject NavigationManager _navigationManager
+@inject ITagsService _tagsService
+
+@if(Id == null)
+{
+    <PageTitle>Kūrimas</PageTitle>
+    <h3>Naujos žymos kūrimas</h3>
+}
+else
+{
+    <PageTitle>Redaguoti</PageTitle>
+    @*<h3>Zonos @area.Name duomenų redagavimas</h3>*@
+}
 
 @code {
+    [Parameter]
+    public int? Id { get; set; }
+    bool loaded;
+    string submitBtnText = string.Empty;
 
+    Tag tag = new();
+    
+    
 }
