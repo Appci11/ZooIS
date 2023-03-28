@@ -1,9 +1,14 @@
 ﻿@page "/habitat"
 @page "/habitat/{id:int}"
 
+@using System.Text;
+@using ZooIS.Client.Services.AreasService;
 @using ZooIS.Client.Services.HabitatsService;
+@using ZooIS.Client.Services.TagsService;
 @inject NavigationManager _navigationManager
 @inject IHabitatsService _habitatsService
+@inject ITagsService _tagsService
+@inject IAreasService _areasService
 
 @if (Id == null)
 {
@@ -16,9 +21,142 @@ else
     @*<h3>Zonos @area.Name duomenų redagavimas</h3>*@
 }
 
+@if (loaded)
+{
+    <MudContainer MaxWidth="MaxWidth.Large">
+        <EditForm Model="@habitat" OnValidSubmit="HandleSubmit">
+            <MudTextField @bind-Value="habitat.Name" Required="true" RequiredError="Neįvestas pavadinimas."
+                      Label="Buveinės pavadinimas" Variant="Variant.Text"></MudTextField>
+            <MudSelect @bind-Value="habitat.AreaId" T="int" Label="Priklauso zonai" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+                @foreach (var item in _areasService.Areas)
+                {
+                    <MudSelectItem Value="@item.Id">(@item.Id) (@item.Name)</MudSelectItem>
+                }
+            </MudSelect>
+            <MudTextField @bind-Value="habitat.Description" Lines="5" Label="Buveinės aprašas" Variant="Variant.Text"></MudTextField>
+
+
+
+            <MudDropContainer Context="dropContext" T="DropItem" Items="_items" ItemsSelector="@((item,dropzone) => item.Identifier == dropzone)" ItemDropped="ItemUpdated" Class="d-flex flex-wrap flex-grow-1">
+                <ChildContent>
+                    <MudDropZone T="DropItem" Identifier="Drop Zone 1" Class="rounded mud-background-gray pa-6 ma-8 flex-grow-1">
+                        <MudText Typo="Typo.h6" Class="mb-4">Visos žymės</MudText>
+                    </MudDropZone>
+                    <MudDropZone T="DropItem" Identifier="Drop Zone 2" Class="rounded mud-background-gray pa-6 ma-8 flex-grow-1">
+                        <MudText Typo="Typo.h6" Class="mb-4">Buveinės žymės</MudText>
+                    </MudDropZone>
+                </ChildContent>
+                <ItemRenderer>
+                    <MudPaper Elevation="25" Class="pa-4 my-4">@dropContext.Name</MudPaper>
+                </ItemRenderer>
+            </MudDropContainer>
+
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Style="margin-top:10px;">@submitBtnText</MudButton>
+        </EditForm>
+    </MudContainer>
+}
+
 @code {
     [Parameter]
     public int? Id { get; set; }
     bool loaded;
     string submitBtnText = string.Empty;
+
+    Habitat habitat = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        submitBtnText = Id == null ? "Pridėti" : "Redaguoti";
+        // per naujo ikeliu del "OnParametersSetAsync" kintamuosius pradanginancios magijos...
+        if (Id != null)
+        {
+            habitat = await _habitatsService.GetHabitat((int)Id);
+        }
+        Populate();
+        loaded = true;
+    }
+
+    //??? kintamuosius issaugo teisingai, bet list'o dali random iseidamas istrina...
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id != null)
+        {
+            habitat = await _habitatsService.GetHabitat((int)Id);
+            if (habitat == null)
+            {
+                // Sutvarkyt
+                // write some error
+                habitat = new Habitat();
+            }
+        }
+    }
+
+    async Task HandleSubmit()
+    {
+        if (Id == null)
+        {
+            AddHabitatTags();
+            await _habitatsService.CreateHabitat(habitat);
+            _navigationManager.NavigateTo("/habitats");
+        }
+        else
+        {
+            AddHabitatTags();
+            await _habitatsService.UpdataHabitat(habitat);
+            _navigationManager.NavigateTo("/habitats");
+        }
+    }
+
+    private List<DropItem> _items = new();
+
+    async void Populate()
+    {
+        await _tagsService.GetTags();
+        List<Tag> Tags = _tagsService.Tags;
+        foreach (Tag item in _tagsService.Tags)
+        {
+            _items.Add(new DropItem() { Name = item.Name, Identifier = "Drop Zone 1" });
+        }
+        if (Id != null)
+        {
+            Console.WriteLine("entered ID != NULL");
+            foreach (var item in habitat.Tags)
+            {
+                var dItem = _items.FirstOrDefault((i) => i.Name.CompareTo(item.Name) == 0);
+                if(dItem != null)
+                {
+                    dItem.Identifier = "Drop Zone 2";
+                }
+            }
+        }
+        else
+        {
+            Console.WriteLine("GUESS ID IS NULL");
+        }
+        StateHasChanged();
+    }
+
+    void AddHabitatTags()
+    {
+        habitat.Tags.Clear();
+        foreach (DropItem item in _items)
+        {
+            if (item.Identifier.CompareTo("Drop Zone 2") == 0)
+            {
+                // Sutvarkyt? gali but kad kazkas tagus pakeite kol cia delioju... pagalvot/issprest kas tada
+                habitat.Tags.Add(_tagsService.Tags.FirstOrDefault((t) => t.Name.CompareTo(item.Name) == 0));
+            }
+        }
+    }
+
+    private void ItemUpdated(MudItemDropInfo<DropItem> dropItem)
+    {
+        dropItem.Item.Identifier = dropItem.DropzoneIdentifier;
+    }
+
+    public class DropItem
+    {
+        public string Name { get; set; }
+        public string Identifier { get; set; }
+    }
 }

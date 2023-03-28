@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using ZooIS.Shared.Dto;
 using ZooIS.Shared.Models;
 
 namespace ZooIS.Client.Services.HabitatsService
@@ -17,7 +18,15 @@ namespace ZooIS.Client.Services.HabitatsService
 
         public async Task<bool> CreateHabitat(Habitat habitat)
         {
-            HttpResponseMessage response = await _http.PostAsJsonAsync($"/api/habitats", habitat);
+            AddHabitatDto dto = new AddHabitatDto();
+            dto.AreaId = habitat.AreaId;
+            dto.Name = habitat.Name;
+            dto.Description = habitat.Description;
+            foreach(var item in habitat.Tags)
+            {
+                dto.TagIds.Add(item.Id);
+            }
+            HttpResponseMessage response = await _http.PostAsJsonAsync($"/api/habitats", dto);
             return response.IsSuccessStatusCode;
         }
 

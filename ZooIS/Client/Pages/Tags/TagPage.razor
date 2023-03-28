@@ -19,7 +19,7 @@ else
 <MudContainer MaxWidth="MaxWidth.Large">
     <EditForm Model="@tag" OnValidSubmit="HandleSubmit">
         <MudTextField @bind-Value="tag.Name" Required="true" RequiredError="Neįvestas pavadinimas." Label="Žymos pavadinimas" Variant="Variant.Text"></MudTextField>
-        <MudTextField @bind-Value="tag.Description" Lines="5" Required="true" RequiredError="Neįvestas aprašas." Label="Žymos aprašas" Variant="Variant.Text"></MudTextField>
+        <MudTextField @bind-Value="tag.Description" Lines="5" Label="Žymos aprašas" Variant="Variant.Text"></MudTextField>
         <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Style="margin-top:10px;">@submitBtnText</MudButton>
     </EditForm>
     <MudButton Href="/areas" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.ArrowBack" Color="Color.Primary" Style="margin-top:15px;">Gryžti</MudButton>

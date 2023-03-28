@@ -1,4 +1,5 @@
-﻿using ZooIS.Shared.Dto;
+﻿using Microsoft.EntityFrameworkCore;
+using ZooIS.Shared.Dto;
 using ZooIS.Shared.Models;
 
 namespace ZooIS.Server.Services.HabitatsService
@@ -19,14 +20,11 @@ namespace ZooIS.Server.Services.HabitatsService
             habitat.Name = addHabitatDto.Name;
             habitat.Description = addHabitatDto.Description;
             habitat.AreaId = addHabitatDto.AreaId;
-            List<Tag> dbTags = await _context.Tags.ToListAsync();
-            foreach (var item in addHabitatDto.Tags)
+            foreach (int tagId in addHabitatDto.TagIds)
             {
-                Tag dbTag = dbTags.FirstOrDefault(t => t.Id == item.Id);
-                if (dbTag != null)
-                {
-                    habitat.Tags.Add(dbTag);
-                }
+                Tag foundTag;
+                foundTag = await _context.Tags.FirstOrDefaultAsync((t) => t.Id == tagId);
+                if (foundTag != null) { habitat.Tags.Add(foundTag); }
             }
 
             _context.Habitats.Add(habitat);

@@ -12,7 +12,8 @@ namespace ZooIS.Shared.Dto
     {
         public string? Name { get; set; } = string.Empty;
         public string? Description { get; set; } = string.Empty;
-        public List<Tag> Tags { get; set; } = new List<Tag>();
         public int AreaId { get; set; }
+        public List<int> TagIds { get; set; } = new List<int>();
+        
     }
 }
