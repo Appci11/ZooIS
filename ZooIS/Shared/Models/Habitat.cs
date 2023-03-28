@@ -1,11 +1,13 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace ZooIS.Shared.Models
 {
     public class Habitat
     {
         public int Id { get; set; }
-        public string? Name { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Reikalinga")]
+        public string Name { get; set; } = string.Empty;
         public string? Description { get; set; } = string.Empty;
 
         //relationship
@@ -17,6 +19,7 @@ namespace ZooIS.Shared.Models
         //with area
         [JsonIgnore]
         public Area Area { get; set; }
+        [Required(ErrorMessage = "Reikalinga")]
         public int AreaId { get; set; }
     }
 }

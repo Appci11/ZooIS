@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -12,6 +13,7 @@ namespace ZooIS.Shared.Models
     /// </summary>
     public class BundleTicket
     {
+        [Required(ErrorMessage = "Reikalinga")]
         public int Quantity { get; set; }
 
         //relationships

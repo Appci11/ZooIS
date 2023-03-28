@@ -17,20 +17,17 @@ namespace ZooIS.Server.Services.SpeciesService
 
             species.Name = addSpeciesDto.Name;
 
+            _context.Species.Add(species);
+            await _context.SaveChangesAsync();
+
             foreach (var item in addSpeciesDto.TagsRequire)
             {
-                SpeciesTagRequire toAdd = new SpeciesTagRequire();
-                toAdd.TagId = item.Id;
-                species.TagsRequire.Add(toAdd);
+                species.TagsRequire.Add(new SpeciesTagRequire { SpeciesId = species.Id, TagId = item });
             }
             foreach (var item in addSpeciesDto.TagsAvoid)
             {
-                SpeciesTagAvoid toAdd = new SpeciesTagAvoid();
-                toAdd.TagId = item.Id;
-                species.TagsAvoid.Add(toAdd);
+                species.TagsAvoid.Add(new SpeciesTagAvoid { SpeciesId = species.Id, TagId = item });
             }
-
-            _context.Species.Add(species);
             await _context.SaveChangesAsync();
 
             return species;
@@ -55,6 +52,7 @@ namespace ZooIS.Server.Services.SpeciesService
                 return await _context.Species
                                 .Where(s => s.Id == id)
                                 .Include(s => s.TagsRequire)
+                                .Include(s => s.TagsAvoid)
                                 .FirstOrDefaultAsync();
             }
             return await _context.Species.FirstOrDefaultAsync(s => s.Id == id);
@@ -62,23 +60,25 @@ namespace ZooIS.Server.Services.SpeciesService
 
         public async Task<Species> UpdateSpecies(UpdateSpeciesDto updateSpeciesDto, int id)
         {
-            Species species = await _context.Species.FirstOrDefaultAsync(s => s.Id == id);
-
+            //Species species = await _context.Species.FirstOrDefaultAsync(s => s.Id == id);
+            Species species = await _context.Species
+                                    .Where(s => s.Id == id)
+                                    .Include(s => s.TagsRequire)
+                                    .Include(s => s.TagsAvoid)
+                                    .FirstOrDefaultAsync();
+            if (species == null) { return null; }
             species.Name = updateSpeciesDto.Name;
+            species.TagsAvoid = new();
             species.TagsRequire.Clear();
-            species.TagsAvoid.Clear();
             foreach (var item in updateSpeciesDto.TagsRequire)
             {
-                SpeciesTagRequire toAdd = new SpeciesTagRequire();
-                toAdd.TagId = item.Id;
-                species.TagsRequire.Add(toAdd);
+                species.TagsRequire.Add(new SpeciesTagRequire { SpeciesId = species.Id, TagId = item });
             }
             foreach (var item in updateSpeciesDto.TagsAvoid)
             {
-                SpeciesTagAvoid toAdd = new SpeciesTagAvoid();
-                toAdd.TagId = item.Id;
-                species.TagsAvoid.Add(toAdd);
+                species.TagsAvoid.Add(new SpeciesTagAvoid { SpeciesId = species.Id, TagId = item });
             }
+
             await _context.SaveChangesAsync();
 
             return species;
@@ -87,7 +87,7 @@ namespace ZooIS.Server.Services.SpeciesService
         public async Task<Species> DeleteSpecies(int id)
         {
             Species species = await _context.Species.FirstOrDefaultAsync(s => s.Id == id);
-            if(species == null)
+            if (species == null)
             {
                 return null;
             }

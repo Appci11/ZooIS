@@ -20,7 +20,7 @@
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortBy="new Func<Area, object>(a=>a.Name)">Pavadinimas</MudTableSortLabel></MudTh>
-            <MudTh>Turimų buveinių skaičius</MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<Area, object>(a=>a.Habitats.Count)">Turimų buveinių skaičius</MudTableSortLabel></MudTh>
             <MudTh>Redaguoti / Šalinti</MudTh>
         </HeaderContent>
         <RowTemplate>

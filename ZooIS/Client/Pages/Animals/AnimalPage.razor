@@ -1,5 +1,13 @@
-﻿<h3>AnimalPage</h3>
+﻿@page "/animal"
+@page "/animal/{id:int}"
+
+<h3>AnimalPage</h3>
 
 @code {
+    [Parameter]
+    public int? Id { get; set; }
+    bool loaded;
+    string submitBtnText = string.Empty;
+
 
 }

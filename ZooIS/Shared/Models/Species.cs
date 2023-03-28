@@ -1,10 +1,12 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace ZooIS.Shared.Models
 {
     public class Species
     {
         public int Id { get; set; }
+        [Required(ErrorMessage = "Reikalinga")]
         public string Name { get; set; } = string.Empty;
 
         //relationships
@@ -13,7 +15,7 @@ namespace ZooIS.Shared.Models
 
         public List<SpeciesTagAvoid>? TagsAvoid { get; set; } = new List<SpeciesTagAvoid>();
         //with animal
-        [JsonIgnore]
+        //[JsonIgnore]  //Sutvarkyt, neturetu luzt be sito, patikrinus - pasalint
         public List<Animal>? Animals { get; set; } = new List<Animal>();
     }
 }

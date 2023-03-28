@@ -1,5 +1,176 @@
-﻿<h3>SingleSpeciesPage</h3>
+﻿@page "/singlespecies"
+@page "/singlespecies/{id:int}"
+
+@using System.Text
+@using ZooIS.Client.Services.SpeciesService
+@using ZooIS.Client.Services.TagsService
+@inject NavigationManager _navigationManager
+@inject ISpeciesService _speciesService
+@inject ITagsService _tagsService
+
+@if (Id == null)
+{
+    <PageTitle>Kūrimas</PageTitle>
+    <h3>Naujo rūšies įrašo kūrimas</h3>
+}
+else
+{
+    <PageTitle>Redaguoti</PageTitle>
+    <h3>Rūšies @species.Name įrašo duomenų redagavimas</h3>
+}
+
+@if (loaded)
+{
+    <MudContainer MaxWidth="MaxWidth.Large">
+        <EditForm Model="@species" OnValidSubmit="HandleSubmit">
+            <DataAnnotationsValidator />
+            <MudTextField @bind-Value="species.Name" For="@(() => species.Name)"
+                      Label="Rūšies pavadinimas" Variant="Variant.Text"></MudTextField>
+
+
+            <MudDropContainer Context="dropContext" T="DropItem" Items="_items" ItemsSelector="@((item,dropzone) => item.Identifier == dropzone)" ItemDropped="ItemUpdated" Class="d-flex flex-wrap flex-grow-1">
+                <ChildContent>
+                    <MudDropZone T="DropItem" Identifier="Drop Zone 1" Class="rounded mud-background-gray pa-6 ma-8 flex-grow-1">
+                        <MudText Typo="Typo.h6" Class="mb-4">Visos žymės</MudText>
+                    </MudDropZone>
+                    <MudDropZone T="DropItem" Identifier="Drop Zone 2" Class="rounded mud-background-gray pa-6 ma-8 flex-grow-1">
+                        <MudText Typo="Typo.h6" Class="mb-4">Pageidaujamos žymės</MudText>
+                    </MudDropZone>
+                    <MudDropZone T="DropItem" Identifier="Drop Zone 3" Class="rounded mud-background-gray pa-6 ma-8 flex-grow-1">
+                        <MudText Typo="Typo.h6" Class="mb-4">Vengtinos žymės</MudText>
+                    </MudDropZone>
+                </ChildContent>
+                <ItemRenderer>
+                    <MudPaper Elevation="25" Class="pa-4 my-4">@dropContext.Name</MudPaper>
+                </ItemRenderer>
+            </MudDropContainer>
+
+
+
+
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Style="margin-top:10px;">@submitBtnText</MudButton>
+        </EditForm>
+    </MudContainer>
+}
 
 @code {
+    [Parameter]
+    public int? Id { get; set; }
+    bool loaded;
+    string submitBtnText = string.Empty;
 
+    Species species = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        submitBtnText = Id == null ? "Pridėti" : "Redaguoti";
+        // per naujo ikeliu del "OnParametersSetAsync" kintamuosius pradanginancios magijos...
+        if (Id != null)
+        {
+            species = await _speciesService.GetSingleSpecies((int)Id);
+        }
+        Populate();
+        loaded = true;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id != null)
+        {
+            species = await _speciesService.GetSingleSpecies((int)Id);
+            if (species == null)
+            {
+                // Sutvarkyt
+                // write some error
+                species = new Species();
+            }
+        }
+    }
+
+    async Task HandleSubmit()
+    {
+        if (Id == null)
+        {
+            AddSpeciesTags();
+            await _speciesService.CreateSingleSpecies(species);
+            _navigationManager.NavigateTo("/allspecies");
+        }
+        else
+        {
+            AddSpeciesTags();
+            await _speciesService.UpdateSingleSpecies(species);
+            _navigationManager.NavigateTo("/allspecies");
+        }
+    }
+
+    public class DropItem
+    {
+        public string Name { get; set; }
+        public string Identifier { get; set; }
+
+        public int TagId { get; set; }
+    }
+
+    private List<DropItem> _items = new();
+
+    async void Populate()
+    {
+        // atnaujinami tag'ai ir ikeliami i default "Drop Zone 1"
+        await _tagsService.GetTags();
+        List<Tag> Tags = _tagsService.Tags;
+        foreach (Tag item in Tags)
+        {
+            _items.Add(new DropItem() { Name = item.Name, Identifier = "Drop Zone 1", TagId = item.Id});
+        }
+        // jei redagavimas, pakeiciamos kai kuriu tag'u zonos
+        if (Id != null)
+        {
+            foreach (SpeciesTagRequire item in species.TagsRequire)
+            {
+                var dItem = _items.FirstOrDefault((di) => di.TagId == item.TagId);
+
+                if (dItem != null)
+                {
+                    dItem.Identifier = "Drop Zone 2";
+                }
+            }
+            if(species.TagsAvoid != null)
+            {
+                foreach (SpeciesTagAvoid item in species.TagsAvoid)
+                {
+                    var dItem = _items.FirstOrDefault((di) => di.TagId == item.TagId);
+
+                    if (dItem != null)
+                    {
+                        dItem.Identifier = "Drop Zone 3";
+                    }
+                }
+            }
+
+
+        }
+        StateHasChanged();
+    }
+
+    void AddSpeciesTags()
+    {
+        species.TagsRequire.Clear();
+        species.TagsAvoid = new();
+        foreach (DropItem item in _items)
+        {
+            if (item.Identifier.CompareTo("Drop Zone 2") == 0)
+            {
+                species.TagsRequire.Add(new SpeciesTagRequire { SpeciesId = species.Id, TagId = item.TagId });
+            }
+            if (item.Identifier.CompareTo("Drop Zone 3") == 0)
+            {
+                species.TagsAvoid.Add(new SpeciesTagAvoid { SpeciesId = species.Id, TagId = item.TagId });
+            }
+        }
+    }
+
+    private void ItemUpdated(MudItemDropInfo<DropItem> dropItem)
+    {
+        dropItem.Item.Identifier = dropItem.DropzoneIdentifier;
+    }
 }

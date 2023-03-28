@@ -21,10 +21,12 @@ else
 }
 @if (loaded)
 {
+
     <MudContainer MaxWidth="MaxWidth.Large">
         <EditForm Model="@user" OnValidSubmit="HandleSubmit">
-            <MudTextField @bind-Value="user.Username" Label="Vartotojo vardas" Variant="Variant.Text"></MudTextField>
-            <MudTextField @bind-Value="user.Email" Label="Elektroninis Paštas" Variant="Variant.Text"></MudTextField>
+            <DataAnnotationsValidator />
+            <MudTextField @bind-Value="user.Username" Label="Vartotojo vardas" Variant="Variant.Text" For="@(() => user.Username)"></MudTextField>
+            <MudTextField @bind-Value="user.Email" Label="Elektroninis Paštas" Variant="Variant.Text" For="@(() => user.Email)"></MudTextField>
             <MudSelect @bind-Value="user.Role" T="string" Label="Rolė" AnchorOrigin="Origin.BottomCenter">
                 @foreach (string item in Enum.GetNames(typeof(UserRoles)))
                 {

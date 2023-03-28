@@ -1,5 +1,75 @@
-﻿<h3>AnimalsPage</h3>
+﻿@page "/animals"
+
+@using ZooIS.Client.Services.HabitatsService
+@using ZooIS.Client.Services.SpeciesService
+@using ZooIS.Client.Services.AnimalsService
+@inject IHabitatsService _habitatsService
+@inject ISpeciesService _speciesService
+@inject IAnimalsService _animalsService
+@inject NavigationManager _navigationManager
+@inject IDialogService _dialogService
+
+<PageTitle>Gyvūnai</PageTitle>
+
+@if (loaded)
+{
+    <MudTable Items="@_animalsService.Animals" Dense="true" Filter="new Func<Animal, bool>(FilterFunc)">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Gyvūnai</MudText>
+            <MudIconButton Href="/animal" Icon="@Icons.Material.Filled.AddCircleOutline" Color="Color.Primary" />
+            <MudSpacer />
+            <MudTextField @bind-Value="searchString" Placeholder="Ieškoti" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortBy="new Func<Animal, object>(a=>a.Name!)">Vardas</MudTableSortLabel></MudTh>
+            <MudTh>Redaguoti / Šalinti</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd>@context.Name</MudTd>
+            <MudTd>
+                <MudIconButton @onclick="(() => GoToEdit(context))" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Color="Color.Primary" />
+                <MudIconButton OnClick="(() => DeleteAnimal(context.Id))" Size="@Size.Small" Icon="@Icons.Material.Filled.RemoveCircleOutline" Color="Color.Warning" />
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager RowsPerPageString="Įrašai per puslapį" />
+        </PagerContent>
+    </MudTable>
+}
 
 @code {
+    bool loaded;
+    string searchString = string.Empty;
+    protected DeleteConfirmationDialog confirmationDialog { get; set; }
 
+    protected override async Task OnInitializedAsync()
+    {
+        await _animalsService.GetAnimals();
+        loaded = true;
+    }
+
+    private bool FilterFunc(Animal element) => FilterFunc1(element, searchString);
+
+    private bool FilterFunc1(Animal element, string searchStr)
+    {
+        if (string.IsNullOrWhiteSpace(searchStr))
+            return true;
+        if (element.Name.Contains(searchStr, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+    void GoToEdit(Animal a) => _navigationManager.NavigateTo($"/animal/{a.Id}");
+
+    async Task DeleteAnimal(int id)
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("BodyText", "Tikrai pašalinti Gyvūną?");
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+        var dialog = _dialogService.Show<ConfirmDeletionDialog>("Šalinimas", parameters, options);
+        if (!(await dialog.Result).Canceled)
+        {
+            await _animalsService.DeleteAnimal(id);
+        }
+    }
 }

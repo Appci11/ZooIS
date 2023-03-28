@@ -8,7 +8,9 @@ namespace ZooIS.Shared.Models
     public class RegisteredUser
     {
         public int Id { get; set; }
+        [Required (ErrorMessage = "Reikalinga")]
         public string Username { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Reikalinga")]
         public string Email { get; set; } = string.Empty;
         // using BCrypt.net-Next for PasswordHash, turi hash + salt sudeta i viena
         public string PasswordHash { get; set; } = string.Empty;

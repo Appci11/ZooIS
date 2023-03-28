@@ -71,7 +71,17 @@ namespace ZooIS.Client.Services.HabitatsService
 
         public async Task<bool> UpdataHabitat(Habitat habitat)
         {
-            HttpResponseMessage response = await _http.PutAsJsonAsync($"/api/habitats/{habitat.Id}", habitat);
+            UpdateHabitatDto dto = new ();
+            dto.AreaId = habitat.AreaId;
+            dto.Name = habitat.Name;
+            dto.Description = habitat.Description;
+            foreach (var item in habitat.Tags)
+            {
+                dto.TagIds.Add(item.Id);
+            }
+            HttpResponseMessage response = await _http.PutAsJsonAsync($"/api/habitats/{habitat.Id}", dto);
+
+            await Console.Out.WriteLineAsync("AAAAAAAAA");
             return response.IsSuccessStatusCode;
         }
     }

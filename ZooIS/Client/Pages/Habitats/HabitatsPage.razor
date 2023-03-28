@@ -36,6 +36,9 @@
                 <MudIconButton OnClick="(() => DeleteHabitat(context.Id))" Size="@Size.Small" Icon="@Icons.Material.Filled.RemoveCircleOutline" Color="Color.Warning" />
             </MudTd>
         </RowTemplate>
+        <PagerContent>
+            <MudTablePager RowsPerPageString="Įrašai per puslapį" />
+        </PagerContent>
     </MudTable>
 }
 

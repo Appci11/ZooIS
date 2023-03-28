@@ -1,10 +1,10 @@
 ﻿@page "/habitat"
 @page "/habitat/{id:int}"
 
-@using System.Text;
-@using ZooIS.Client.Services.AreasService;
-@using ZooIS.Client.Services.HabitatsService;
-@using ZooIS.Client.Services.TagsService;
+@using System.Text
+@using ZooIS.Client.Services.AreasService
+@using ZooIS.Client.Services.HabitatsService
+@using ZooIS.Client.Services.TagsService
 @inject NavigationManager _navigationManager
 @inject IHabitatsService _habitatsService
 @inject ITagsService _tagsService
@@ -18,16 +18,17 @@
 else
 {
     <PageTitle>Redaguoti</PageTitle>
-    @*<h3>Zonos @area.Name duomenų redagavimas</h3>*@
+    <h3>Buveinės @habitat.Name duomenų redagavimas</h3>
 }
 
 @if (loaded)
 {
     <MudContainer MaxWidth="MaxWidth.Large">
         <EditForm Model="@habitat" OnValidSubmit="HandleSubmit">
-            <MudTextField @bind-Value="habitat.Name" Required="true" RequiredError="Neįvestas pavadinimas."
+            <DataAnnotationsValidator />
+            <MudTextField @bind-Value="habitat.Name" For="@(() => habitat.Name)"
                       Label="Buveinės pavadinimas" Variant="Variant.Text"></MudTextField>
-            <MudSelect @bind-Value="habitat.AreaId" T="int" Label="Priklauso zonai" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+            <MudSelect @bind-Value="habitat.AreaId" T="int" Label="Priklauso zonai" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" For="@(() => habitat.AreaId)">
                 @foreach (var item in _areasService.Areas)
                 {
                     <MudSelectItem Value="@item.Id">(@item.Id) (@item.Name)</MudSelectItem>
@@ -67,7 +68,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         submitBtnText = Id == null ? "Pridėti" : "Redaguoti";
-        // per naujo ikeliu del "OnParametersSetAsync" kintamuosius pradanginancios magijos...
+        // per naujo... del "OnParametersSetAsync" liste esanciu reiksmiu pradanginimo...
         if (Id != null)
         {
             habitat = await _habitatsService.GetHabitat((int)Id);
@@ -76,7 +77,7 @@ else
         loaded = true;
     }
 
-    //??? kintamuosius issaugo teisingai, bet list'o dali random iseidamas istrina...
+    //??? kintamuosius issaugo teisingai, bet saraso narius - ne ...
     protected override async Task OnParametersSetAsync()
     {
         if (Id != null)
@@ -119,7 +120,6 @@ else
         }
         if (Id != null)
         {
-            Console.WriteLine("entered ID != NULL");
             foreach (var item in habitat.Tags)
             {
                 var dItem = _items.FirstOrDefault((i) => i.Name.CompareTo(item.Name) == 0);
@@ -128,10 +128,6 @@ else
                     dItem.Identifier = "Drop Zone 2";
                 }
             }
-        }
-        else
-        {
-            Console.WriteLine("GUESS ID IS NULL");
         }
         StateHasChanged();
     }

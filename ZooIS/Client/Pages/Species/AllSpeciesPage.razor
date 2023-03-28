@@ -1,5 +1,78 @@
-﻿<h3>AllSpeciesPage</h3>
+﻿@page "/allspecies"
+
+@using ZooIS.Client.Services.SpeciesService
+@inject ISpeciesService _speciesService
+@inject NavigationManager _navigationManager
+@inject IDialogService _dialogService
+
+<PageTitle>Rūšys</PageTitle>
+
+@if (loaded)
+{
+    <MudTable Items="@_speciesService.AllSpecies" Dense="true" Filter="new Func<Species, bool>(FilterFunc)">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Gyvūnų rūšys</MudText>
+            <MudIconButton Href="/singlespecies" Icon="@Icons.Material.Filled.AddCircleOutline" Color="Color.Primary" />
+            <MudSpacer />
+            <MudTextField @bind-Value="searchString" Placeholder="Ieškoti" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortBy="new Func<Habitat, object>(h=>h.Name!)">Pavadinimas</MudTableSortLabel></MudTh>
+            <MudTh>Gyvūnų kiekis</MudTh>
+            <MudTh>Pageidautinos žymos</MudTh>
+            <MudTh>Vengtinos žymos</MudTh>
+            <MudTh>Redaguoti / Šalinti</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd>@context.Name</MudTd>
+            <MudTd>@context.Animals.Count</MudTd>
+            <MudTd>@context.TagsRequire.Count</MudTd>
+            <MudTd>@context.TagsAvoid.Count</MudTd>
+            <MudTd>
+                <MudIconButton @onclick="(() => GoToEdit(context))" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Color="Color.Primary" />
+                <MudIconButton OnClick="(() => DeleteSpecies(context.Id))" Size="@Size.Small" Icon="@Icons.Material.Filled.RemoveCircleOutline" Color="Color.Warning" />
+            </MudTd>
+
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager RowsPerPageString="Įrašai per puslapį" />
+        </PagerContent>
+    </MudTable>
+}
 
 @code {
+    bool loaded;
+    string searchString = string.Empty;
+    protected DeleteConfirmationDialog confirmationDialog { get; set; }
 
+    protected override async Task OnInitializedAsync()
+    {
+        await _speciesService.GetAllSpecies();
+        loaded = true;
+    }
+
+    private bool FilterFunc(Species element) => FilterFunc1(element, searchString);
+
+    private bool FilterFunc1(Species element, string searchStr)
+    {
+        if (string.IsNullOrWhiteSpace(searchStr))
+            return true;
+        if (element.Name.Contains(searchStr, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+    void GoToEdit(Species s) => _navigationManager.NavigateTo($"/singlespecies/{s.Id}");
+
+    async Task DeleteSpecies(int id)
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("BodyText", "Pašalinti gyvūnų rūšį?");
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+        var dialog = _dialogService.Show<ConfirmDeletionDialog>("Šalinimas", parameters, options);
+        if (!(await dialog.Result).Canceled)
+        {
+            await _speciesService.DeleteSingleSpecies(id);
+        }
+    }
 }

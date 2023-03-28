@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Json;
+using ZooIS.Shared.Dto;
 using ZooIS.Shared.Models;
-using static MudBlazor.CategoryTypes;
 
 namespace ZooIS.Client.Services.SpeciesService
 {
@@ -17,7 +17,21 @@ namespace ZooIS.Client.Services.SpeciesService
 
         public async Task<bool> CreateSingleSpecies(Species species)
         {
-            HttpResponseMessage response = await _http.PostAsJsonAsync($"/api/species", species);
+            AddSpeciesDto dto = new AddSpeciesDto();
+            dto.Name = species.Name;
+            foreach (var item in species.TagsRequire) 
+            {
+                dto.TagsRequire.Add(item.TagId);
+            }
+            if(species.TagsAvoid != null)
+            {
+                foreach (var item in species.TagsAvoid)
+                {
+                    dto.TagsAvoid.Add(item.TagId);
+                }
+            }         
+
+            HttpResponseMessage response = await _http.PostAsJsonAsync($"/api/species", dto);
             return response.IsSuccessStatusCode;
         }
 
@@ -62,7 +76,21 @@ namespace ZooIS.Client.Services.SpeciesService
 
         public async Task<bool> UpdateSingleSpecies(Species species)
         {
-            HttpResponseMessage response = await _http.PutAsJsonAsync($"/api/species/{species.Id}", species);
+            UpdateSpeciesDto dto = new ();
+            dto.Name = species.Name;
+            foreach (var item in species.TagsRequire)
+            {
+                dto.TagsRequire.Add(item.TagId);
+            }
+            if (species.TagsAvoid != null)
+            {
+                foreach (var item in species.TagsAvoid)
+                {
+                    dto.TagsAvoid.Add(item.TagId);
+                }
+            }
+
+            HttpResponseMessage response = await _http.PutAsJsonAsync($"/api/species/{species.Id}", dto);
             return response.IsSuccessStatusCode;
         }
     }

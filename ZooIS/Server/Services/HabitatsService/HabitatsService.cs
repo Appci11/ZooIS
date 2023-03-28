@@ -63,13 +63,11 @@ namespace ZooIS.Server.Services.HabitatsService
             habitat.AreaId = updateHabitatDto.AreaId;
             habitat.Tags.Clear();
             List<Tag> dbTags = await _context.Tags.ToListAsync();
-            foreach (var item in updateHabitatDto.Tags)
+            foreach (int tagId in updateHabitatDto.TagIds)
             {
-                Tag dbTag = dbTags.FirstOrDefault(t => t.Id == item.Id);
-                if (dbTag != null)
-                {
-                    habitat.Tags.Add(dbTag);
-                }
+                Tag foundTag;
+                foundTag = await _context.Tags.FirstOrDefaultAsync((t) => t.Id == tagId);
+                if (foundTag != null) { habitat.Tags.Add(foundTag); }
             }
             await _context.SaveChangesAsync();
 
