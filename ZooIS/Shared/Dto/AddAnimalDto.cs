@@ -14,6 +14,7 @@ namespace ZooIS.Shared.Dto
         public DateTime? DateOfDeparture { get; set; } = DateTime.MinValue;
         public DateTime DateOfBirth { get; set; } = DateTime.MinValue;
         public string State { get; set; } = SpeciesState.Healthy.ToString();
+        
         public int? HabitatId { get; set; }
         public int SpeciesId { get; set; }
     }

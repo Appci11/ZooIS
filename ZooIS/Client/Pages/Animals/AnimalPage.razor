@@ -1,7 +1,59 @@
 ﻿@page "/animal"
 @page "/animal/{id:int}"
 
-<h3>AnimalPage</h3>
+@using ZooIS.Client.Services.HabitatsService
+@using ZooIS.Client.Services.SpeciesService
+@using ZooIS.Client.Services.AnimalsService
+@inject NavigationManager _navigationManager
+@inject IHabitatsService _habitatsService
+@inject ISpeciesService _speciesService
+@inject IAnimalsService _animalsService
+
+@if (Id == null)
+{
+    <PageTitle>Įkėlimas</PageTitle>
+    <h3>Naujo gyvūno škėlimas</h3>
+}
+else
+{
+    <PageTitle>Redaguoti</PageTitle>
+    <h3>Gyvūno @animal.Name duomenų redagavimas</h3>
+}
+
+@if (loaded)
+{
+    <MudContainer MaxWidth="MaxWidth.Large">
+        <EditForm Model="@animal" OnValidSubmit="HandleSubmit">
+            <DataAnnotationsValidator />
+            <MudTextField @bind-Value="animal.Name" For="@(() => animal.Name)" Label="Gyvūno vardas" Variant="Variant.Text"></MudTextField>
+            <MudSelect @bind-Value="animal.State" T="string" Label="Būsena" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+                @foreach (string item in Enum.GetNames(typeof(SpeciesState)))
+                {
+                    <MudSelectItem Value="item" />
+                }
+            </MudSelect>
+            <MudSelect @bind-Value="animal.SpeciesId" T="int" Label="Rūšis" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" For="@(() => animal.SpeciesId)">
+                @foreach (var item in _speciesService.AllSpecies)
+                {
+                    <MudSelectItem Value="@item.Id">@item.Name (@item.Id)</MudSelectItem>
+                }
+            </MudSelect>
+            <MudSelect @bind-Value="AnimalHabitatId" T="int" Label="Paskirta buveinė" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+                @foreach (var item in _habitatsService.Habitats)
+                {
+                    <MudSelectItem Value="@item.Id">@item.Name (@item.Id)</MudSelectItem>
+                }
+            </MudSelect>
+            <MudDatePicker Label="Atvykimo data" Editable="true" @bind-Date="animal.DateAquired"
+                       Mask="@(new DateMask("0000-00-00"))" DateFormat="yyyy-MM-dd" Placeholder="Atvykimo data (nebūtina)" />
+            <MudDatePicker Label="Išvykimo data" Editable="true" @bind-Date="animal.DateOfDeparture"
+                       Mask="@(new DateMask("0000-00-00"))" DateFormat="yyyy-MM-dd" Placeholder="Išvykimo data (nebūtina)" />
+            <MudDatePicker Label="Gimimo data" Editable="true" @bind-Date="animal.DateOfBirth"
+                       Mask="@(new DateMask("0000-00-00"))" DateFormat="yyyy-MM-dd" Placeholder="Gimimo data (nebūtina)" />
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Style="margin-top:10px;">@submitBtnText</MudButton>
+        </EditForm>
+    </MudContainer>
+}
 
 @code {
     [Parameter]
@@ -9,5 +61,55 @@
     bool loaded;
     string submitBtnText = string.Empty;
 
+    Animal animal = new();
 
+    // bindings fix
+    int AnimalHabitatId
+    {
+        get
+        {
+            if (animal.HabitatId != null)
+            {
+                return animal.HabitatId.Value;
+            }
+            return 0;
+        }
+        set { animal.HabitatId = value; }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        submitBtnText = Id == null ? "Pridėti" : "Redaguoti";
+        await _speciesService.GetAllSpecies();
+        await _habitatsService.GetHabitats();
+        loaded = true;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id != null)
+        {
+            animal = await _animalsService.GetAnimal((int)Id);
+            if (animal == null)
+            {
+                // Sutvarkyt
+                // write some error
+                animal = new();
+            }
+        }
+    }
+
+    async Task HandleSubmit()
+    {
+        if (Id == null)
+        {
+            await _animalsService.CreateAnimal(animal);
+            _navigationManager.NavigateTo("/animals");
+        }
+        else
+        {
+            await _animalsService.UpdateAnimal(animal);
+            _navigationManager.NavigateTo("/animals");
+        }
+    }
 }

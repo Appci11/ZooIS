@@ -14,19 +14,20 @@ namespace ZooIS.Shared.Models
         public int Id { get; set; }
         [Required(ErrorMessage = "Reikalinga")]
         public string Name { get; set; } = string.Empty;
-        public DateTime? DateAquired { get; set; } = DateTime.MinValue;
-        public DateTime? DateOfDeparture { get; set; } = DateTime.MinValue;
-        public DateTime? DateOfBirth { get; set; } = DateTime.MinValue;
+        public DateTime? DateAquired { get; set; } = DateTime.Now;
+        public DateTime? DateOfDeparture { get; set; } = DateTime.Now;
+        public DateTime? DateOfBirth { get; set; } = DateTime.Now;
         public string State { get; set; } = SpeciesState.Healthy.ToString();
 
         //relationships
         //with habitat
         [JsonIgnore]
         public Habitat? Habitat { get; set; }
+
         public int? HabitatId { get; set; }
         //with species
         [JsonIgnore]
-        public Species Species { get; set; }
+        public Species Species { get; set; } = new();
         [Required(ErrorMessage = "Reikalinga")]
         public int SpeciesId { get; set; }
 
