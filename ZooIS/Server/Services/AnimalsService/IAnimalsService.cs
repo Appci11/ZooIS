@@ -6,7 +6,7 @@ namespace ZooIS.Server.Services.AnimalsService
     public interface IAnimalsService
     {
         Task<Animal> AddAnimal(AddAnimalDto addAnimalDto);
-        Task<List<Animal>> GetAllAnimals();
+        Task<List<Animal>> GetAllAnimals(bool includeRelated);
         Task<Animal> GetAnimal(int id);
         Task<Animal> UdateAnimal(UpdateAnimalDto updateAnimalDto, int id);
         Task<Animal> UdateAnimalState(UpdateAnimalStateDto updateAnimalStateDto, int id);

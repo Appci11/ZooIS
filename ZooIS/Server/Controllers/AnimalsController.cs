@@ -31,7 +31,7 @@ namespace ZooIS.Server.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllAnimals()
         {
-            List<Animal> response = await _animalsService.GetAllAnimals();
+            List<Animal> response = await _animalsService.GetAllAnimals(true);
             if(response.Count > 0)
             {
                 return Ok(response);

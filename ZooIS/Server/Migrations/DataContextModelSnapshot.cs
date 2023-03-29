@@ -41,7 +41,7 @@ namespace ZooIS.Server.Migrations
                     b.Property<DateTime?>("DateAquired")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("DateOfBirth")
+                    b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("DateOfDeparture")
@@ -145,6 +145,7 @@ namespace ZooIS.Server.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

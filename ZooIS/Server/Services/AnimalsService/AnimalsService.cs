@@ -41,8 +41,13 @@ namespace ZooIS.Server.Services.AnimalsService
             return animal;
         }
 
-        public async Task<List<Animal>> GetAllAnimals()
+        public async Task<List<Animal>> GetAllAnimals(bool includeRelated)
         {
+            if(includeRelated)
+                return await _context.Animals
+                .Include(a => a.Species)
+                .Include(a => a.Habitat)
+                .ToListAsync();
             return await _context.Animals.ToListAsync();
         }
 

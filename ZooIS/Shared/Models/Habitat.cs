@@ -20,6 +20,7 @@ namespace ZooIS.Shared.Models
         [JsonIgnore]
         public Area Area { get; set; }
         [Required(ErrorMessage = "Reikalinga")]
+        [Range(1, int.MaxValue, ErrorMessage = "Nenurodyta zona")]
         public int AreaId { get; set; }
     }
 }

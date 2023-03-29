@@ -40,6 +40,7 @@ namespace ZooIS.Server.Services.SpeciesService
                 return await _context.Species
                                     .Include(s => s.TagsRequire)
                                     .Include(s => s.TagsAvoid)
+                                    .Include(s => s.Animals)
                                     .ToListAsync();
             }
             return await _context.Species.ToListAsync();

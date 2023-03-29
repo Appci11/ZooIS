@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using ZooIS.Shared.Enums;
 
 namespace ZooIS.Shared.Models
@@ -14,22 +9,24 @@ namespace ZooIS.Shared.Models
         public int Id { get; set; }
         [Required(ErrorMessage = "Reikalinga")]
         public string Name { get; set; } = string.Empty;
-        public DateTime? DateAquired { get; set; } = DateTime.Now;
-        public DateTime? DateOfDeparture { get; set; } = DateTime.Now;
+        public DateTime? DateAquired { get; set; }
+        public DateTime? DateOfDeparture { get; set; }
         public DateTime? DateOfBirth { get; set; } = DateTime.Now;
         public string State { get; set; } = SpeciesState.Healthy.ToString();
 
         //relationships
         //with habitat
-        [JsonIgnore]
+        //[JsonIgnore]  //Sutvarkyt patikrint ir jei EFcore nemess err - istrint
         public Habitat? Habitat { get; set; }
 
         public int? HabitatId { get; set; }
         //with species
-        [JsonIgnore]
-        public Species Species { get; set; } = new();
+        //[JsonIgnore]  //Sutvarkyt patikrint ir jei EFcore nemess err - istrint
+        public Species Species { get; set; }
         [Required(ErrorMessage = "Reikalinga")]
-        public int SpeciesId { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "Nenurodyta rūšis")]
+
+        public int SpeciesId { get; set; } 
 
     }
 }

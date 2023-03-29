@@ -21,11 +21,28 @@
             <MudTextField @bind-Value="searchString" Placeholder="Ieškoti" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
         <HeaderContent>
-            <MudTh><MudTableSortLabel SortBy="new Func<Animal, object>(a=>a.Name!)">Vardas</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<Animal, object>(a=>a.Name)">Vardas</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<Animal, object>(a=>a.Species.Name)">Rūšis</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<Animal, object>(a=>{return true;})">Buveinė</MudTableSortLabel></MudTh> @*??? Sutvarkyt privaloma nurodyt funkcija... kurios vis tiek nenaudoja...*@
+            <MudTh>Atvykimo data</MudTh>
+            <MudTh>Išvykimo data</MudTh>
+            <MudTh>Gimimo data</MudTh>
             <MudTh>Redaguoti / Šalinti</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd>@context.Name</MudTd>
+            <MudTd>@context.Species.Name</MudTd>
+            @if(context.Habitat != null)
+            {
+                <MudTd>@context.Habitat.Name</MudTd>
+            }
+            else
+            {
+                <MudTd></MudTd>
+            }
+            <MudTd>@context.DateAquired</MudTd>
+            <MudTd>@context.DateOfDeparture</MudTd>
+            <MudTd>@context.DateOfBirth</MudTd>
             <MudTd>
                 <MudIconButton @onclick="(() => GoToEdit(context))" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Color="Color.Primary" />
                 <MudIconButton OnClick="(() => DeleteAnimal(context.Id))" Size="@Size.Small" Icon="@Icons.Material.Filled.RemoveCircleOutline" Color="Color.Warning" />
@@ -58,6 +75,11 @@
             return true;
         if (element.Name.Contains(searchStr, StringComparison.OrdinalIgnoreCase))
             return true;
+        if (element.Species.Name.Contains(searchStr, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Habitat != null)
+            if (element.Habitat.Name.Contains(searchStr, StringComparison.OrdinalIgnoreCase))
+                return true;
         return false;
     }
 

@@ -109,7 +109,7 @@ namespace ZooIS.Server.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: true),
                     AreaId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
@@ -223,7 +223,7 @@ namespace ZooIS.Server.Migrations
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     DateAquired = table.Column<DateTime>(type: "TEXT", nullable: true),
                     DateOfDeparture = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    DateOfBirth = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    DateOfBirth = table.Column<DateTime>(type: "TEXT", nullable: true),
                     State = table.Column<string>(type: "TEXT", nullable: false),
                     HabitatId = table.Column<int>(type: "INTEGER", nullable: true),
                     SpeciesId = table.Column<int>(type: "INTEGER", nullable: false)
