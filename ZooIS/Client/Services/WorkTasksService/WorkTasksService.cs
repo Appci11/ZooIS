@@ -1,41 +1,86 @@
-﻿using ZooIS.Shared.Models;
+﻿using System.Net.Http.Json;
+using ZooIS.Shared.Models;
 
 namespace ZooIS.Client.Services.WorkTasksService
 {
     public class WorkTasksService : IWorkTasksService
     {
         private readonly HttpClient _http;
-
-        public List<WorkTask> WorkTasks { get; set; }
+        public List<WorkTask> WorkTasks { get; set; } = new List<WorkTask>();
 
         public WorkTasksService(HttpClient http)
         {
             _http = http;
         }
 
-        public Task<bool> CreateWorkTask(WorkTask workTask)
+        public async Task<bool> CreateWorkTask(WorkTask workTask)
         {
-            throw new NotImplementedException();
+            HttpResponseMessage response = await _http.PostAsJsonAsync($"/api/worktasks/", workTask);
+            return response.IsSuccessStatusCode;
         }
 
-        public Task<bool> DeleteWorkTask(int id)
+        public async Task<bool> DeleteWorkTask(int id)
         {
-            throw new NotImplementedException();
+            var response = await _http.DeleteAsync($"/api/worktasks/{id}");
+            if (response.IsSuccessStatusCode)
+            {
+                WorkTask task = WorkTasks.FirstOrDefault(x => x.Id == id)!;
+                if (task != null)
+                {
+                    WorkTasks.Remove(task);
+                    return true;
+                }
+            }
+            return false;
         }
 
-        public Task<WorkTask> GetWorkTask(int id)
+        public async Task<WorkTask> GetWorkTask(int id)
         {
-            throw new NotImplementedException();
+            var result = await _http.GetFromJsonAsync<WorkTask>($"/api/worktasks/{id}");
+            if (result != null)
+            {
+                return result;
+            }
+            return null;
         }
 
-        public Task GetWorkTasks()
+        public async Task GetWorkTasks()
         {
-            throw new NotImplementedException();
+            List<WorkTask> result = new List<WorkTask>();
+            try
+            {
+                result = await _http.GetFromJsonAsync<List<WorkTask>>("/api/worktasks");
+            }
+            catch { }
+            if (result != null && result.Count > 0)
+            {
+                WorkTasks = result;
+            }
         }
 
-        public Task<bool> UpdateWorkTask(WorkTask workTask)
+        public async Task<bool> UpdateWorkTask(WorkTask workTask)
         {
-            throw new NotImplementedException();
+            HttpResponseMessage response = await _http.PutAsJsonAsync($"/api/worktasks/{workTask.Id}", workTask);
+            if (response.IsSuccessStatusCode)
+            {
+                WorkTask task = WorkTasks.FirstOrDefault(x => x.Id == workTask.Id)!;
+                if (task != null)
+                {
+                    task.Name = workTask.Name;
+                    task.IsCompleted = workTask.IsCompleted;
+                }
+            }
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<int> DeleteWorkTasks(HashSet<WorkTask> workTasks)
+        {
+            int c = 0;
+            foreach (var item in workTasks)
+            {
+                if (await DeleteWorkTask(item.Id)) c++;
+            }
+            return c;
         }
     }
 }

@@ -85,8 +85,8 @@ namespace ZooIS.Server.Services.UsersService
             dbUser.DeletionRequested = userUpdateDto.DeletionRequested;
             dbUser.IsDeleted = userUpdateDto.IsDeleted;
             dbUser.Role = userUpdateDto.Role;
-            await _context.SaveChangesAsync();
-           
+
+            await _context.SaveChangesAsync();           
             return dbUser;
         }
 

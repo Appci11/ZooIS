@@ -48,5 +48,20 @@ namespace ZooIS.Server.Services.WorkTasksService
             WorkTask? response = await _context.WorkTasks.FirstOrDefaultAsync(x => x.Id == id);
             return response;
         }
+
+        public async Task<WorkTask> UpdateWorkTask(UpdateWorkTaskDto dto, int id)
+        {
+            WorkTask workTask = await _context.WorkTasks.FirstOrDefaultAsync(wt => wt.Id == id);
+            if(workTask == null)
+            {
+                return null;
+            }
+            workTask.Name = dto.Name;
+            workTask.Description = dto.Description;
+            workTask.IsCompleted = dto.IsCompleted;
+
+            await _context.SaveChangesAsync();
+            return workTask;
+        }
     }
 }

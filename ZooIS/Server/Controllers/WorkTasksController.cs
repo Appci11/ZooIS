@@ -21,7 +21,7 @@ namespace ZooIS.Server.Controllers
         public async Task<IActionResult> AddWorkTask(AddWorkTaskDto request)
         {
             WorkTask response = await _workTasksService.AddWorkTask(request);
-            if(response != null)
+            if (response != null)
             {
                 return Created($"/api/[controller]/{response.Id}", response);
             }
@@ -32,7 +32,7 @@ namespace ZooIS.Server.Controllers
         public async Task<IActionResult> GetAllWorkTasks()
         {
             List<WorkTask> response = await _workTasksService.GetAllWorkTasks();
-            if(response.Count > 0)
+            if (response.Count > 0)
             {
                 return Ok(response);
             }
@@ -43,7 +43,7 @@ namespace ZooIS.Server.Controllers
         public async Task<ActionResult<WorkTask>> GetWorkTask(int id)
         {
             WorkTask response = await _workTasksService.GetWorkTask(id);
-            if(response != null)
+            if (response != null)
             {
                 return Ok(response);
             }
@@ -54,11 +54,22 @@ namespace ZooIS.Server.Controllers
         public async Task<IActionResult> DeleteWorkTask(int id)
         {
             WorkTask response = await _workTasksService.DeleteWorkTask(id);
-            if(response != null)
+            if (response != null)
             {
                 return Ok(response);
             }
             return NotFound(new { message = "No task was found. Nothing deleted." });
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<WorkTask>> UpdateWorkTask(UpdateWorkTaskDto dto, int id)
+        {
+            WorkTask response = await _workTasksService.UpdateWorkTask(dto, id);
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            return NotFound(new { message = "WorkTask not found" });
         }
     }
 }
