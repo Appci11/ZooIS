@@ -1,0 +1,37 @@
+﻿<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.PostAdd" Class="mr-3 mb-n1" />
+            Darbo pridėjimas
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudContainer MaxWidth="MaxWidth.Medium">
+            <EditForm Model="@dto" OnValidSubmit="Submit">
+                <DataAnnotationsValidator />
+                <MudTextField @bind-Value="@dto.Name" Label="Pavadinimas" For="@(() => dto.Name)" />
+                <MudTextField @bind-Value="@dto.Description" Label="Aprašymas" Lines="5" For="@(() => dto.Description)" />
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Style="margin-top:10px;">Kurti</MudButton>
+            </EditForm>
+        </MudContainer>
+    </DialogContent>
+    @*
+    <DialogActions>
+    <MudButton OnClick="Cancel">Atšaukti</MudButton>
+    <MudButton Color="Color.Tertiary" OnClick="Submit">Kurti</MudButton>
+    </DialogActions>
+    *@
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    AddWorkTaskDto dto = new();
+
+    void Cancel() => MudDialog.Cancel();
+
+    void Submit()
+    {
+        MudDialog.Close(DialogResult.Ok(dto));
+    }
+}

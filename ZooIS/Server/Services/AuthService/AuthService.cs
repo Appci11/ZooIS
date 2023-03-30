@@ -11,7 +11,7 @@ namespace ZooIS.Server.Services.AuthService
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
 
-        const string REFRESH_TOKEN = "TOTALLY_LEGIT-refresh-token"; //Sutvarkyt + data saugot pakeitimui
+        const string REFRESH_TOKEN = "TOTALLY_LEGIT-refresh-token"; //Sutvarkyt. esant noro ir laiko galima idet
 
         public AuthService(DataContext context, IConfiguration configuration)
         {

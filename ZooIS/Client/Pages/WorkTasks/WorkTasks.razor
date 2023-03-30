@@ -1,5 +1,44 @@
-﻿<h3>WorkTasks</h3>
+﻿@page "/worktasks"
+@attribute [Authorize]
+
+@using ZooIS.Client.Services.WorkTasksService;
+@inject IDialogService _dialogService
+@inject ILocalStorageService _localStorage
+@inject IWorkTasksService _workTasksService
+
+<PageTitle>Darbai</PageTitle>
+
+<AuthorizeView>
+    <MudFab OnClick="() => OpenDialog()" Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.Add" Size="Size.Large" Style="margin-top:15px;" />
+</AuthorizeView>
+
 
 @code {
+    bool loaded = false;
 
+    async void OpenDialog()
+    {
+        var dialog = await _dialogService.ShowAsync<WorkTaskDataFormDialog>();
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            AddWorkTaskDto dto = new();
+            dto = (AddWorkTaskDto)result.Data;
+            AddWorkTask(dto);
+        }
+    }
+
+    async void AddWorkTask(AddWorkTaskDto workTask)
+    {
+        if (workTask.Name != string.Empty && workTask.Description != string.Empty)
+        {
+            int userId = await _localStorage.GetItemAsync<int>("userId");
+            WorkTask request = new WorkTask();
+            request.Name = workTask.Name;
+            request.Description = workTask.Description;
+            request.CreatorId = userId;
+            await _workTasksService.CreateWorkTask(request);
+        }
+    }
 }

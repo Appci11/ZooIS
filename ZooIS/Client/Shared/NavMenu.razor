@@ -12,8 +12,10 @@
     <MudNavLink Href="habitats" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Home">Buveinės</MudNavLink>
     <MudNavLink Href="allspecies" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Pageview">Rūšys</MudNavLink>
     <MudNavLink Href="animals" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Gyvūnai</MudNavLink>
-    <MudNavLink Href="worktasks/edit" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Darbai</MudNavLink>
-
+    <MudNavLink Href="worktasks/edit" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Darbų sąrašas</MudNavLink>
+    <AuthorizeView>
+        <MudNavLink Href="worktasks" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Darbai</MudNavLink>
+    </AuthorizeView>
 
 
     <MudNavLink Href="counter" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Add">Counter</MudNavLink>

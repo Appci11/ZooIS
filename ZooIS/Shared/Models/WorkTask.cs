@@ -17,6 +17,7 @@ namespace ZooIS.Shared.Models
         [Required(ErrorMessage = "Reikalinga")]
         public string Description { get; set; } = string.Empty;
         public DateTime TimeCreated { get; set; } = DateTime.Now;
+        public int CreatorId { get; set; }
         public bool IsCompleted { get; set; }
     }
 }

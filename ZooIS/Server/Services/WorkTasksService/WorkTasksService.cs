@@ -17,6 +17,7 @@ namespace ZooIS.Server.Services.WorkTasksService
 
             workTask.Name = workTaskDto.Name;
             workTask.Description = workTaskDto.Description;
+            workTask.CreatorId = workTaskDto.CreatorId;
 
             _context.WorkTasks.Add(workTask);
             await _context.SaveChangesAsync();

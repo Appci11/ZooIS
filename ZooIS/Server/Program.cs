@@ -39,7 +39,7 @@ builder.Services.AddScoped<IHabitatsService, HabitatsService>();
 builder.Services.AddScoped<ISpeciesService, SpeciesService>();
 builder.Services.AddScoped<IAnimalsService, AnimalsService>();
 
-//adding swagget info start
+//adding swagger info start
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
@@ -51,7 +51,7 @@ builder.Services.AddSwaggerGen(options =>
     });
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
-//adding swagget info end
+//adding swagger info end
 
 builder.Services.AddRazorPages();
 builder.Services.AddDbContext<DataContext>(options =>

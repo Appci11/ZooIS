@@ -46,7 +46,9 @@
         </HeaderContent>
         <RowTemplate>
             <MudTd></MudTd>
-            <MudTd DataLabel="Pavadinimas">@context.Name</MudTd>
+            <MudTooltip Text=@($"Aprašymas: {context.Description}") Delay="300" Duration="600">
+                <MudTd DataLabel="Pavadinimas">@context.Name</MudTd>
+            </MudTooltip>
             <MudTd DataLabel="Sukūrimo laikas">@context.TimeCreated</MudTd>
             <MudTd DataLabel="Užbaigta">
                 @(context.IsCompleted == true ? "Taip" : "Ne")

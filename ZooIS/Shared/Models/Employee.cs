@@ -12,5 +12,6 @@ namespace ZooIS.Shared.Models
         // gali pirkti bilietus kaip ir bet kuris lankytojas
         // totally planned feature
         public DateTime? DateOfEmployment { get; set; }
+        public DateTime? DateOfDismissal { get; set; }
     }
 }
