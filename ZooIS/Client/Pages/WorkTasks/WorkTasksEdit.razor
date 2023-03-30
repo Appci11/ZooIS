@@ -58,18 +58,24 @@
                 <MudTextField @bind-Value="elementBeforeEdit.Name" Required />
             </MudTd>
             <MudTd></MudTd>
-            <MudTd></MudTd>
+            <MudTd DataLabel="Užbaigta">
+                <MudCheckBox @bind-Checked="elementBeforeEdit.IsCompleted" Dense="true"></MudCheckBox>
+            </MudTd>
         </RowEditingTemplate>
         <GroupFooterTemplate>
             <MudTh Class="mud-table-cell-custom-group mud-table-cell-custom-group-footer" colspan="4">Viso: @context.Items.Count()</MudTh>
         </GroupFooterTemplate>
+        <PagerContent>
+            <MudTablePager RowsPerPageString="Įrašai per puslapį" />
+        </PagerContent>
     </MudTable>
-
-    <br />
-    <br />
-    <MudButton OnClick="InitiateDeletion" Color="Color.Secondary">Šalinti pasirinktus</MudButton>
-    <MudText>Selected items (@SelectedItems?.Count): @(SelectedItems == null ? "" : string.Join(", ", SelectedItems.OrderBy(x => x.Name).Select(x => x.Name)))</MudText>
-
+    <MudButton OnClick="InitiateDeletion"
+           Variant="Variant.Filled"
+           Color="Color.Secondary"
+           Disabled="@(@SelectedItems.Count <= 0)"
+           Style="margin-top:10px;">
+        Šalinti pasirinktus (@SelectedItems.Count)
+    </MudButton>
 }
 
 @code {
@@ -120,9 +126,11 @@
 
     async void InitiateDeletion()
     {
-        // Sutvarkyt   galima ir koki popup apie sekminga istrynima idet kai mokesiu
+        var parameters = new DialogParameters();
+        parameters.Add("BodyText", $"Pažymėta darbų: {SelectedItems.Count}. Tikrai pašalinti?");
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+        var dialog = _dialogService.Show<ConfirmDeletionDialog>("Šalinimas", parameters, options);
         int n = await _workTasksService.DeleteWorkTasks(SelectedItems);
-        Console.WriteLine($"Pasalinta darbu: {n}");
         StateHasChanged();
     }
 }
