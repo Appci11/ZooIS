@@ -18,7 +18,9 @@ namespace ZooIS.Shared.Models
         public List<Animal>? Animals { get; set; } = new List<Animal>();
         //with area
         [JsonIgnore]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public Area Area { get; set; }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         [Required(ErrorMessage = "Reikalinga")]
         [Range(1, int.MaxValue, ErrorMessage = "Nenurodyta zona")]
         public int AreaId { get; set; }

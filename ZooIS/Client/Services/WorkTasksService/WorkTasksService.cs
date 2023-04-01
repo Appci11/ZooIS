@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using ZooIS.Client.Pages.WorkTasks;
 using ZooIS.Shared.Models;
 
 namespace ZooIS.Client.Services.WorkTasksService
@@ -68,6 +69,20 @@ namespace ZooIS.Client.Services.WorkTasksService
                 {
                     task.Name = workTask.Name;
                     task.IsCompleted = workTask.IsCompleted;
+                }
+            }
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> WorkTaskSetToCompleted(int id)
+        {
+            HttpResponseMessage response = await _http.PatchAsJsonAsync($"/api/worktasks/{id}", "whatever");
+            if (response.IsSuccessStatusCode)
+            {
+                WorkTask task = WorkTasks.FirstOrDefault(x => x.Id == id)!;
+                if (task != null)
+                {
+                    task.IsCompleted = true;
                 }
             }
             return response.IsSuccessStatusCode;

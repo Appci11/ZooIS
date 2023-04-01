@@ -24,7 +24,9 @@ namespace ZooIS.Server.Services.AuthService
             RegisteredUser? user = await _context.RegisteredUsers.FirstOrDefaultAsync(u => u.Username == request.Username);
             if (user != null)
             {
+#pragma warning disable CS8603 // Possible null reference return.
                 return null;
+#pragma warning restore CS8603 // Possible null reference return.
             }
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
             user = new RegisteredUser();
@@ -55,11 +57,15 @@ namespace ZooIS.Server.Services.AuthService
             RegisteredUser? user = await _context.RegisteredUsers.FirstOrDefaultAsync(u => u.Username == request.Username);
             if (user == null)
             {
+#pragma warning disable CS8603 // Possible null reference return.
                 return null;
+#pragma warning restore CS8603 // Possible null reference return.
             }
             if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             {
+#pragma warning disable CS8603 // Possible null reference return.
                 return null;
+#pragma warning restore CS8603 // Possible null reference return.
             }
             string idToken = CreateToken(user);
             return new AuthResponseDto

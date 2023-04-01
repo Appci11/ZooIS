@@ -29,7 +29,9 @@ namespace ZooIS.Server.Services.AreasService
             Area? area = await _context.Areas.FirstOrDefaultAsync(x => x.Id == id);
             if (area == null)
             {
+#pragma warning disable CS8603 // Possible null reference return.
                 return null;
+#pragma warning restore CS8603 // Possible null reference return.
             }
             _context.Areas.Remove(area);
             await _context.SaveChangesAsync();
@@ -52,7 +54,9 @@ namespace ZooIS.Server.Services.AreasService
         public async Task<Area> GetArea(int id)
         {
             Area? area = await _context.Areas.FirstOrDefaultAsync(_x => _x.Id == id);
+#pragma warning disable CS8603 // Possible null reference return.
             return area;
+#pragma warning restore CS8603 // Possible null reference return.
         }
 
         public async Task<Area> UpdateArea(UpdateAreaDto updateAreaDto, int id)
@@ -60,7 +64,9 @@ namespace ZooIS.Server.Services.AreasService
             Area? area = await _context.Areas.FirstOrDefaultAsync(_x => _x.Id == id);
             if (area == null)
             {
+#pragma warning disable CS8603 // Possible null reference return.
                 return null;
+#pragma warning restore CS8603 // Possible null reference return.
             }
             
             area.Name = updateAreaDto.Name;

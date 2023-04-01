@@ -26,7 +26,9 @@ namespace ZooIS.Client.Services.EmployeesService
             HttpResponseMessage response = await _http.DeleteAsync($"/api/employees/{id}");
             if (response.IsSuccessStatusCode)
             {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 Employee employee = Employees.FirstOrDefault(e => e.Id == id);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
                 if (employee != null)
                 {
                     Employees.Remove(employee);
@@ -43,7 +45,9 @@ namespace ZooIS.Client.Services.EmployeesService
             {
                 return result;
             }
+#pragma warning disable CS8603 // Possible null reference return.
             return null;
+#pragma warning restore CS8603 // Possible null reference return.
         }
 
         public async Task GetEmployees()
@@ -51,7 +55,9 @@ namespace ZooIS.Client.Services.EmployeesService
             List<Employee> result = new List<Employee>();
             try
             {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 result = await _http.GetFromJsonAsync<List<Employee>>("/api/employees");
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             }
             catch { }
             if (result != null && result.Count > 0)

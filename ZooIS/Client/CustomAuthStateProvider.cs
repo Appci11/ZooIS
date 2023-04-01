@@ -40,7 +40,6 @@ namespace ZooIS.Client
                 Console.WriteLine("No fiddle with tokens !!!");
             }
 
-
             var user = new ClaimsPrincipal(identity);
             var state = new AuthenticationState(user);
 

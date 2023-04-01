@@ -11,7 +11,7 @@ using ZooIS.Server.Data;
 namespace ZooIS.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230329152357_Initial")]
+    [Migration("20230331204446_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -316,6 +316,9 @@ namespace ZooIS.Server.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("CreatorId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -326,6 +329,12 @@ namespace ZooIS.Server.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("Severity")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Subject")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("TimeCreated")
                         .HasColumnType("TEXT");
@@ -338,6 +347,9 @@ namespace ZooIS.Server.Migrations
             modelBuilder.Entity("ZooIS.Shared.Models.Employee", b =>
                 {
                     b.HasBaseType("ZooIS.Shared.Models.RegisteredUser");
+
+                    b.Property<DateTime?>("DateOfDismissal")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("DateOfEmployment")
                         .HasColumnType("TEXT");

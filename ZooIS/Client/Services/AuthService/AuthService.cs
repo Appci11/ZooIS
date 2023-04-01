@@ -24,7 +24,9 @@ namespace ZooIS.Client.Services.AuthService
             HttpResponseMessage response = await _http.PostAsJsonAsync("/api/register", registerUserDto);
             if (response.IsSuccessStatusCode)
             {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 AuthResponseDto responseDto = await response.Content.ReadFromJsonAsync<AuthResponseDto>();
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
                 if (responseDto != null)
                 {
                     await _localStorage.SetItemAsync<string>("idToken", responseDto.IdToken);
@@ -43,7 +45,9 @@ namespace ZooIS.Client.Services.AuthService
             HttpResponseMessage response = await _http.PostAsJsonAsync("/api/login", authUserDto);
             if (response.IsSuccessStatusCode)
             {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 AuthResponseDto responseDto = await response.Content.ReadFromJsonAsync<AuthResponseDto>();
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
                 if (responseDto != null)
                 {
                     if(responseDto.PassResetRequest)

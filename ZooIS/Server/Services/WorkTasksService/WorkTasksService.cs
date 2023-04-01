@@ -18,6 +18,8 @@ namespace ZooIS.Server.Services.WorkTasksService
             workTask.Name = workTaskDto.Name;
             workTask.Description = workTaskDto.Description;
             workTask.CreatorId = workTaskDto.CreatorId;
+            workTask.Severity = workTaskDto.Severity;
+            workTask.Subject = workTaskDto.Subject;
 
             _context.WorkTasks.Add(workTask);
             await _context.SaveChangesAsync();
@@ -50,6 +52,19 @@ namespace ZooIS.Server.Services.WorkTasksService
             return response;
         }
 
+        public async Task<WorkTask> SetWorkTaskToCompleted(int id)
+        {
+            WorkTask workTask = await _context.WorkTasks.FirstOrDefaultAsync(wt => wt.Id == id);
+            if (workTask == null)
+            {
+                return null;
+            }
+            workTask.IsCompleted = true;
+            await _context.SaveChangesAsync();
+            return workTask;
+        }
+
+        // nepamirsta niekas, tiesiog planuoju leisti keisti tik situos duomenis
         public async Task<WorkTask> UpdateWorkTask(UpdateWorkTaskDto dto, int id)
         {
             WorkTask workTask = await _context.WorkTasks.FirstOrDefaultAsync(wt => wt.Id == id);

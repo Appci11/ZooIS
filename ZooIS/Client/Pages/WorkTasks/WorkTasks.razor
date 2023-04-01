@@ -5,16 +5,150 @@
 @inject IDialogService _dialogService
 @inject ILocalStorageService _localStorage
 @inject IWorkTasksService _workTasksService
+@inject ISnackbar _snackbar
 
 <PageTitle>Darbai</PageTitle>
+@*
+<MudPaper Class="d-flex flex-row justify-start flex-shrink-1 gap-4" Elevation="0">
 
-<AuthorizeView>
-    <MudFab OnClick="() => OpenDialog()" Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.Add" Size="Size.Large" Style="margin-top:15px;" />
-</AuthorizeView>
+    <MudFab OnClick="() => OpenDialog()" Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.Add" Size="Size.Large" Style="margin-top:15px; margin-bottom:15px; margin-right:15px;" />
 
+    <MudSelect style="max-width:150px;" @bind-Value="selectedSubject" Label="Tema" AnchorOrigin="Origin.BottomCenter" FullWidth="false">
+        <MudSelectItem Value="-1">Visos</MudSelectItem>
+        @foreach (int item in Enum.GetValues(typeof(WorkTaskSubject)))
+        {
+            <MudSelectItem Value="@item">@((WorkTaskSubject)@item)</MudSelectItem>
+        }
+    </MudSelect>
+
+    <MudChipSet  Filter="true" Mandatory="false">
+        <MudChip Text="grey">Default</MudChip>
+        <MudChip Text="purple" Color="Color.Primary">Primary</MudChip>
+    </MudChipSet>
+
+</MudPaper>
+*@
+
+
+<MudPaper Class="d-flex flex-row justify-start align-content-center flex-shrink-1 gap-4" Elevation="0" Style="margin-top:10px; margin-bottom:10px;">
+
+    <MudPaper Elevation="0">
+        <MudFab OnClick="() => OpenDialog()" Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.Add" Size="Size.Large" Style="margin-top:15px; margin-bottom:15px; margin-right:15px;" />
+    </MudPaper>
+
+    <MudPaper Width="150px;" Elevation="0">
+        <MudSelect @bind-Value="selectedSubject" Label="Tema" AnchorOrigin="Origin.BottomCenter" FullWidth="false">
+            <MudSelectItem Value="-1">Visos</MudSelectItem>
+            @foreach (int item in Enum.GetValues(typeof(WorkTaskSubject)))
+            {
+                <MudSelectItem Value="@item">@((WorkTaskSubject)@item)</MudSelectItem>
+            }
+        </MudSelect>
+    </MudPaper>
+
+    <MudPaper Elevation="0">
+        <MudButton OnClick="@(() => loadOnlyPersonal = !loadOnlyPersonal)" Variant="Variant.Filled" DisableElevation="true" Color="Color.Primary" EndIcon="@GetIcon">
+            Rodyti tik išsaugotus
+        </MudButton>
+    </MudPaper>
+
+    <MudPaper Elevation="0">
+        <MudButton OnClick="ClearSaved" Variant="Variant.Filled" DisableElevation="true" Color="Color.Primary">
+            Išvalyti išsaugotus
+        </MudButton>
+    </MudPaper>
+
+    <MudPaper Elevation="0">
+        <MudButton OnClick="SortSavedTasks" Variant="Variant.Filled" DisableElevation="true" Color="Color.Primary">
+            Keisti rikiavimo tvarką
+        </MudButton>
+    </MudPaper>
+
+</MudPaper>
+
+@if (loaded)
+{
+    <MudPaper Class="d-flex flex-wrap justify-center gap-4" Elevation="0">
+        @foreach (var item in _workTasksService.WorkTasks)
+        {
+            @if (!item.IsCompleted == false) continue;
+            @if (selectedSubject != -1 && selectedSubject != item.Subject) continue;
+            @if (@loadOnlyPersonal)
+            {
+                @if (!@SavedTasks.Contains(item.Id))
+                    continue;
+            }
+            <MudCard Style="height:400px; width:300px;">
+                <MudCardHeader>
+                    <CardHeaderAvatar>
+                        <MudAvatar Style="@($"background:{ColorCodeForSeverity(item.Severity)};")"></MudAvatar>
+                    </CardHeaderAvatar>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.body1">@item.Name</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudText Typo="Typo.body2" Style="height:243px; overflow:scroll;">@item.Description</MudText>
+                </MudCardContent>
+                <MudCardActions Class="d-flex justify-space-between flex-grow-1 gap-4">
+                    <MudButton OnClick="@(() => CompleteTask(item.Id))" Variant="Variant.Filled" Size="Size.Small" StartIcon="@Icons.Material.Filled.CheckCircle" Color="Color.Tertiary">Baigta</MudButton>
+                    <MudButton OnClick="@(() => AddWorkTaskIdToHash(item.Id))" Variant="Variant.Filled" Size="Size.Small" EndIcon="@Icons.Material.Filled.AddCard" Color="Color.Primary">Išsaugoti</MudButton>
+                </MudCardActions>
+            </MudCard>
+        }
+    </MudPaper>
+}
 
 @code {
     bool loaded = false;
+    bool loadOnlyPersonal = false;
+
+    HashSet<int> SavedTasks = new HashSet<int>();
+    bool showOnlySaved;
+    int selectedSubject = -1;
+    bool sortAscending = false;
+
+    string GetIcon
+    {
+        get
+        {
+            if (loadOnlyPersonal) return Icons.Material.Filled.Check;
+            return Icons.Material.Filled.Close;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await _workTasksService.GetWorkTasks();
+        try
+        {
+            SavedTasks.UnionWith(await _localStorage.GetItemAsync<HashSet<int>>("savedWorkTaskIds"));
+        }
+        catch { }
+        SortSavedTasks();
+        loaded = true;
+    }
+
+    void SortSavedTasks()
+    {
+        sortAscending = !sortAscending;
+        Console.WriteLine(sortAscending);
+        if (sortAscending) _workTasksService.WorkTasks.Sort();
+        else _workTasksService.WorkTasks.Sort((x, y) => y.CompareTo(x));
+        StateHasChanged();
+    }
+
+    async Task CompleteTask(int id)
+    {
+        await _workTasksService.WorkTaskSetToCompleted(id);
+    }
+
+    async Task AddWorkTaskIdToHash(int id)
+    {
+        SavedTasks.Add(id);
+        await _localStorage.SetItemAsync<HashSet<int>>("savedWorkTaskIds", SavedTasks);
+        _snackbar.Add("Pridėta", Severity.Success);
+    }
 
     async void OpenDialog()
     {
@@ -40,5 +174,27 @@
             request.CreatorId = userId;
             await _workTasksService.CreateWorkTask(request);
         }
+    }
+
+    static string ColorCodeForSeverity(int severity)
+    {
+        switch (severity)
+        {
+            case 0:
+                return Colors.Teal.Lighten1;
+            case 1:
+                return Colors.Lime.Lighten1;
+            case 2:
+                return Colors.DeepOrange.Lighten1;
+            default:
+                return Colors.Blue.Lighten1;
+        }
+    }
+
+    async Task ClearSaved()
+    {
+        await _localStorage.RemoveItemAsync("savedWorkTaskIds");
+        SavedTasks.Clear();
+        _snackbar.Add("Sėkmingai išvalyta.", Severity.Success);
     }
 }

@@ -31,10 +31,14 @@ namespace ZooIS.Server.Services.AnimalsService
 
         public async Task<Animal> DeleteAnimal(int id)
         {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             Animal animal = await _context.Animals.FirstOrDefaultAsync(x => x.Id == id);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             if(animal == null)
             {
+#pragma warning disable CS8603 // Possible null reference return.
                 return null;
+#pragma warning restore CS8603 // Possible null reference return.
             }
             _context.Remove(animal);
             await _context.SaveChangesAsync();
@@ -53,15 +57,21 @@ namespace ZooIS.Server.Services.AnimalsService
 
         public async Task<Animal> GetAnimal(int id)
         {
+#pragma warning disable CS8603 // Possible null reference return.
             return await _context.Animals.FirstOrDefaultAsync(a => a.Id == id);
+#pragma warning restore CS8603 // Possible null reference return.
         }
 
         public async Task<Animal> UdateAnimal(UpdateAnimalDto updateAnimalDto, int id)
         {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             Animal animal = _context.Animals.FirstOrDefault(a => a.Id == id);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             if(animal == null)
             {
+#pragma warning disable CS8603 // Possible null reference return.
                 return null;
+#pragma warning restore CS8603 // Possible null reference return.
             }
             animal.Name = updateAnimalDto.Name;
             animal.DateAquired = updateAnimalDto.DateAquired;
@@ -78,10 +88,14 @@ namespace ZooIS.Server.Services.AnimalsService
 
         public async Task<Animal> UdateAnimalState(UpdateAnimalStateDto updateAnimalStateDto, int id)
         {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             Animal animal = _context.Animals.FirstOrDefault(a => a.Id == id);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             if (animal == null)
             {
+#pragma warning disable CS8603 // Possible null reference return.
                 return null;
+#pragma warning restore CS8603 // Possible null reference return.
             }
             animal.State = updateAnimalStateDto.State;
 

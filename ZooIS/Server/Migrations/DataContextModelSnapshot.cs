@@ -327,6 +327,12 @@ namespace ZooIS.Server.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("Severity")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Subject")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("TimeCreated")
                         .HasColumnType("TEXT");
 

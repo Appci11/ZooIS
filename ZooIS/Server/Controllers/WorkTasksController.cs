@@ -71,5 +71,16 @@ namespace ZooIS.Server.Controllers
             }
             return NotFound(new { message = "WorkTask not found" });
         }
+
+        [HttpPatch("{id}")]
+        public async Task<ActionResult> SetWorkTaskToCompleted(int id)
+        {
+            WorkTask response = await _workTasksService.SetWorkTaskToCompleted(id);
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            return NotFound(new { message = "WorkTask not found" });
+        }
     }
 }

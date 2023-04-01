@@ -12,5 +12,6 @@ namespace ZooIS.Client.Services.WorkTasksService
         public Task<bool> UpdateWorkTask(WorkTask workTask);
         public Task<bool> DeleteWorkTask(int id);
         public Task<int> DeleteWorkTasks(HashSet<WorkTask> workTasks);
+        public Task<bool> WorkTaskSetToCompleted(int id);
     }
 }

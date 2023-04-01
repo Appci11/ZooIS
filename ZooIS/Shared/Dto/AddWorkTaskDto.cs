@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ZooIS.Shared.Enums;
 
 namespace ZooIS.Shared.Dto
 {
@@ -14,5 +15,7 @@ namespace ZooIS.Shared.Dto
         [Required(ErrorMessage = "Reikalinga")]
         public string Description { get; set; } = string.Empty;
         public int CreatorId { get; set; }  //irgi reikalinga, bet sita, eigoje prides sistema
+        public int Severity { get; set; }
+        public int Subject { get; set; }
     }
 }

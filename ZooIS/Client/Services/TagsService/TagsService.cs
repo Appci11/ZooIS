@@ -25,7 +25,9 @@ namespace ZooIS.Client.Services.TagsService
             HttpResponseMessage response = await _http.DeleteAsync($"/api/tags/{id}");
             if(response.IsSuccessStatusCode)
             {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 Tag tag = Tags.FirstOrDefault(t => t.Id == id);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
                 if(tag != null)
                 {
                     Tags.Remove(tag);
@@ -43,7 +45,9 @@ namespace ZooIS.Client.Services.TagsService
             {
                 return result;
             }
+#pragma warning disable CS8603 // Possible null reference return.
             return null;
+#pragma warning restore CS8603 // Possible null reference return.
         }
 
         public async Task GetTags()
@@ -51,7 +55,9 @@ namespace ZooIS.Client.Services.TagsService
             List<Tag> result = new List<Tag>();
             try
             {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 result = await _http.GetFromJsonAsync<List<Tag>>("/api/tags");
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             }
             catch { }
             if (result != null && result.Count > 0)

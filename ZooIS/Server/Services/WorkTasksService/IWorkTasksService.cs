@@ -10,5 +10,6 @@ namespace ZooIS.Server.Services.WorkTasksService
         Task<WorkTask> GetWorkTask(int id);
         Task<WorkTask> UpdateWorkTask(UpdateWorkTaskDto dto, int id);
         Task<WorkTask> DeleteWorkTask(int id);
+        Task<WorkTask> SetWorkTaskToCompleted(int id);
     }
 }

@@ -9,24 +9,36 @@
         <MudContainer MaxWidth="MaxWidth.Medium">
             <EditForm Model="@dto" OnValidSubmit="Submit">
                 <DataAnnotationsValidator />
+                <MudSelect @bind-Value="dto.Severity" T="int" Label="Svarba" AnchorOrigin="Origin.BottomCenter">
+                    @foreach (int item in Enum.GetValues(typeof(WorkTaskSeverity)))
+                    {
+                        <MudSelectItem Value="item">@((WorkTaskSeverity)@item)</MudSelectItem>
+                    }
+                </MudSelect>
+                <MudSelect @bind-Value="dto.Subject" T="int" Label="Tema" AnchorOrigin="Origin.BottomCenter">
+                    @foreach (int item in Enum.GetValues(typeof(WorkTaskSubject)))
+                    {
+                        <MudSelectItem Value="item">@((WorkTaskSubject)@item)</MudSelectItem>
+                    }
+                </MudSelect>
                 <MudTextField @bind-Value="@dto.Name" Label="Pavadinimas" For="@(() => dto.Name)" />
                 <MudTextField @bind-Value="@dto.Description" Label="Aprašymas" Lines="5" For="@(() => dto.Description)" />
                 <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Style="margin-top:10px;">Kurti</MudButton>
             </EditForm>
         </MudContainer>
     </DialogContent>
-    @*
-    <DialogActions>
-    <MudButton OnClick="Cancel">Atšaukti</MudButton>
-    <MudButton Color="Color.Tertiary" OnClick="Submit">Kurti</MudButton>
-    </DialogActions>
-    *@
 </MudDialog>
 
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
     AddWorkTaskDto dto = new();
+
+    protected override void OnInitialized()
+    {
+        DialogOptions options = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true };
+        MudDialog.SetOptions(options);
+    }
 
     void Cancel() => MudDialog.Cancel();
 

@@ -25,7 +25,9 @@ namespace ZooIS.Client.Services.AreasService
             HttpResponseMessage response = await _http.DeleteAsync($"/api/areas/{id}");
             if (response.IsSuccessStatusCode)
             {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 Area area = Areas.FirstOrDefault(a => a.Id == id);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
                 if (area != null)
                 {
                     Areas.Remove(area);
@@ -51,7 +53,9 @@ namespace ZooIS.Client.Services.AreasService
             List<Area> result = new List<Area>();
             try
             {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 result = await _http.GetFromJsonAsync<List<Area>>("/api/Areas");
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             }
             catch { }
             if (result != null && result.Count > 0)

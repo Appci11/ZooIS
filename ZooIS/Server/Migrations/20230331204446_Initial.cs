@@ -41,7 +41,8 @@ namespace ZooIS.Server.Migrations
                     DeletionRequested = table.Column<bool>(type: "INTEGER", nullable: false),
                     IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
                     Discriminator = table.Column<string>(type: "TEXT", nullable: false),
-                    DateOfEmployment = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    DateOfEmployment = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    DateOfDismissal = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -98,7 +99,10 @@ namespace ZooIS.Server.Migrations
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: false),
                     TimeCreated = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    IsCompleted = table.Column<bool>(type: "INTEGER", nullable: false)
+                    CreatorId = table.Column<int>(type: "INTEGER", nullable: false),
+                    IsCompleted = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Severity = table.Column<int>(type: "INTEGER", nullable: false),
+                    Subject = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {

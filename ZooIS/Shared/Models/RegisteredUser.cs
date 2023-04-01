@@ -25,7 +25,9 @@ namespace ZooIS.Shared.Models
         //relationships
         //With Settings
         [JsonIgnore]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public UserSettings UserSettings { get; set; }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         //With Bundles
         public Bundle? Bundle { get; set; }
 

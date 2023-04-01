@@ -25,7 +25,9 @@ namespace ZooIS.Server.Services.BundlesService
             double totalPrice = 0;
             foreach (var item in bundle.BundleTickets)
             {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
                 double price = tickets.FirstOrDefault(p => p.Id == item.TicketId).Price;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 if (price != 0) //siek tiek sumazinam rizika
                 {
                     totalPrice += price * item.Quantity;
@@ -82,7 +84,9 @@ namespace ZooIS.Server.Services.BundlesService
                                         .Where(t => t.Id == id)
                                         .Include(b => b.BundleTickets)
                                         .FirstOrDefaultAsync();
+#pragma warning disable CS8603 // Possible null reference return.
             return bundle;
+#pragma warning restore CS8603 // Possible null reference return.
         }
 
         public async Task<Bundle> GetBundleWithTickets(int id)
@@ -92,17 +96,23 @@ namespace ZooIS.Server.Services.BundlesService
                               .Include(b => b.BundleTickets)
                               .ThenInclude(t => t.Ticket)
                               .FirstOrDefaultAsync();
+#pragma warning disable CS8603 // Possible null reference return.
             return bundle;
+#pragma warning restore CS8603 // Possible null reference return.
         }
 
         public async Task<Bundle> UpdateBundle(AddBundleDto addBundleDto, int id)
         {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             Bundle bundle = await _context.Bundles.FirstOrDefaultAsync(i => i.Id == id);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 
             // kol bilietu rusiu nedaug(taip kol kas tikimasi)
             // tol turetu buti greiciau senuosius saraso irasus pasalinti
             // ir uzpildyti naujais
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             bundle.BundleTickets.Clear();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             foreach (var item in addBundleDto.BundleTickets)
             {
                 BundleTicket toAdd = new BundleTicket();
@@ -119,10 +129,14 @@ namespace ZooIS.Server.Services.BundlesService
 
         public async Task<Bundle> DeleteBundle(int id)
         {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             Bundle bundle = await _context.Bundles.FirstOrDefaultAsync(i => i.Id == id);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             if (bundle == null)
             {
+#pragma warning disable CS8603 // Possible null reference return.
                 return null;
+#pragma warning restore CS8603 // Possible null reference return.
             }
             _context.Bundles.Remove(bundle);
             await _context.SaveChangesAsync();

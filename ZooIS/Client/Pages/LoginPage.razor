@@ -12,10 +12,7 @@
         <MudTextField @bind-Value="user.Username" T="string" Label="Vartotojo vardas" Required="true" RequiredError="Neįvestas vartotojo vardas." @ref="focusTarget" />
         <MudTextField @bind-Value="user.Password" T="string" Label="Slaptažodis" InputType="InputType.Password" Required="true" RequiredError="Neįvestas slaptažodis." @ref="focusTarget2" />
         <br />
-
         <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Prisijungti</MudButton>
-
-
     </EditForm>
     <MudText Color="errorMsgColor" Style="padding-top:10px;">@errorMsg</MudText>
 </MudItem>

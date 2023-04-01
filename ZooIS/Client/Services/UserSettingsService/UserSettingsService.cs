@@ -18,7 +18,9 @@ namespace ZooIS.Client.Services.UserSettingsService
             {
                 return result;
             }
+#pragma warning disable CS8603 // Possible null reference return.
             return null;
+#pragma warning restore CS8603 // Possible null reference return.
         }
 
         public Task UpdateSettings(UserSettings userSettings)

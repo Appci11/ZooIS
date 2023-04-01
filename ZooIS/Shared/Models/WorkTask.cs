@@ -4,12 +4,13 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ZooIS.Shared.Enums;
 
 namespace ZooIS.Shared.Models
 {
     //Noretusi "Task" vadint, bet daug kur yra naudojama to paties pavadinimo
     //sistemine klase, tai patogumo delei kuriam WorkTask klase(modeli)
-    public class WorkTask
+    public class WorkTask : IComparable<WorkTask>
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "Reikalinga")]
@@ -19,5 +20,15 @@ namespace ZooIS.Shared.Models
         public DateTime TimeCreated { get; set; } = DateTime.Now;
         public int CreatorId { get; set; }
         public bool IsCompleted { get; set; }
+        public int Severity { get; set; }
+        public int Subject { get; set; }
+
+        public int CompareTo(WorkTask? other)
+        {
+            if(other == null) return 1;
+            if(Severity > other.Severity) return 1;
+            if (Severity == other.Severity) return 0;
+            return -1;
+        }
     }
 }

@@ -35,7 +35,9 @@ namespace ZooIS.Client.Services.HabitatsService
             HttpResponseMessage response = await _http.DeleteAsync($"/api/habitats/{id}");
             if (response.IsSuccessStatusCode)
             {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 Habitat habitat = Habitats.FirstOrDefault(x => x.Id == id);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
                 if (habitat != null)
                 {
                     Habitats.Remove(habitat);
@@ -52,7 +54,9 @@ namespace ZooIS.Client.Services.HabitatsService
             {
                 return result;
             }
+#pragma warning disable CS8603 // Possible null reference return.
             return null;
+#pragma warning restore CS8603 // Possible null reference return.
         }
 
         public async Task GetHabitats()
@@ -60,7 +64,9 @@ namespace ZooIS.Client.Services.HabitatsService
             List<Habitat> result = new List<Habitat>();
             try
             {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 result = await _http.GetFromJsonAsync<List<Habitat>>("/api/habitats");
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             }
             catch { }
             if (result != null && result.Count > 0)

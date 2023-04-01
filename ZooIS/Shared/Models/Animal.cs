@@ -22,7 +22,9 @@ namespace ZooIS.Shared.Models
         public int? HabitatId { get; set; }
         //with species
         //[JsonIgnore]  //Sutvarkyt patikrint ir jei EFcore nemess err - istrint
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public Species Species { get; set; }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         [Required(ErrorMessage = "Reikalinga")]
         [Range(1, int.MaxValue, ErrorMessage = "Nenurodyta rūšis")]
 

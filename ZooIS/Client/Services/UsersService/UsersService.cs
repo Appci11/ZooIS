@@ -28,7 +28,9 @@ namespace ZooIS.Client.Services.UsersService
             var response = await _http.DeleteAsync($"/api/users/{id}");
             if (response.IsSuccessStatusCode)
             {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 RegisteredUser user = Users.FirstOrDefault(u => u.Id == id);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
                 if (user != null)
                 {
                     Users.Remove(user);
@@ -45,7 +47,9 @@ namespace ZooIS.Client.Services.UsersService
             {
                 return result;
             }
+#pragma warning disable CS8603 // Possible null reference return.
             return null;
+#pragma warning restore CS8603 // Possible null reference return.
         }
 
         public async Task GetUsers()
@@ -53,7 +57,9 @@ namespace ZooIS.Client.Services.UsersService
             List<RegisteredUser> result = new List<RegisteredUser>();
             try
             {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 result = await _http.GetFromJsonAsync<List<RegisteredUser>>("/api/users");
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             }
             catch { }
             if (result != null && result.Count > 0)

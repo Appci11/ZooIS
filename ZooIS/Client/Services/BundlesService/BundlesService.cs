@@ -26,7 +26,9 @@ namespace ZooIS.Client.Services.BundlesService
             HttpResponseMessage response = await _http.DeleteAsync($"/api/bundles/{id}");
             if (response.IsSuccessStatusCode)
             {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 Bundle bundle = Bundles.FirstOrDefault(t => t.Id == id);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
                 if (bundle != null)
                 {
                     Bundles.Remove(bundle);
@@ -43,12 +45,16 @@ namespace ZooIS.Client.Services.BundlesService
         }
 
         // remember to add get with extras too
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<Bundle> GetBundle(int id)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             throw new NotImplementedException();
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task GetBundles()
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             throw new NotImplementedException();
         }

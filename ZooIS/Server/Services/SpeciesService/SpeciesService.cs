@@ -26,7 +26,9 @@ namespace ZooIS.Server.Services.SpeciesService
             }
             foreach (var item in addSpeciesDto.TagsAvoid)
             {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
                 species.TagsAvoid.Add(new SpeciesTagAvoid { SpeciesId = species.Id, TagId = item });
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             }
             await _context.SaveChangesAsync();
 
@@ -50,24 +52,32 @@ namespace ZooIS.Server.Services.SpeciesService
         {
             if (addTags)
             {
+#pragma warning disable CS8603 // Possible null reference return.
                 return await _context.Species
                                 .Where(s => s.Id == id)
                                 .Include(s => s.TagsRequire)
                                 .Include(s => s.TagsAvoid)
                                 .FirstOrDefaultAsync();
+#pragma warning restore CS8603 // Possible null reference return.
             }
+#pragma warning disable CS8603 // Possible null reference return.
             return await _context.Species.FirstOrDefaultAsync(s => s.Id == id);
+#pragma warning restore CS8603 // Possible null reference return.
         }
 
         public async Task<Species> UpdateSpecies(UpdateSpeciesDto updateSpeciesDto, int id)
         {
             //Species species = await _context.Species.FirstOrDefaultAsync(s => s.Id == id);
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             Species species = await _context.Species
                                     .Where(s => s.Id == id)
                                     .Include(s => s.TagsRequire)
                                     .Include(s => s.TagsAvoid)
                                     .FirstOrDefaultAsync();
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+#pragma warning disable CS8603 // Possible null reference return.
             if (species == null) { return null; }
+#pragma warning restore CS8603 // Possible null reference return.
             species.Name = updateSpeciesDto.Name;
             species.TagsAvoid = new();
             species.TagsRequire.Clear();
@@ -87,10 +97,14 @@ namespace ZooIS.Server.Services.SpeciesService
 
         public async Task<Species> DeleteSpecies(int id)
         {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             Species species = await _context.Species.FirstOrDefaultAsync(s => s.Id == id);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             if (species == null)
             {
+#pragma warning disable CS8603 // Possible null reference return.
                 return null;
+#pragma warning restore CS8603 // Possible null reference return.
             }
             _context.Species.Remove(species);
             await _context.SaveChangesAsync();
