@@ -1,4 +1,5 @@
-﻿using ZooIS.Shared.Models;
+﻿using System.Net.Http.Json;
+using ZooIS.Shared.Models;
 
 namespace ZooIS.Client.Services.TicketsService
 {
@@ -6,38 +7,63 @@ namespace ZooIS.Client.Services.TicketsService
     {
         private readonly HttpClient _http;
 
-        public List<Ticket> Tickets { get; set; }
+        public List<Ticket> Tickets { get; set; } = new List<Ticket>();
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public TicketsService(HttpClient http)
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             _http = http;
         }
 
-        public Task<bool> CreateTicket(Ticket tag)
+        public async Task<bool> CreateTicket(Ticket ticket)
         {
-            throw new NotImplementedException();
+            HttpResponseMessage response = await _http.PostAsJsonAsync($"/api/tickets", ticket);
+            return response.IsSuccessStatusCode;
         }
 
-        public Task<bool> DeleteTicket(int id)
+        public async Task<bool> DeleteTicket(int id)
         {
-            throw new NotImplementedException();
+            var response = await _http.DeleteAsync($"/api/tickets/{id}");
+            if(response.IsSuccessStatusCode)
+            {
+                Ticket ticket = Tickets.FirstOrDefault(t => t.Id == id);
+                if(ticket != null)
+                {
+                    Tickets.Remove(ticket);
+                    return true;
+                }
+            }
+            return false;
         }
 
-        public Task<Ticket> GetTicket(int id)
+        public async Task<Ticket> GetTicket(int id)
         {
-            throw new NotImplementedException();
+            var result = await _http.GetFromJsonAsync<Ticket>($"/api/users/{id}");
+            if (result != null)
+            {
+                return result;
+            }
+            return null;
         }
 
-        public Task GetTickets()
+        public async Task GetTickets()
         {
-            throw new NotImplementedException();
+            List<Ticket> result = new List<Ticket>();
+            try
+            {
+                result = await _http.GetFromJsonAsync<List<Ticket>>("/api/tickets");
+
+            }
+            catch { }
+            if(result != null && result.Count > 0)
+            {
+                Tickets = result;
+            }
         }
 
-        public Task<bool> UpdateTicket(Ticket tag)
+        public async Task<bool> UpdateTicket(Ticket tag)
         {
-            throw new NotImplementedException();
+            HttpResponseMessage response = await _http.PutAsJsonAsync($"/api/users/{tag.Id}", tag);
+            return response.IsSuccessStatusCode;
         }
     }
 }

@@ -11,6 +11,7 @@ namespace ZooIS.Shared.Dto
         public string Username { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
-        public DateTime DateOfEmployment { get; set; } = DateTime.Now;
+        public DateTime? DateOfEmployment { get; set; }
+        public DateTime? DateOfDismissal { get; set; }
     }
 }

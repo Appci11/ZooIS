@@ -8,27 +8,6 @@
 @inject ISnackbar _snackbar
 
 <PageTitle>Darbai</PageTitle>
-@*
-<MudPaper Class="d-flex flex-row justify-start flex-shrink-1 gap-4" Elevation="0">
-
-    <MudFab OnClick="() => OpenDialog()" Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.Add" Size="Size.Large" Style="margin-top:15px; margin-bottom:15px; margin-right:15px;" />
-
-    <MudSelect style="max-width:150px;" @bind-Value="selectedSubject" Label="Tema" AnchorOrigin="Origin.BottomCenter" FullWidth="false">
-        <MudSelectItem Value="-1">Visos</MudSelectItem>
-        @foreach (int item in Enum.GetValues(typeof(WorkTaskSubject)))
-        {
-            <MudSelectItem Value="@item">@((WorkTaskSubject)@item)</MudSelectItem>
-        }
-    </MudSelect>
-
-    <MudChipSet  Filter="true" Mandatory="false">
-        <MudChip Text="grey">Default</MudChip>
-        <MudChip Text="purple" Color="Color.Primary">Primary</MudChip>
-    </MudChipSet>
-
-</MudPaper>
-*@
-
 
 <MudPaper Class="d-flex flex-row justify-start align-content-center flex-shrink-1 gap-4" Elevation="0" Style="margin-top:10px; margin-bottom:10px;">
 

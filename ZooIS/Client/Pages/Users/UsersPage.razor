@@ -1,6 +1,6 @@
 ﻿@page "/users"
 
-@using ZooIS.Client.Services.UsersService;
+@using ZooIS.Client.Services.UsersService
 @inject IUsersService _usersService
 @inject NavigationManager _navigationManager
 @inject IDialogService _dialogService
@@ -28,7 +28,7 @@
         <RowTemplate>
             <MudTd @onclick="((x) => Kriu(context.Username))" DataLabel="Vardas">@context.Username</MudTd>
             <MudTd DataLabel="Rolė">@context.Role</MudTd>
-            <MudTd DataLabel="Registracijos dataaa">@context.DateCreated</MudTd>
+            <MudTd DataLabel="Registracijos data">@context.DateCreated</MudTd>
             <MudTd>
                 <MudIconButton @onclick="(() => GoToEdit(context))" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Color="Color.Primary" />
                 <MudIconButton OnClick="(() => DeleteUser(context.Id))" Size="@Size.Small" Icon="@Icons.Material.Filled.RemoveCircleOutline" Color="Color.Warning" />
@@ -39,10 +39,7 @@
         </PagerContent>
     </MudTable>
 }
-else
-{
-    <div class="loader">Loading...</div>
-}
+
 
 @code {
     bool loaded;

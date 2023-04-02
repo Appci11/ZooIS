@@ -1,0 +1,91 @@
+﻿@page "/employee"
+@page "/employee/{id:int}"
+
+@using ZooIS.Client.Services.EmployeesService
+@inject IEmployeesService _employeesService
+@inject NavigationManager _navigationManager
+
+@if (Id == null)
+{
+    <PageTitle>Naujas darbuotojas</PageTitle>
+    <h3>Naujo darbuotojo pridėjimas</h3>
+}
+else
+{
+    <PageTitle>Redaguoti</PageTitle>
+    <h3>Vartotojo @employee.Username duomenų redagavimas</h3>
+}
+
+@if (loaded)
+{
+    <MudContainer MaxWidth="MaxWidth.Large">
+        <EditForm Model="@employee" OnValidSubmit="HandleSubmit">
+            <DataAnnotationsValidator />
+            <MudTextField @bind-Value="employee.Username" Label="Darbuotojo vardas" Variant="Variant.Text" For="@(() => employee.Username)"></MudTextField>
+            <MudTextField @bind-Value="employee.Email" Label="Elektroninis Paštas" Variant="Variant.Text" For="@(() => employee.Email)"></MudTextField>
+            <MudSelect @bind-Value="employee.Role" T="string" Label="Rolė" AnchorOrigin="Origin.BottomCenter">
+                @foreach (string item in Enum.GetNames(typeof(UserRoles)))
+                {
+                    @if (item.CompareTo("SysAdmin") == 0) continue;
+                    @if (item.CompareTo("Visitor") == 0) continue;
+                    <MudSelectItem Value="item" />
+                }
+            </MudSelect>
+            <MudDatePicker Label="Įdarbinimo data" Editable="true" @bind-Date="employee.DateOfEmployment"
+                       Mask="@(new DateMask("0000-00-00"))" DateFormat="yyyy-MM-dd" Placeholder="Įdarbinimo data">
+            </MudDatePicker>
+            @if (Id != null)
+            {
+                <MudDatePicker Label="Išdarbinimo data" Editable="true" @bind-Date="employee.DateOfDismissal"
+                       Mask="@(new DateMask("0000-00-00"))" DateFormat="yyyy-MM-dd" Placeholder="Išdarbinimo data">
+                </MudDatePicker>
+                <MudCheckBox @bind-Checked="employee.RequestPasswordReset" Label="Keisti slaptažodį"></MudCheckBox>
+            }
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Style="margin-top:10px;">@submitBtnText</MudButton>
+        </EditForm>
+        <MudButton Href="/employees" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.ArrowBack" Color="Color.Primary" Style="margin-top:15px;">Gryžti</MudButton>
+    </MudContainer>
+}
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+    bool loaded;
+    string submitBtnText = string.Empty;
+
+    Employee employee = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        submitBtnText = Id == null ? "Pridėti" : "Redaguoti";
+        loaded = true;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id != null)
+        {
+            employee = await _employeesService.GetEmployee((int)Id);
+            if (employee == null)
+            {
+                // Sutvarkyt
+                // write some error
+                employee = new();
+            }
+        }
+    }
+
+    async Task HandleSubmit()
+    {
+        if (Id == null)
+        {
+            await _employeesService.CreateEmployee(employee);
+            _navigationManager.NavigateTo("/employees");
+        }
+        else
+        {
+            await _employeesService.UpdateEmployee(employee);
+            _navigationManager.NavigateTo("/employees");
+        }
+    }
+}

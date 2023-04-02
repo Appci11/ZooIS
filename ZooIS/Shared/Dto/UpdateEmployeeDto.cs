@@ -15,7 +15,7 @@ namespace ZooIS.Shared.Dto
         public required bool IsDeleted { get; set; }
         public required string Role { get; set; }
         // Potencialus Ooooooops.... Sutvarkyt kai UI client'e bus.
-        public DateTime DateOfEmployment { get; set; } = DateTime.Now;
+        public DateTime? DateOfEmployment { get; set; }
         public DateTime? DateOfDismissal { get; set; }
     }
 }

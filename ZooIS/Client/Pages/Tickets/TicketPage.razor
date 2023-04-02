@@ -1,0 +1,78 @@
+﻿@page "/ticket"
+@page "/ticket/{id:int}"
+
+@using ZooIS.Client.Services.TicketsService;
+@inject NavigationManager _navigationManager
+@inject ITicketsService _ticketServce
+
+@if (Id == null)
+{
+    <PageTitle>Nauja rūšis</PageTitle>
+    <h3>Naujos bilieto rūšies pridėjimas</h3>
+}
+else
+{
+    <PageTitle>Redaguoti</PageTitle>
+    <h3>Filieto @ticket.Name duomenų redagavimas</h3>
+}
+
+@if (loaded)
+{
+    <MudContainer MaxWidth="MaxWidth.Large">
+        <EditForm Model="@ticket" OnValidSubmit="HandleSubmit">
+            <DataAnnotationsValidator />
+            <MudTextField @bind-Value="ticket.Name" Label="Bilieto pavadinimas" Variant="Variant.Text" For="@(() => ticket.Name)" />
+            <MudNumericField @bind-Value="ticket.Price" Label="Kaina" For="@(() => ticket.Price)" />
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Style="margin-top:10px;">@submitBtnText</MudButton>
+        </EditForm>
+        <MudButton OnClick="GoBack" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.ArrowBack" Color="Color.Primary" Style="margin-top:15px;">Gryžti</MudButton>
+    </MudContainer>
+}
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+    bool loaded;
+    string submitBtnText = string.Empty;
+
+    Ticket ticket = new Ticket();
+
+    protected override async Task OnInitializedAsync()
+    {
+        submitBtnText = Id == null ? "Pridėti" : "Redaguoti";
+        loaded = true;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id != null)
+        {
+            ticket = await _ticketServce.GetTicket((int)Id);
+            if (ticket == null)
+            {
+                // Sutvarkyt
+                // write some error
+                ticket = new();
+            }
+        }
+    }
+
+    async Task HandleSubmit()
+    {
+        if (Id == null)
+        {
+            await _ticketServce.CreateTicket(ticket);
+            _navigationManager.NavigateTo("/tickets");
+        }
+        else
+        {
+            await _ticketServce.UpdateTicket(ticket);
+            _navigationManager.NavigateTo("/tickets");
+        }
+    }
+
+    void GoBack()
+    {
+        _navigationManager.NavigateTo("/tickets");
+    }
+}

@@ -8,7 +8,8 @@ namespace ZooIS.Shared.Models
         public int Id { get; set; }
         [Required(ErrorMessage = "Reikalinga")]
         public string Name { get; set; } = string.Empty;
-        [Required(ErrorMessage = "Reikalinga")]
+        [Required]
+        [Range(0.00, double.MaxValue, ErrorMessage = "Kaina negali būti neigiama")]
         public double Price { get; set; }
 
         //relationships

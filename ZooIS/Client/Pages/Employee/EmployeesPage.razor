@@ -1,0 +1,78 @@
+﻿@page "/employees"
+
+@using ZooIS.Client.Services.EmployeesService
+@inject IEmployeesService _employeesService
+@inject NavigationManager _navigationManager
+@inject IDialogService _dialogService
+
+<PageTitle>Darbuotojai</PageTitle>
+
+@if (loaded)
+{
+    <MudTable Items="@_employeesService.Employees" Dense="true" Filter="new Func<Employee, bool>(FilterFunc)">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Darbuotojų sąrašas</MudText>
+            <MudIconButton Href="/employee" Icon="@Icons.Material.Filled.AddCircleOutline" Color="Color.Primary" />
+            <MudSpacer />
+            <MudTextField @bind-Value="searchString" Placeholder="Ieškoti" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortBy="new Func<Employee, object>(e=>e.Username)">Username</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<Employee, object>(e=>e.Role)">Rolė</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<Employee, object>(e => e.DateOfEmployment == null ? string.Empty : e.DateOfEmployment)">Įdarbinimo data</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<Employee, object>(e => e.DateOfDismissal == null ? string.Empty : e.DateOfDismissal)">Išdarbinimo data</MudTableSortLabel></MudTh>
+            <MudTh>Redaguoti / Šalinti</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Vardas">@context.Username</MudTd>
+            <MudTd DataLabel="Rolė">@context.Role</MudTd>
+            <MudTd DataLabel="Įdarbinimo data">@context.DateOfEmployment</MudTd>
+            <MudTd DataLabel="Išdarbinimo data">@context.DateOfDismissal</MudTd>
+            <MudTd>
+                <MudIconButton Href="@($"employee/{context.Id}")" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Color="Color.Primary" />
+                <MudIconButton OnClick="(() => DeleteUser(context.Id))" Size="@Size.Small" Icon="@Icons.Material.Filled.RemoveCircleOutline" Color="Color.Warning" />
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager RowsPerPageString="Įrašai per puslapį" />
+        </PagerContent>
+    </MudTable>
+}
+
+@code {
+    bool loaded;
+    string searchString = string.Empty;
+    protected DeleteConfirmationDialog confirmationDialog { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await _employeesService.GetEmployees();
+        loaded = true;
+    }
+
+    private bool FilterFunc(Employee element) => FilterFunc1(element, searchString);
+
+    private bool FilterFunc1(Employee element, string searchStr)
+    {
+        if (string.IsNullOrWhiteSpace(searchStr))
+            return true;
+        if (element.Username.Contains(searchStr, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Role.Contains(searchStr, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+    async Task DeleteUser(int id)
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("BodyText", "Pašalinti darbuotojo duomenis?");
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+        var dialog = _dialogService.Show<ConfirmDeletionDialog>("Šalinimas", parameters, options);
+
+        if (!(await dialog.Result).Canceled)
+        {
+            await _employeesService.DeleteEmployee(id);
+        }
+    }
+}
