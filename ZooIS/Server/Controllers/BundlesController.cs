@@ -28,22 +28,9 @@ namespace ZooIS.Server.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllBundles()
         {
-            List<Bundle> response = await _bundlesService.GetAllBundles();
+            List<Bundle> response = await _bundlesService.GetAllBundles(true);
 
-            if (response.Count > 0)
-            {
-                return Ok(response);
-            }
-            return NotFound(new { message = "No Bundles found" });
-        }
-
-        [HttpGet]
-        [Route("~/api/BundlesWTickets")]
-        public async Task<IActionResult> GetAllBundlesWithTickets()
-        {
-            List<Bundle> response = await _bundlesService.GetAllBundlesWithTickets();
-
-            if (response.Count > 0)
+            if (response == null || response.Count > 0)
             {
                 return Ok(response);
             }
@@ -53,17 +40,8 @@ namespace ZooIS.Server.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Bundle>> GetBundle(int id)
         {
-            Bundle response = await _bundlesService.GetBundle(id);
+            Bundle response = await _bundlesService.GetBundle(id, true);
             if(response == null) return NotFound(new { message = "Ticket no found" });
-            return Ok(response);
-        }
-
-        [HttpGet]
-        [Route("~/api/BundlesWTickets/{id}")]
-        public async Task<ActionResult<Bundle>> GetBundleWithTickets(int id)
-        {
-            Bundle response = await _bundlesService.GetBundleWithTickets(id);
-            if (response == null) return NotFound(new { message = "Ticket no found" });
             return Ok(response);
         }
 
