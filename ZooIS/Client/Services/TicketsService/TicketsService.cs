@@ -37,7 +37,7 @@ namespace ZooIS.Client.Services.TicketsService
 
         public async Task<Ticket> GetTicket(int id)
         {
-            var result = await _http.GetFromJsonAsync<Ticket>($"/api/users/{id}");
+            var result = await _http.GetFromJsonAsync<Ticket>($"/api/tickets/{id}");
             if (result != null)
             {
                 return result;
@@ -62,7 +62,7 @@ namespace ZooIS.Client.Services.TicketsService
 
         public async Task<bool> UpdateTicket(Ticket tag)
         {
-            HttpResponseMessage response = await _http.PutAsJsonAsync($"/api/users/{tag.Id}", tag);
+            HttpResponseMessage response = await _http.PutAsJsonAsync($"/api/tickets/{tag.Id}", tag);
             return response.IsSuccessStatusCode;
         }
     }

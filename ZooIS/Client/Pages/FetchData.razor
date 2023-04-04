@@ -1,61 +1,49 @@
 ﻿@page "/fetchdata"
-@using ZooIS.Shared
 
-@inject HttpClient Http
-@inject NavigationManager NavigationManager
+@using ZooIS.Client.Services.TicketsService;
+@inject ITicketsService _ticketServce
 
-<PageTitle>Weather forecast</PageTitle>
-
-<h1>Weather forecast</h1>
-
-<p>This component demonstrates fetching data from the server.</p>
-
-@if (forecasts == null)
+<h3>Bilietų pirkimas</h3>
+@*
+<MudContainer Style="margin-top:20px;">
+    <ZooIS.Client.Pages.TicketBundles.QuantityPickerComponent Text="Suaugusiojo" AmmountChanged="ValueChanged" />
+</MudContainer>
+*@
+@if (loaded)
 {
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var forecast in forecasts)
-            {
-                <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    @foreach (var item in _ticketServce.Tickets)
+    {
+        <MudContainer Style="margin-top:20px;">
+            <ZooIS.Client.Pages.TicketBundles.QuantityPickerComponent Id="@item.Id" Text="@item.Name" AmmountChanged="ValueChanged" />
+        </MudContainer>
+    }
+    @foreach (var item in arr)
+    {
+        <h5>@item</h5>
+    }
 }
 
-<button class="btn btn-primary" @onclick="NavigateTo">Create a new user</button>
 
 
 @code {
-    private WeatherForecast[]? forecasts;
-    bool first = true;
+    bool loaded;
+    int[] arr = new int[0];
+    Dictionary<int, int> IdNumber = new();
+    Dictionary<int, double> IdPrice = new();
+
+    //pasidaryt kopija i dictionary, tada pereit, susidet komponentus, tada bus galima skaiciuot ir t.t.
+    
+
+
     protected override async Task OnInitializedAsync()
     {
-        if (first)
-        {
-            forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
-            first = false;
-        }
+        await _ticketServce.GetTickets();
+        arr = new int[_ticketServce.Tickets.Count];
+        loaded = true;
     }
 
-    void NavigateTo()
+    void ValueChanged((int, int) tup)
     {
-        NavigationManager.NavigateTo("/user");
+        
     }
 }

@@ -1,4 +1,12 @@
-﻿<h3>TicketPurchasePage</h3>
+﻿@page "/tickets/purchase"
+
+@using ZooIS.Client.Services.TicketsService;
+@inject NavigationManager _navigationManager
+@inject ITicketsService _ticketServce
+
+<h3>Bilietų pirkimas</h3>
+
+
 
 @code {
 

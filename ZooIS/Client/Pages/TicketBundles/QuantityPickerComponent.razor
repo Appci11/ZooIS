@@ -1,0 +1,32 @@
+﻿<MudPaper Class="d-flex align-center flex-grow-1" Elevation="0">
+    <MudButton OnClick="Minus1" Variant="Variant.Filled" Color="Color.Primary" class="mud-theme-primary py-4 px-6 mx-4 rounded-tl-xl rounded-bl-xl" Style="margin-right:0px; padding-left:10px; padding-right:10px; width:90px;">Atimti</MudButton>
+    <MudText Typo="Typo.h6" Style="margin-left:0px; margin-right:0px;">@Ammount</MudText>
+    <MudButton OnClick="Plus1" Variant="Variant.Filled" Color="Color.Primary" class="mud-theme-primary py-4 px-6 mx-4 rounded-br-xl rounded-tr-xl" Style="margin-left:0px; padding-left:10px; padding-right:10px; width:90px;">Prideti</MudButton>
+    <MudText Typo="Typo.h6" Style="margin-left:0px; margin-right:0px;">@Text</MudText>
+</MudPaper>
+
+@code {
+    [Parameter]
+    public int Id { get; set; } 
+    [Parameter]
+    public string Text { get; set; } = "Placeholder Text...";
+    int Ammount;
+
+    [Parameter]
+    public EventCallback<(int, int)> AmmountChanged { get; set; }
+
+    void Minus1()
+    {
+        if (Ammount > 0)
+        {
+            //ammount--;
+            AmmountChanged.InvokeAsync((Id, --Ammount));
+        }
+    }
+
+    void Plus1()
+    {
+        //ammount++;
+        AmmountChanged.InvokeAsync((Id, ++Ammount));
+    }
+}
