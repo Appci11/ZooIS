@@ -290,23 +290,6 @@ namespace ZooIS.Server.Migrations
                     b.ToTable("Tickets");
                 });
 
-            modelBuilder.Entity("ZooIS.Shared.Models.UserSettings", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("DarkMode")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Language")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("UserSettings");
-                });
-
             modelBuilder.Entity("ZooIS.Shared.Models.WorkTask", b =>
                 {
                     b.Property<int>("Id")
@@ -465,17 +448,6 @@ namespace ZooIS.Server.Migrations
                     b.Navigation("Tag");
                 });
 
-            modelBuilder.Entity("ZooIS.Shared.Models.UserSettings", b =>
-                {
-                    b.HasOne("ZooIS.Shared.Models.RegisteredUser", "RegisteredUser")
-                        .WithOne("UserSettings")
-                        .HasForeignKey("ZooIS.Shared.Models.UserSettings", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("RegisteredUser");
-                });
-
             modelBuilder.Entity("ZooIS.Shared.Models.Area", b =>
                 {
                     b.Navigation("Habitats");
@@ -494,9 +466,6 @@ namespace ZooIS.Server.Migrations
             modelBuilder.Entity("ZooIS.Shared.Models.RegisteredUser", b =>
                 {
                     b.Navigation("Bundle");
-
-                    b.Navigation("UserSettings")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("ZooIS.Shared.Models.Species", b =>

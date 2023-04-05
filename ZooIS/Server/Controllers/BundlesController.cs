@@ -41,7 +41,15 @@ namespace ZooIS.Server.Controllers
         public async Task<ActionResult<Bundle>> GetBundle(int id)
         {
             Bundle response = await _bundlesService.GetBundle(id, true);
-            if(response == null) return NotFound(new { message = "Ticket no found" });
+            if(response == null) return NotFound(new { message = "Bundle no found" });
+            return Ok(response);
+        }
+
+        [HttpGet("getbyuser/{id}")]
+        public async Task<ActionResult<Bundle>> GetBundleByUserId(int id)
+        {
+            Bundle response = await _bundlesService.GetBundleByUserId(id, true);
+            if (response == null) return NotFound(new { message = "Bundle no found" });
             return Ok(response);
         }
 
@@ -51,7 +59,7 @@ namespace ZooIS.Server.Controllers
             Bundle response = await _bundlesService.UpdateBundle(request, id);
             if (response == null)
             {
-                return NotFound(new { message = "Ticket was not updated" });
+                return NotFound(new { message = "Bundle was not updated" });
             }
             return Ok(response);
         }

@@ -154,25 +154,6 @@ namespace ZooIS.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserSettings",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false),
-                    Language = table.Column<string>(type: "TEXT", nullable: false),
-                    DarkMode = table.Column<bool>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserSettings", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_UserSettings_RegisteredUsers_Id",
-                        column: x => x.Id,
-                        principalTable: "RegisteredUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "SpeciesTagAvoid",
                 columns: table => new
                 {
@@ -358,9 +339,6 @@ namespace ZooIS.Server.Migrations
 
             migrationBuilder.DropTable(
                 name: "SpeciesTagRequire");
-
-            migrationBuilder.DropTable(
-                name: "UserSettings");
 
             migrationBuilder.DropTable(
                 name: "WorkTasks");

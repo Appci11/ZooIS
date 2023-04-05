@@ -1,0 +1,72 @@
+﻿@page "/bundles"
+
+@using ZooIS.Client.Services.BundlesService
+@inject IBundlesService _bundlesService
+@inject IDialogService _dialogService
+
+<PageTitle>Bilietų rinkiniai</PageTitle>
+
+@if(loaded)
+{
+    <MudTable Items="@_bundlesService.Bundles" Dense="true" Filter="new Func<Bundle, bool>(FilterFunc)">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Bilietų rinkiniai</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="searchString" Placeholder="Ieškoti" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortBy="new Func<Bundle, object>(b=>b.Id)">ID</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<Bundle, object>(b=>b.RegisteredUserId)">Sistemo naudotojo ID</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<Bundle, object>(b => b.CreationDate== null ? string.Empty : b.CreationDate)">Sukūrimo data</MudTableSortLabel></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Sistemo naudotojo ID">@context.RegisteredUserId</MudTd>
+            <MudTd DataLabel="Sukūrimo data">@context.CreationDate</MudTd>
+            <MudTd>
+                <MudIconButton OnClick="(() => DeleteBundle(context.Id))" Size="@Size.Small" Icon="@Icons.Material.Filled.RemoveCircleOutline" Color="Color.Warning" />
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager RowsPerPageString="Įrašai per puslapį" />
+        </PagerContent>
+    </MudTable>
+}
+
+@code {
+    bool loaded;
+    string searchString = string.Empty;
+    protected DeleteConfirmationDialog confirmationDialog{ get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await _bundlesService.GetBundles();
+        loaded = true;
+    }
+
+    private bool FilterFunc(Bundle element) => FilterFunc1(element, searchString);
+
+    private bool FilterFunc1(Bundle element, string searchStr)
+    {
+        if (string.IsNullOrWhiteSpace(searchStr))
+            return true;
+        if (element.Id.ToString().Contains(searchStr, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.RegisteredUserId.ToString().Contains(searchStr, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+    async Task DeleteBundle(int id)
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("BodyText", "Pašalinti bilietų rinkinį?");
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+        var dialog = _dialogService.Show<ConfirmDeletionDialog>("Šalinimas", parameters, options);
+
+        if (!(await dialog.Result).Canceled)
+        {
+            await _bundlesService.DeleteBundle(id);
+        }
+    }
+}

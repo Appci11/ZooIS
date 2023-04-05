@@ -13,7 +13,6 @@ using ZooIS.Client.Services.HabitatsService;
 using ZooIS.Client.Services.SpeciesService;
 using ZooIS.Client.Services.TagsService;
 using ZooIS.Client.Services.TicketsService;
-using ZooIS.Client.Services.UserSettingsService;
 using ZooIS.Client.Services.UsersService;
 using ZooIS.Client.Services.WorkTasksService;
 using ZooIS.Client.Services.ZooMapService;
@@ -30,7 +29,6 @@ builder.Services.AddAuthorizationCore();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUsersService, UsersService>();
-builder.Services.AddScoped<IUserSettingsService, UserSettingsService>();
 builder.Services.AddScoped<IZooMapService, ZooMapService>();
 builder.Services.AddScoped<IAreasService, AreasService>();
 builder.Services.AddScoped<ITagsService, TagsService>();

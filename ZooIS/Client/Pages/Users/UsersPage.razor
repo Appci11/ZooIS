@@ -26,7 +26,7 @@
             <MudTh>Redaguoti / Šalinti</MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd @onclick="((x) => Kriu(context.Username))" DataLabel="Vardas">@context.Username</MudTd>
+            <MudTd DataLabel="Vardas">@context.Username</MudTd>
             <MudTd DataLabel="Rolė">@context.Role</MudTd>
             <MudTd DataLabel="Registracijos data">@context.DateCreated</MudTd>
             <MudTd>
@@ -47,12 +47,6 @@
     protected DeleteConfirmationDialog confirmationDialog { get; set; }
     // Sutvarkyt , jei niekas nelus pasalint, lyg ir nebereikia
     //int nrToDelete = -1;
-
-
-    void Kriu(string vardas)
-    {
-        Console.WriteLine(vardas);
-    }
 
     private bool FilterFunc(RegisteredUser element) => FilterFunc1(element, searchString);
 

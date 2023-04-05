@@ -36,9 +36,6 @@ namespace ZooIS.Server.Services.AuthService
             user.PassChangeTime = DateTime.Now;
             _context.RegisteredUsers.Add(user);
             await _context.SaveChangesAsync();
-            UserSettings settings = new UserSettings() { Id = user.Id };
-            _context.UserSettings.Add(settings);
-            await _context.SaveChangesAsync();
             AuthResponseDto response = new AuthResponseDto();
             response.Username = request.Username;
             if (request.returnSecureToken)

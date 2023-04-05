@@ -26,10 +26,6 @@ namespace ZooIS.Server.Services.UsersService
             _context.RegisteredUsers.Add(registeredUser);
             await _context.SaveChangesAsync();
 
-            UserSettings settings = new UserSettings() { Id = registeredUser.Id };
-            _context.UserSettings.Add(settings);
-            await _context.SaveChangesAsync();
-
             return registeredUser;
         }
 

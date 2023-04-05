@@ -38,6 +38,13 @@ namespace ZooIS.Server.Services.BundlesService
 
         public async Task<Bundle> AddBundle(AddBundleDto addBundleDto)
         {
+            // kadangi leidziam turet tik viena egzemplioriu, jei randam ankstesni... pasalinam.
+            var result = await _context.Bundles.FirstOrDefaultAsync(b => b.RegisteredUserId == addBundleDto.RegisteredUserId);
+            if(result != null)
+            {
+                await DeleteBundle(result.Id);
+            }
+
             Bundle bundle = new Bundle();
 
             bundle.RegisteredUserId = addBundleDto.RegisteredUserId;
@@ -94,6 +101,25 @@ namespace ZooIS.Server.Services.BundlesService
             return bundle;
         }
 
+        public async Task<Bundle> GetBundleByUserId(int id, bool includeRelated)
+        {
+            Bundle bundle;
+            if (!includeRelated)
+            {
+                bundle = await _context.Bundles
+                                            .Where(t => t.RegisteredUserId == id)
+                                            .Include(b => b.BundleTickets)
+                                            .FirstOrDefaultAsync();
+                return bundle;
+            }
+            bundle = await _context.Bundles
+                              .Where(t => t.RegisteredUserId == id)
+                              .Include(b => b.BundleTickets)
+                              .ThenInclude(t => t.Ticket)
+                              .FirstOrDefaultAsync();
+            return bundle;
+        }
+
         public async Task<Bundle> UpdateBundle(AddBundleDto addBundleDto, int id)
         {
             Bundle bundle = await _context.Bundles.FirstOrDefaultAsync(i => i.Id == id);
@@ -126,5 +152,7 @@ namespace ZooIS.Server.Services.BundlesService
             await _context.SaveChangesAsync();
             return bundle;
         }
+
+
     }
 }

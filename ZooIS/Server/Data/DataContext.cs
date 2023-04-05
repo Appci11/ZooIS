@@ -22,7 +22,6 @@ namespace ZooIS.Server.Data
         public DbSet<Species> Species => Set<Species>();
         public DbSet<Tag> Tags => Set<Tag>();
         public DbSet<Ticket> Tickets => Set<Ticket>();
-        public DbSet<UserSettings> UserSettings => Set<UserSettings>();
         public DbSet<WorkTask> WorkTasks => Set<WorkTask>();
 
         // for tutorial purposes
@@ -37,10 +36,6 @@ namespace ZooIS.Server.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<UserSettings>()
-              .Property(e => e.Id)
-              .ValueGeneratedNever();
-
             modelBuilder.Entity<BundleTicket>()
                         .HasKey(bt => new { bt.BundleId, bt.TicketId });
 

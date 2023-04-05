@@ -13,7 +13,6 @@ using ZooIS.Server.Services.AuthService;
 using ZooIS.Server.Services.SpeciesService;
 using ZooIS.Server.Services.TagsService;
 using ZooIS.Server.Services.TicketsService;
-using ZooIS.Server.Services.UserSettingsService;
 using ZooIS.Server.Services.UsersService;
 using ZooIS.Server.Services.WorkTasksService;
 using System.Text.Json.Serialization;
@@ -28,7 +27,6 @@ builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 
 builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IUserSettingsService,UserSettingsService>();
 builder.Services.AddScoped<ITicketsService, TicketsService>();
 builder.Services.AddScoped<IBundlesService, BundlesService>();
 builder.Services.AddScoped<IWorkTasksService, WorkTasksService>();

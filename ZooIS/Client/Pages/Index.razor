@@ -1,7 +1,5 @@
 ﻿@page "/"
 @using MudBlazor
-@using ZooIS.Client.Services.UserSettingsService;
-@inject IUserSettingsService SettingsService
 
 <h3>Main Screen...</h3>
 <div>
@@ -19,7 +17,6 @@
 
 @code {
     bool loaded = false;
-    UserSettings? Settings;
 
     protected override async Task OnInitializedAsync()
     {

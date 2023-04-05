@@ -27,10 +27,6 @@ namespace ZooIS.Server.Services.EmployeesService
             _context.Employees.Add(employee);
             await _context.SaveChangesAsync();
 
-            UserSettings settings = new UserSettings() { Id = employee.Id };
-            _context.UserSettings.Add(settings);
-            await _context.SaveChangesAsync();
-
             return employee;
         }
 
