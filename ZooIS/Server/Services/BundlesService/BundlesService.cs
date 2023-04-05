@@ -40,7 +40,7 @@ namespace ZooIS.Server.Services.BundlesService
         {
             Bundle bundle = new Bundle();
 
-            bundle.RegisteredUserId = addBundleDto.UserId;
+            bundle.RegisteredUserId = addBundleDto.RegisteredUserId;
 
             foreach (var item in addBundleDto.BundleTickets)
             {

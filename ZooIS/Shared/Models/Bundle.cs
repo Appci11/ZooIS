@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
 namespace ZooIS.Shared.Models
 {
@@ -19,7 +14,7 @@ namespace ZooIS.Shared.Models
         public List<BundleTicket> BundleTickets { get; set; } = new List<BundleTicket>();
         //with RegisteredUsers
         [JsonIgnore]
-        public RegisteredUser RegisteredUser { get; set; } = new RegisteredUser();
+        public RegisteredUser RegisteredUser { get; set; }
         public int RegisteredUserId { get; set; }
     }
 }

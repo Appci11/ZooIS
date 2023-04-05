@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using ZooIS.Shared.Dto;
 using ZooIS.Shared.Models;
 using static MudBlazor.CategoryTypes;
 
@@ -15,9 +16,9 @@ namespace ZooIS.Client.Services.BundlesService
             _http = http;
         }
 
-        public async Task<bool> CreateBundle(Bundle bundle)
+        public async Task<bool> CreateBundle(AddBundleDto dto)
         {
-            HttpResponseMessage response = await _http.PostAsJsonAsync($"/api/bundles", bundle);
+            HttpResponseMessage response = await _http.PostAsJsonAsync($"/api/bundles", dto);
             return response.IsSuccessStatusCode;
         }
 
