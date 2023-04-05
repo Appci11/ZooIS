@@ -1,13 +1,111 @@
 ﻿@page "/tickets/purchase"
 
-@using ZooIS.Client.Services.TicketsService;
-@inject NavigationManager _navigationManager
-@inject ITicketsService _ticketServce
+@using System.Text;
+@using ZooIS.Client.Services.TicketsService
+@using ZooIS.Client.Services.BundlesService
+@inject ITicketsService _ticketsServce
+@inject IBundlesService _bundlesService
+@inject ILocalStorageService _localStorage
+@inject IDialogService _dialogService
 
-<h3>Bilietų pirkimas</h3>
+@if (loaded)
+{
+    <h3>Bilietų kainos</h3>
+    @foreach (var item in _ticketsServce.Tickets)
+    {
+        <MudText>@item.Name: @item.Price€</MudText>
+    }
+}
 
-
+<!--Bus problemu, jei veikimo metu pasikeis bilieto pavadinimas ar id, tokiu, esminiu, pasikeitimu metu
+    reiketu sistema padaryti neprieinama vartotojams-->
+@if (loaded)
+{
+    <MudPaper Elevation="0" Style="margin:10px">
+        @foreach (var item in _ticketsServce.Tickets)
+        {
+            <MudPaper Elevation="0" Style="margin:5px">
+                <ZooIS.Client.Pages.TicketBundles.QuantityPickerComponent Id="@item.Id" Text="@item.Name" AmmountChanged="ValueChanged" />
+            </MudPaper>
+        }
+    </MudPaper>
+    <MudDatePicker Label="Apsilankymo data" @bind-Date="dateOfVisit" DateFormat="dd-MM-yyyy" Style="width:200px;" />
+    <MudButton OnClick="PurchaseStarted" Variant="Variant.Filled" Color="Color.Primary" Style="margin-top:20px;">Pirkti</MudButton>
+}
 
 @code {
+    bool loaded;
+    Dictionary<int, int> TicketId_Number = new();
+    int longestTicketNameLength = 0;
+    double totalPrice = 0;
+    DateTime? dateOfVisit = DateTime.Today;
 
+    protected override async Task OnInitializedAsync()
+    {
+        await _ticketsServce.GetTickets();
+        foreach (var item in _ticketsServce.Tickets)
+        {
+            TicketId_Number.Add(item.Id, 0);
+            if (longestTicketNameLength < item.Name.Length)
+                longestTicketNameLength = item.Name.Length;
+        }
+        longestTicketNameLength += 10;
+        loaded = true;
+    }
+
+    void ValueChanged((int, int) tup)
+    {
+        TicketId_Number[tup.Item1] = tup.Item2;
+        totalPrice = CalculatePrice();
+    }
+
+    double CalculatePrice()
+    {
+        double total = 0;
+        foreach (var item in TicketId_Number)
+        {
+            int ammount = item.Value;
+            double price = _ticketsServce.Tickets.FirstOrDefault(t => t.Id == item.Key)!.Price;
+            total += ammount * price;
+        }
+        return Math.Round(total, 2, MidpointRounding.AwayFromZero);
+    }
+
+    async Task PurchaseStarted()
+    {
+        StringBuilder builder = new StringBuilder();
+        foreach (var item in _ticketsServce.Tickets)
+        {
+            if (TicketId_Number[item.Id] == 0) continue;
+            builder.Append($"{item.Name} {TicketId_Number[item.Id]} x {item.Price} €\n");
+        }
+        builder.Append("\n");
+        builder.Append($"Viso: {totalPrice}€");
+
+        var parameters = new DialogParameters();
+        parameters.Add("BodyText", builder.ToString());
+        parameters.Add("LineAmmount", _ticketsServce.Tickets.Count + 2);
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        var dialog = _dialogService.Show<ConfirmPurchaseDialog>(" Pirkimo patvirtinimas", parameters, options);
+
+        if (!(await dialog.Result).Canceled)
+        {
+            await CreateBundle();
+            Console.WriteLine("PERKAM!!");
+
+        }
+    }
+
+    async Task CreateBundle()
+    {
+        AddBundleDto bundleDto = new();
+        bundleDto.RegisteredUserId = await _localStorage.GetItemAsync<int>("userId");    //Sutvarkyt
+        foreach (var item in TicketId_Number)
+        {
+            if (item.Value == 0) continue;
+            AddBundleTicketDto tDto = new AddBundleTicketDto { TicketId = item.Key, Quantity = item.Value };
+            bundleDto.BundleTickets.Add(tDto);
+        }
+        await _bundlesService.CreateBundle(bundleDto);
+    }
 }
