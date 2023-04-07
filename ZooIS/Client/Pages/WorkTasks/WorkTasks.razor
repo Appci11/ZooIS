@@ -127,6 +127,7 @@
         SavedTasks.Add(id);
         await _localStorage.SetItemAsync<HashSet<int>>("savedWorkTaskIds", SavedTasks);
         _snackbar.Add("Pridėta", Severity.Success);
+        StateHasChanged();
     }
 
     async void OpenDialog()
@@ -148,10 +149,13 @@
         {
             int userId = await _localStorage.GetItemAsync<int>("userId");
             WorkTask request = new WorkTask();
+            request.Severity = workTask.Severity;
+            request.Subject = workTask.Subject;
             request.Name = workTask.Name;
             request.Description = workTask.Description;
             request.CreatorId = userId;
             await _workTasksService.CreateWorkTask(request);
+            StateHasChanged();
         }
     }
 

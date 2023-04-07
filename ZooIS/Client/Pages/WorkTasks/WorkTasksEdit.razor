@@ -132,7 +132,10 @@
         parameters.Add("BodyText", $"Pažymėta darbų: {SelectedItems.Count}. Tikrai pašalinti?");
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
         var dialog = _dialogService.Show<ConfirmDeletionDialog>("Šalinimas", parameters, options);
-        int n = await _workTasksService.DeleteWorkTasks(SelectedItems);
+        if (!(await dialog.Result).Canceled)
+        {
+            await _workTasksService.DeleteWorkTasks(SelectedItems);
+        }
         StateHasChanged();
     }
 }

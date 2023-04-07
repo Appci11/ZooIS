@@ -1,26 +1,126 @@
 ﻿@page "/"
-@using MudBlazor
 
-<h3>Main Screen...</h3>
-<div>
-<MudText Typo="Typo.h1">DYYYYDELIS uzrasas</MudText>
-</div>
-<br />
-<AuthorizeView>
-    <h3>
-        Logged in as: @context.User.Identity!.Name
-    </h3>
-</AuthorizeView>
-<hr />
+@if (loaded)
+{
+    <MudMenu ActivationEvent="@MouseEvent.RightClick" PositionAtCursor="true">
+        <ActivatorContent>
+            <svg width="600px" height="600px" viewBox="0 0 600 600"
+                 style="background-image:url(img/ZOO_teritorija.webp); background-color: rgb(255, 255, 255);"
+             @onmousemove="@(e => Coords = $"X = {e.OffsetX} Y = {e.OffsetY}")"
+             @onclick="@((e) => LeftClickOnPicture(e.Button, e.ShiftKey, e.OffsetX, e.OffsetY))"
+             @oncontextmenu="RightClickOnPicture"
+             @oncontextmenu:preventDefault="true">
+                @*<path d="M 0 0 L 39.6 0 L 19.8 39.6 Z" fill="none" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="all" />*@
+                @if (CurrentCoordinates.Count > 1)
+                {
+                    <path d="@GetCoordinatesInString()" fill="ffffff" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="all" />
+                }
 
-<img src="aaa-Page-2.svg"/>
+            </svg>
+        </ActivatorContent>
+        <ChildContent>
+            <MudMenuItem>Profile</MudMenuItem>
+            <MudMenuItem>Theme</MudMenuItem>
+            <MudMenuItem>Usage</MudMenuItem>
+            <MudMenuItem>Sign Out</MudMenuItem>
+        </ChildContent>
+    </MudMenu>
+}
+
+<h1>@Coords</h1>
+<h1>X = @currentX Y = @currentY</h1>
+<button @onclick="StartDrawing">StartDrawing</button>
+<button @onclick="FinishDrawing">FinishDrawing</button>
+<h1>state: @state</h1>
 
 @code {
-    bool loaded = false;
+    bool loaded;
+    protected string Coords { get; set; }
+    double currentX;
+    double currentY;
 
-    protected override async Task OnInitializedAsync()
+    string state = string.Empty;
+    bool addingPoints = false;
+    bool firstPointAdded = false;   //pasikeitus logikai, tikriausiai nebereikia
+
+    List<Coordinates> CurrentCoordinates { get; set; } = new();
+
+    protected override Task OnInitializedAsync()
     {
-        //Settings = await SettingsService.GetSettings(1);
+        //Arr.Add(new Coordinates(5, 5));
+        //Arr.Add(new Coordinates(15, 15));
+        //Arr.Add(new Coordinates(25, 25));
+        CurrentCoordinates.Add(new Coordinates(0, 0));
+        CurrentCoordinates.Add(new Coordinates(39.6, 0));
+        CurrentCoordinates.Add(new Coordinates(19.8, 39.6));
+        CurrentCoordinates.Add(new Coordinates(5, 39.6));
         loaded = true;
+        return base.OnInitializedAsync();
+    }
+
+    void LeftClickOnPicture(long btn, bool shiftPressed, double x, double y)
+    {
+        Console.WriteLine("Pressed on Picture!");
+        if (!addingPoints) return;
+        CurrentCoordinates.Add(new Coordinates(x, y));
+    }
+
+    void RightClickOnPicture(MouseEventArgs args)
+    {
+        if (args.Button == 2)
+        {
+            Console.WriteLine("Removing last Coordinate");
+            if (!addingPoints) return;
+            if (CurrentCoordinates.Count != 0)
+                CurrentCoordinates.RemoveAt(CurrentCoordinates.Count - 1);
+        }
+    }
+
+    void StartDrawing()
+    {
+        state = "Starting to draw. Add First point.";
+        CurrentCoordinates = new();
+        addingPoints = true;
+    }
+
+    void FinishDrawing()
+    {
+        state = "Finished drawing polyline.";
+        addingPoints = false;
+    }
+
+    string GetCoordinatesInString()
+    {
+        if (CurrentCoordinates.Count < 1) return string.Empty;
+        string siaip = "M 0 0 L 39.6 0 L 19.8 39.6 Z";
+        String result = $"M {CurrentCoordinates[0].X} {CurrentCoordinates[0].Y}";
+        for (int i = 1; i < CurrentCoordinates.Count; i++)
+        {
+            result += $" L {CurrentCoordinates[i].X} {CurrentCoordinates[i].Y}";
+        }
+        result += " Z";
+        return result;
+    }
+
+    void Dragging()
+    {
+        Console.WriteLine("Mause is dawn");
+    }
+
+    protected void Mouse_Move(MouseEventArgs e)
+    {
+        Coords = $"X = {e.ClientX} Y = {e.ClientY}";
+    }
+
+    public class Coordinates
+    {
+        public double X { get; set; }
+        public double Y { get; set; }
+        public Coordinates(double x, double y)
+        {
+            X = x;
+            Y = y;
+        }
     }
 }
+

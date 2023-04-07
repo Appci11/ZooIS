@@ -17,6 +17,10 @@ namespace ZooIS.Client.Services.WorkTasksService
         public async Task<bool> CreateWorkTask(WorkTask workTask)
         {
             HttpResponseMessage response = await _http.PostAsJsonAsync($"/api/worktasks/", workTask);
+            if(response.IsSuccessStatusCode)
+            {
+                await GetWorkTasks();   // kitur nereikejo, nes gryztant i "all" puslapi automatiskai atnaujina
+            }
             return response.IsSuccessStatusCode;
         }
 
