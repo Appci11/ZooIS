@@ -12,7 +12,7 @@ namespace ZooIS.Shared.Models.MapAreaModels
         public int Nr { get; set; }
         public List<Coordinates> PolyCoordinates { get; set; } = new List<Coordinates>();
         public Coordinates TextCoordinates { get; set; }
-        public string FillColor { get; set; } = "ffffff";
-        public string StrokeColor { get; set; } = "000000";
+        public string FillColor { get; set; } = "#ffffff";
+        public string StrokeColor { get; set; } = "#000000";
     }
 }

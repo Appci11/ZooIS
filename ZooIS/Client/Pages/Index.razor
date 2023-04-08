@@ -1,17 +1,28 @@
 ﻿@page "/"
 
+
 @if (loaded)
 {
-
+    <MudButton OnClick="Kriu">Kriu</MudButton>
+    <MudImage @ref="@image" Src="api/pictures" Alt="Mony the dog" Elevation="25" Class="rounded-lg" />
 }
+
+
 
 @code {
     bool loaded;
 
+    MudImage? image;
+
     protected override Task OnInitializedAsync()
     {
-        
+
         loaded = true;
         return base.OnInitializedAsync();
+    }
+
+    async void Kriu()
+    {
+        
     }
 }
