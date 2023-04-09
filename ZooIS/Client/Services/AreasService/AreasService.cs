@@ -17,7 +17,7 @@ namespace ZooIS.Client.Services.AreasService
         public async Task<bool> CreateArea(Area area)
         {
             HttpResponseMessage response = await _http.PostAsJsonAsync($"/api/areas", area);
-            return response.IsSuccessStatusCode ? true : false;
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> DeleteArea(int id)
@@ -25,9 +25,22 @@ namespace ZooIS.Client.Services.AreasService
             HttpResponseMessage response = await _http.DeleteAsync($"/api/areas/{id}");
             if (response.IsSuccessStatusCode)
             {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 Area area = Areas.FirstOrDefault(a => a.Id == id);
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+                if (area != null)
+                {
+                    Areas.Remove(area);
+                    return true;
+                }
+                //Lieka atvejis, jei API sekmingai pasalino, bet client dalyje kazkas nepavyko
+            }
+            return false;
+        }
+        public async Task<bool> DeleteAreaByNr(int nr)
+        {
+            HttpResponseMessage response = await _http.DeleteAsync($"/api/areas/bynumber/{nr}");
+            if (response.IsSuccessStatusCode)
+            {
+                Area area = Areas.FirstOrDefault(a => a.Id == nr);
                 if (area != null)
                 {
                     Areas.Remove(area);
@@ -53,15 +66,14 @@ namespace ZooIS.Client.Services.AreasService
             List<Area> result = new List<Area>();
             try
             {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 result = await _http.GetFromJsonAsync<List<Area>>("/api/Areas");
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             }
             catch { }
             if (result != null && result.Count > 0)
             {
                 Areas = result;
             }
+            else Areas = new();
         }
 
         public async Task<bool> UpdateArea(Area area)

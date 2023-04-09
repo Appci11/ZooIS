@@ -1,24 +1,31 @@
 ﻿@page "/map/edit"
-@using ZooIS.Shared.Models.MapAreaModels;
+@using ZooIS.Client.Services.PicturesService
+@using ZooIS.Client.Services.ZooMapService
+@using ZooIS.Shared.Models.MapAreaModels
+@using ZooIS.Client.Services.AreasService
+@inject IZooMapService _zooMapService
+@inject IPicturesService _picturesService
+@inject IDialogService _dialogService
+@inject IAreasService _areasService
 
-<MudPaper Class="d-inline-flex pa-4" Elevation="0">
-    <MudPaper Elevation="0">
-        @if (loaded)
-        {
-            <MudPaper Elevation="0" Style="height:600px; width:600px; overflow:scroll;">
+@if (loaded)
+{
+    <MudPaper Class="d-inline-flex pa-4" Elevation="0">
+        <MudPaper Elevation="0">
+            <MudPaper Elevation="0" Style="height:700px; max-width:1000px; overflow:scroll;">
                 <MudMenu ActivationEvent="@MouseEvent.RightClick" PositionAtCursor="true">
                     <ActivatorContent>
-                        <svg width="2000" height="1809" viewBox="0 0 2000 1809" tabindex="0"
-                             style=" background-color: rgb(255, 255, 255); outline:none; @cursor"
+                        <svg width="@pictureCoordinates.X" height="@pictureCoordinates.Y" viewBox="0 0 @pictureCoordinates.X @pictureCoordinates.Y" tabindex="0"
+                             style="background-color:rgb(255, 255, 255); outline:none; @cursor"
                          @onclick="@((e) => LeftClickOnSVG(e.OffsetX, e.OffsetY))"
                          @onmousemove="SetCurrentXY"
                          @onmouseup="MouseUpOnSVG"
                          @onkeyup="KeyPressed">
 
-                            <image pointer-events="none" x="0" y="0" width="2000" height="1809" xlink:href="api/pictures" />
+                            <image pointer-events="none" xlink:href="api/pictures/0" />
 
                             <!--Add all areas-->
-                            @foreach (AreaDrawData item in AreasData)
+                            @foreach (AreaDrawData item in _zooMapService.Map.AreasData)
                             {
                                 @if (item.PolyCoordinates.Count > 1)
                                 {
@@ -34,7 +41,7 @@
                             }
 
                             <!--Add all numbers-->
-                            @foreach (AreaDrawData item in AreasData)
+                            @foreach (AreaDrawData item in _zooMapService.Map.AreasData)
                             {
                                 @if (null != item.TextCoordinates)
                                 {
@@ -61,40 +68,38 @@
                         <MudMenuItem OnClick="StartDrawing">Brėžti naują</MudMenuItem>
                         <MudMenuItem OnClick="FinishDrawing">Baigti brėžimą</MudMenuItem>
                         <MudMenuItem OnClick="RemoveLastPoint" Disabled="!addingPoints">Šalinti paskutinį tašką</MudMenuItem>
-                        <MudMenuItem OnClick="RemoveLastArea" Disabled="@(AreasData.Count > 0 ? false : true)">Šalinti paskitinę zoną</MudMenuItem>
+                        <MudMenuItem OnClick="RemoveLastArea" Disabled="@(_zooMapService.Map.AreasData.Count > 0 ? false : true)">Šalinti paskutinę zoną</MudMenuItem>
                     </ChildContent>
                 </MudMenu>
             </MudPaper>
-        }
+        </MudPaper>
+        <MudPaper Elevation="0" Style="margin-left:10px;">
+            <MudChip OnClick="StartDrawing" Disabled="addingPoints" Color="Color.Primary">Brėžti</MudChip><span>- naują zoną.</span><br />
+            <MudChip OnClick="FinishDrawing" Disabled="!addingPoints" Color="Color.Primary">Baigti</MudChip><span>- zonos brėžimą. + Vardo suteikimas.</span><br />
+            <MudChip OnClick="RemoveLastPoint" Disabled="@(CurrentDrawCoordinates.Count > 0 ? false : true)" Color="Color.Primary">Šalinti</MudChip><span>- paskutinį brėžimo tašką.</span><br />
+            <MudChip OnClick="RemoveLastArea" Disabled="@(_zooMapService.Map.AreasData.Count > 0 ? false : true)" Color="Color.Secondary">Šalinti</MudChip><span>- paskutinę zoną.</span><br />
+        </MudPaper>
     </MudPaper>
-    <MudPaper Elevation="0" Style="margin-left:10px;">
-        <MudButton Class="cursor-not-allowed" Color="Color.Primary" Variant="Variant.Filled">Delete</MudButton>
-        <h1>state: @state</h1>
-        <button @onclick="StartDrawing">StartDrawing</button>
-        <button @onclick="FinishDrawing">FinishDrawing</button>
-    </MudPaper>
-</MudPaper>
-
-
-
-
-@*
-<img src="api/pictures"/>
-*@
+}
+else
+{
+    <span>Laukiama serverio duomenų...</span>
+}
 @code {
     bool loaded;
-    List<AreaDrawData> AreasData = new();
     List<Coordinates> CurrentDrawCoordinates { get; set; } = new();
-    AreaDrawData helperData;
-    bool dragingNumber = false;
+    AreaDrawData? helperData;    //skaiciaus kilnojimui
+    Coordinates pictureCoordinates = new(50, 50);
     int numberDragged;
     double numberX;
     double numberY;
     string state = "Not Drawing.";
     string cursor = "cursor:default;";    //2 reiksmes tik, no enum...
+
     bool addingPoints = false;
-    //double currentX;
-    //double currentY;
+    bool dragingNumber = false;
+    bool areasChanged = false;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -102,7 +107,26 @@
         //bytes = await _http.GetByteArrayAsync("img/ZOO_teritorija.webp");
         //string eil = Convert.ToBase64String(bytes);
         //Console.WriteLine(eil);
+        pictureCoordinates = await _picturesService.GetPictureCoordinates(0);
+        await LoadMap();
         loaded = true;
+    }
+
+    async Task LoadMap()
+    {
+        if (await _zooMapService.GetMap())
+        {
+            areasChanged = false;
+        }
+    }
+
+    async Task SaveMap()
+    {
+        if (await _zooMapService.AddMap(_zooMapService.Map))
+        {
+            Console.WriteLine("Service_MapSavingSuccess");
+            areasChanged = false;
+        }
     }
 
     void SetCurrentXY(MouseEventArgs args)
@@ -122,7 +146,7 @@
         dragingNumber = true;
     }
 
-    void MouseUpOnSVG(MouseEventArgs args)
+    async void MouseUpOnSVG(MouseEventArgs args)
     {
         Console.WriteLine($"Mouse-UP on SVG  X = {args.OffsetX}  Y = {args.OffsetY}");
         if (dragingNumber)
@@ -130,6 +154,7 @@
             helperData.TextCoordinates.X = args.OffsetX;
             helperData.TextCoordinates.Y = args.OffsetY;
             dragingNumber = false;
+            await SaveMap();  //Sutvarkyt jei netingesiu i ka nors gudresnio pakeist
         }
     }
 
@@ -160,35 +185,62 @@
 
     void StartDrawing()
     {
-        state = "Drawing.";
+        state = "Drawing";
         CurrentDrawCoordinates = new();
         addingPoints = true;
         cursor = "cursor:crosshair;";
     }
 
-    void FinishDrawing()
+    async void FinishDrawing()
     {
         addingPoints = false;
         state = "Not Drawing.";
-        AreasData.Add(new AreaDrawData
-            {
-                Nr = AreasData.Count + 1,
-                PolyCoordinates = CurrentDrawCoordinates,
-                TextCoordinates = new(CurrentDrawCoordinates[0].X, CurrentDrawCoordinates[0].Y)
-            });
-
         // Sutvarkyt. Issaugo tvarkingai, bet kol senosios rodykles i kazka rodo
         // tol UI atsisako priimt pakeitimus...
-        // baigus testuot, galima ir pasalint, nes dirba teisingai, kad ui nemato naujausio NR nesvarbu
-        CurrentDrawCoordinates = new();
+        // galima ir pasalint, nes dirba teisingai
         cursor = "cursor:default;";
+        string eil = await OpenAddAreaDialog();
+        if (eil != string.Empty)
+        {
+            int nr = _zooMapService.Map.AreasData.Count + 1;
+            _zooMapService.Map.AreasData.Add(new AreaDrawData
+                {
+                    Nr = nr,
+                    PolyCoordinates = CurrentDrawCoordinates,
+                    TextCoordinates = new(CurrentDrawCoordinates[0].X, CurrentDrawCoordinates[0].Y)
+                });
+            await _areasService.CreateArea(new Area
+                {
+                    Nr = nr,
+                    Name = eil
+                });
+            await SaveMap();
+            areasChanged = true;
+            CurrentDrawCoordinates = new();
+        }
     }
 
-    void RemoveLastArea()
+    async void RemoveLastArea()
     {
-        if (AreasData.Count > 0)
+        var parameters = new DialogParameters();
+        parameters.Add("BodyText", "Tikrai pašalinti paskutinę zoną?");
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+        var dialog = _dialogService.Show<ConfirmDeletionDialog>("Šalinimas", parameters, options);
+        if (!(await dialog.Result).Canceled)
         {
-            AreasData.RemoveAt(AreasData.Count - 1);
+            int nr = _zooMapService.Map.AreasData.Count;
+            if (_zooMapService.Map.AreasData.Count > 0)
+            {
+                _zooMapService.Map.AreasData.RemoveAt(nr - 1);
+                areasChanged = true;
+            }
+            await _areasService.DeleteAreaByNr(nr);
+            await SaveMap();
+            if(nr == 1)
+            {
+                await _areasService.GetAreas();
+            }
+            StateHasChanged();
         }
     }
 
@@ -202,5 +254,20 @@
         }
         result += " Z";
         return result;
+    }
+
+    async Task<string> OpenAddAreaDialog()
+    {
+        var dialog = await _dialogService.ShowAsync<EnterNameDialog>();
+        var result = await dialog.Result;
+        if (!result.Canceled && result.Data != null)
+        {
+            string eil = result.Data.ToString()!;
+            if (eil.Length > 0)
+            {
+                return eil;
+            }
+        }
+        return string.Empty;
     }
 }

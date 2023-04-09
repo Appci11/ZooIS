@@ -16,6 +16,7 @@ using ZooIS.Server.Services.TicketsService;
 using ZooIS.Server.Services.UsersService;
 using ZooIS.Server.Services.WorkTasksService;
 using System.Text.Json.Serialization;
+using ZooIS.Server.Services.MapsService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +37,7 @@ builder.Services.AddScoped<ITagsService, TagsService>();
 builder.Services.AddScoped<IHabitatsService, HabitatsService>();
 builder.Services.AddScoped<ISpeciesService, SpeciesService>();
 builder.Services.AddScoped<IAnimalsService, AnimalsService>();
+builder.Services.AddScoped<IMapsService, MapsService>();
 
 //adding swagger info start
 builder.Services.AddSwaggerGen(options =>

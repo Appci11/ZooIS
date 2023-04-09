@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Xml;
-using ZooIS.Server.TutorialClasses;
+﻿using ZooIS.Server.Models;
 using ZooIS.Shared.Models;
 
 namespace ZooIS.Server.Data
@@ -23,6 +21,7 @@ namespace ZooIS.Server.Data
         public DbSet<Tag> Tags => Set<Tag>();
         public DbSet<Ticket> Tickets => Set<Ticket>();
         public DbSet<WorkTask> WorkTasks => Set<WorkTask>();
+        public DbSet<MapData> MapsData => Set<MapData>();   //realiai yra tik vienas
 
         // for tutorial purposes
         //public DbSet<User> Users { get; set; }

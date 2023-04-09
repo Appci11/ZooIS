@@ -19,12 +19,14 @@
             <MudTextField @bind-Value="searchString" Placeholder="Ieškoti" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
         <HeaderContent>
+            <MudTh><MudTableSortLabel SortBy="new Func<Area, object>(a=>a.Nr)">Numeris</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortBy="new Func<Area, object>(a=>a.Name)">Pavadinimas</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortBy="new Func<Area, object>(a=>a.Habitats.Count)">Turimų buveinių skaičius</MudTableSortLabel></MudTh>
             <MudTh>Redaguoti / Šalinti</MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd @onclick="((x) => Kriu(context.Name))" DataLabel="Vardas">@context.Name</MudTd>
+            <MudTd DataLabel="Numeris">@context.Nr</MudTd>
+            <MudTd DataLabel="Pavadinimas">@context.Name</MudTd>
             <MudTd>@context.Habitats.Count</MudTd>
             <MudTd>
                 <MudIconButton @onclick="(() => GoToEdit(context))" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Color="Color.Primary" />
@@ -49,13 +51,6 @@ else
     {
         await _areasService.GetAreas();
         loaded = true;
-    }
-
-    // Sutvarkyt - "Priskirtos buveinės" dinamiska varianta padaryt kai jau bus imanoma
-    // Sutvarkyt  ... pasalint kriu
-    void Kriu(string eil)
-    {
-        Console.WriteLine(eil);
     }
 
     private bool FilterFunc(Area element) => FilterFunc1(element, searchString);

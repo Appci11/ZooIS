@@ -11,7 +11,7 @@ using ZooIS.Server.Data;
 namespace ZooIS.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230405144344_Initial")]
+    [Migration("20230409185546_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -33,6 +33,24 @@ namespace ZooIS.Server.Migrations
                     b.HasIndex("TagsId");
 
                     b.ToTable("HabitatTag");
+                });
+
+            modelBuilder.Entity("ZooIS.Server.Models.MapData", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<byte[]>("AreasDrawData")
+                        .IsRequired()
+                        .HasColumnType("BLOB");
+
+                    b.Property<int>("PictureId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MapsData");
                 });
 
             modelBuilder.Entity("ZooIS.Shared.Models.Animal", b =>
@@ -83,6 +101,9 @@ namespace ZooIS.Server.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("Nr")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.ToTable("Areas");
@@ -111,8 +132,7 @@ namespace ZooIS.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RegisteredUserId")
-                        .IsUnique();
+                    b.HasIndex("RegisteredUserId");
 
                     b.ToTable("Bundles");
                 });
@@ -375,8 +395,8 @@ namespace ZooIS.Server.Migrations
             modelBuilder.Entity("ZooIS.Shared.Models.Bundle", b =>
                 {
                     b.HasOne("ZooIS.Shared.Models.RegisteredUser", "RegisteredUser")
-                        .WithOne("Bundle")
-                        .HasForeignKey("ZooIS.Shared.Models.Bundle", "RegisteredUserId")
+                        .WithMany("Bundles")
+                        .HasForeignKey("RegisteredUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -468,7 +488,7 @@ namespace ZooIS.Server.Migrations
 
             modelBuilder.Entity("ZooIS.Shared.Models.RegisteredUser", b =>
                 {
-                    b.Navigation("Bundle");
+                    b.Navigation("Bundles");
                 });
 
             modelBuilder.Entity("ZooIS.Shared.Models.Species", b =>

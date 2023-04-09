@@ -17,11 +17,26 @@ namespace ZooIS.Server.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    Nr = table.Column<int>(type: "INTEGER", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Areas", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MapsData",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    PictureId = table.Column<int>(type: "INTEGER", nullable: false),
+                    AreasDrawData = table.Column<byte[]>(type: "BLOB", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MapsData", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -293,8 +308,7 @@ namespace ZooIS.Server.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Bundles_RegisteredUserId",
                 table: "Bundles",
-                column: "RegisteredUserId",
-                unique: true);
+                column: "RegisteredUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BundleTickets_TicketId",
@@ -333,6 +347,9 @@ namespace ZooIS.Server.Migrations
 
             migrationBuilder.DropTable(
                 name: "HabitatTag");
+
+            migrationBuilder.DropTable(
+                name: "MapsData");
 
             migrationBuilder.DropTable(
                 name: "SpeciesTagAvoid");

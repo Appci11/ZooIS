@@ -1,12 +1,16 @@
 ﻿@page "/"
-
+@using ZooIS.Client.Services.PicturesService
+@using ZooIS.Shared.Models.MapAreaModels;
+@inject IPicturesService _picturesService
+@inject IDialogService _dialogService
 
 @if (loaded)
 {
     <MudButton OnClick="Kriu">Kriu</MudButton>
-    <MudImage @ref="@image" Src="api/pictures" Alt="Mony the dog" Elevation="25" Class="rounded-lg" />
 }
 
+
+<div style="height:500px; width:500px; background-image:url(api/pictures/0)"></div>
 
 
 @code {
@@ -23,6 +27,6 @@
 
     async void Kriu()
     {
-        
+        Coordinates smth = await _picturesService.GetPictureCoordinates(0);
     }
 }

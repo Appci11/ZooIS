@@ -10,6 +10,7 @@ using ZooIS.Client.Services.AuthService;
 using ZooIS.Client.Services.BundlesService;
 using ZooIS.Client.Services.EmployeesService;
 using ZooIS.Client.Services.HabitatsService;
+using ZooIS.Client.Services.PicturesService;
 using ZooIS.Client.Services.SpeciesService;
 using ZooIS.Client.Services.TagsService;
 using ZooIS.Client.Services.TicketsService;
@@ -39,5 +40,6 @@ builder.Services.AddScoped<ITicketsService, TicketsService>();
 builder.Services.AddScoped<IBundlesService, BundlesService>();
 builder.Services.AddScoped<IEmployeesService, EmployeesService>();
 builder.Services.AddScoped<IWorkTasksService, WorkTasksService>();
+builder.Services.AddScoped<IPicturesService, PicturesService>();
 
 await builder.Build().RunAsync();

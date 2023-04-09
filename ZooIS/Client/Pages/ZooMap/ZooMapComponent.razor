@@ -9,7 +9,7 @@
         <svg width="@mapWidth" height="@mapHeight" viewBox="0 0 2000 1809" style="background-color: rgb(255, 255, 255);">
             @if (ShowMap)
             {
-                <image x="0" y="0" width="2000" height="1809" xlink:href="api/pictures" />
+                <image x="0" y="0" width="2000" height="1809" xlink:href="api/pictures/0" />
             }
             @if (ShowAreas)
             {
@@ -228,14 +228,6 @@
         };
         loaded = true;
         return base.OnInitializedAsync();
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await _jsRuntime.InvokeVoidAsync("blaBla", "imageSMTH");
-        }
     }
 
     static string GetCoordinatesInString(List<Coordinates> cordinates)

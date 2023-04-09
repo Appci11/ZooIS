@@ -74,5 +74,16 @@ namespace ZooIS.Server.Controllers
             }
             return NotFound(new { message = "Area was not deleted" });
         }
+        [HttpDelete("bynumber/{nr}")]
+        public async Task<IActionResult> DeleteAreaByNr(int nr)
+        {
+            Area response = await _areasService.DeleteAreaByNr(nr);
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            return NotFound(new { message = "Area was not deleted" });
+        }
+
     }
 }

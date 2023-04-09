@@ -5,7 +5,8 @@ namespace ZooIS.Shared.Models
     public class Area
     {
         public int Id { get; set; }
-        [Required(ErrorMessage = "Reikalinga")]
+        public int Nr { get; set; } // jei be klaidu, priskirs sistema
+        [Required(ErrorMessage = "Reikalinga")]        
         public string Name { get; set; } = string.Empty;
         //gal dar koki tipa ar dar ka pridesiu
         //kol kas bus naudojama tik zemelapio sudaryme

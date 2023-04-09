@@ -24,7 +24,7 @@ namespace ZooIS.Shared.Models
 
         //relationships
         //With Bundles
-        public Bundle? Bundle { get; set; }
+        public List<Bundle> Bundles { get; set; } = new List<Bundle> ();
 
         public override string ToString()
         {

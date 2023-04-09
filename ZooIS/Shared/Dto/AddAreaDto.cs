@@ -8,6 +8,7 @@ namespace ZooIS.Shared.Dto
 {
     public class AddAreaDto
     {
+        public int Nr { get; set; }
         public string Name { get; set; } = string.Empty;
     }
 }

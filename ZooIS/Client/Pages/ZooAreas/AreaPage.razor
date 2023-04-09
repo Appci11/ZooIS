@@ -21,6 +21,10 @@ else
     <MudContainer MaxWidth="MaxWidth.Large">
         <EditForm Model="@area" OnValidSubmit="HandleSubmit">
             <DataAnnotationsValidator />
+            @if (Id != null)
+            {
+                <MudText>Nr: @area.Nr</MudText>
+            }
             <MudTextField @bind-Value="area.Name" For="@(() => area.Name)" Label="Zonos pavadinimas" Variant="Variant.Text"></MudTextField>
             <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Style="margin-top:10px;">@submitBtnText</MudButton>
         </EditForm>
