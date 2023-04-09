@@ -1,7 +1,9 @@
 ﻿@using ZooIS.Client.Services.ZooMapService;
 @using ZooIS.Shared.Models.MapAreaModels
+@using ZooIS.Client.Services.AreasService
 @inject IZooMapService _zooMapService
 @inject IJSRuntime _jsRuntime
+@inject IAreasService _areasService
 
 @if (loaded)
 {
@@ -193,6 +195,10 @@
             mapHeight = $"{currentHeight}px";
             StateHasChanged();
         }
+        get
+        {
+            return zoomLevel;
+        }
     }
     [Parameter]
     public string[] MapAreaFillColors { get; set; } = new string[35];
@@ -207,6 +213,7 @@
     string mapHeight = "1809px";
 
     AreaDrawData AreaData = new();
+    List<AreaDrawData> AreasData = new();
 
     protected override Task OnInitializedAsync()
     {
@@ -226,6 +233,8 @@
             new Coordinates(123.36, 409.33),
             new Coordinates(177.81, 408)
         };
+        _zooMapService.GetMap();
+        AreasData = _zooMapService.Map.AreasData;
         loaded = true;
         return base.OnInitializedAsync();
     }
