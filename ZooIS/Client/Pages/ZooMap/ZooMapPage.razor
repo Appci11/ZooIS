@@ -2,19 +2,19 @@
 @using MudBlazor
 <PageTitle>Map</PageTitle>
 
-<div style="position:center; top:100%">
+<MudPaper Elevation="0">
     <MudCheckBox Class="d-inline-flex pa-4" Dense="true" DisableRipple="true" @bind-Checked="@showMap" Label="Žemėlapis"></MudCheckBox>
     <MudCheckBox Class="d-inline-flex pa-4" Dense="true" DisableRipple="true" @bind-Checked="@showAreas" Label="Zonos"></MudCheckBox>
     <MudCheckBox Class="d-inline-flex pa-4" Dense="true" DisableRipple="true" @bind-Checked="@showAreaNumbers" Label="Numeracija"></MudCheckBox>
-</div>
+</MudPaper>
 
-<div>
+<MudPaper Elevation="0">
     <MudSlider @bind-Value="@zoomValue" Step="0.01" Min="0.0" Max="1.0" Size="Size.Small" />
-</div>
+</MudPaper>
 
-<div style="max-width:100%; max-height:100%; overflow:scroll;">
+<MudPaper Elevation="0" Style="overflow:scroll; max-height:700px; max-width:1200;">
     <ZooMapComponent ShowMap="@showMap" ShowAreas="@showAreas" ShowAreaNumbers="@showAreaNumbers" ZoomLevel="@zoomValue" MapPartId="MapResponse"></ZooMapComponent>
-</div>
+</MudPaper>
 
 @code {
     bool showMap = true;

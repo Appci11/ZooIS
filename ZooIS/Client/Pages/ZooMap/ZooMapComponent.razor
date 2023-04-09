@@ -1,22 +1,30 @@
 ﻿@using ZooIS.Client.Services.ZooMapService;
 @using ZooIS.Shared.Models.MapAreaModels
+@using ZooIS.Client.Services.PicturesService
 @using ZooIS.Client.Services.AreasService
 @inject IZooMapService _zooMapService
 @inject IJSRuntime _jsRuntime
+@inject IPicturesService _picturesService
 @inject IAreasService _areasService
 
 @if (loaded)
 {
-    <div class="container">
-        <svg width="@mapWidth" height="@mapHeight" viewBox="0 0 2000 1809" style="background-color: rgb(255, 255, 255);">
+    <MudPaper Elevation="0">
+        <svg width="@mapWidth" height="@mapHeight" viewBox="0 0 @pictureCoordinates.X @pictureCoordinates.Y" style="background-color: rgb(255, 255, 255);">
             @if (ShowMap)
             {
-                <image x="0" y="0" width="2000" height="1809" xlink:href="api/pictures/0" />
+                <image xlink:href="api/pictures/0" />
             }
             @if (ShowAreas)
             {
 
                 <path @onclick="@(() => MapPartId.InvokeAsync(AreaData.Nr))" fill="@AreaData.FillColor" stroke="@AreaData.StrokeColor" d="@(GetCoordinatesInString(AreaData.PolyCoordinates))" stroke-miterlimit="10" pointer-events="none" />
+                @foreach (AreaDrawData item in AreasData)
+                {
+                    <path @onclick="@(() => MapPartId.InvokeAsync(item.Nr))" fill="@item.FillColor" stroke="@item.StrokeColor" d="@(GetCoordinatesInString(item.PolyCoordinates))" stroke-miterlimit="10" pointer-events="none" />
+                }
+
+
 
                 @*
         <path @onclick="@(() => MapPartId.InvokeAsync(1))" fill="@_zooMapService.ZooMapFillColors[1]" stroke="@_zooMapService.ZooMapStrokeColors[1]" d="M 209.27 408 L 214.11 427.95 L 222.58 427.95 L 225 538.34 L 116.1 538.34 L 104 418.64 L 123.36 409.33 L 177.81 408 Z" stroke-miterlimit="10" pointer-events="all" />
@@ -65,6 +73,13 @@
                     <text disabled x="@AreaData.TextCoordinates.X" y="@AreaData.TextCoordinates.Y">@AreaData.Nr</text>
                 </g>
 
+
+                @foreach (AreaDrawData item in AreasData)
+                {
+                    <g fill="rgb(0, 0, 0)" font-family="Helvetica" font-weight="bold" text-anchor="middle" font-size="20px">
+                        <text disabled x="@item.TextCoordinates.X" y="@item.TextCoordinates.Y">@item.Nr</text>
+                    </g>
+                }
 
                 @*
         <g fill="rgb(0, 0, 0)" font-family="Helvetica" font-weight="bold" text-anchor="middle" font-size="20px">
@@ -172,7 +187,7 @@
         *@
             }
         </svg>
-    </div>
+    </MudPaper>
 }
 @code {
     [Parameter]
@@ -202,8 +217,8 @@
     }
     [Parameter]
     public string[] MapAreaFillColors { get; set; } = new string[35];
-
     bool loaded;
+    Coordinates pictureCoordinates = new(50, 50);
     const double defaultZoomLevel = 0.5;
 
     double zoomLevel = defaultZoomLevel;
@@ -215,7 +230,7 @@
     AreaDrawData AreaData = new();
     List<AreaDrawData> AreasData = new();
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         AreaData.Id = 0;
         AreaData.Nr = 1;
@@ -233,10 +248,11 @@
             new Coordinates(123.36, 409.33),
             new Coordinates(177.81, 408)
         };
-        _zooMapService.GetMap();
+        pictureCoordinates = await _picturesService.GetPictureCoordinates(0);
+        await _zooMapService.GetMap();
         AreasData = _zooMapService.Map.AreasData;
         loaded = true;
-        return base.OnInitializedAsync();
+
     }
 
     static string GetCoordinatesInString(List<Coordinates> cordinates)
