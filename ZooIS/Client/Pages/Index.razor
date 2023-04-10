@@ -9,24 +9,12 @@
     <MudButton OnClick="Kriu">Kriu</MudButton>
 }
 
-
-<div style="height:500px; width:500px; background-image:url(api/pictures/0)"></div>
-
-
 @code {
-    bool loaded;
+    bool loaded = true;
 
-    MudImage? image;
 
-    protected override Task OnInitializedAsync()
+     void Kriu()
     {
-
-        loaded = true;
-        return base.OnInitializedAsync();
-    }
-
-    async void Kriu()
-    {
-        Coordinates smth = await _picturesService.GetPictureCoordinates(0);
+        Console.WriteLine(MudBlazor.Colors.Lime.Lighten1.ToString());
     }
 }

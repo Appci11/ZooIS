@@ -1,11 +1,9 @@
 ﻿@using ZooIS.Client.Services.ZooMapService;
 @using ZooIS.Shared.Models.MapAreaModels
 @using ZooIS.Client.Services.PicturesService
-@using ZooIS.Client.Services.AreasService
 @inject IZooMapService _zooMapService
 @inject IJSRuntime _jsRuntime
 @inject IPicturesService _picturesService
-@inject IAreasService _areasService
 
 @if (loaded)
 {
@@ -18,10 +16,10 @@
             @if (ShowAreas)
             {
 
-                <path @onclick="@(() => MapPartId.InvokeAsync(AreaData.Nr))" fill="@AreaData.FillColor" stroke="@AreaData.StrokeColor" d="@(GetCoordinatesInString(AreaData.PolyCoordinates))" stroke-miterlimit="10" pointer-events="none" />
+                <path @onclick="@(() => Console.WriteLine("kriu"))" fill="@AreaData.FillColor" stroke="@AreaData.StrokeColor" d="@(GetCoordinatesInString(AreaData.PolyCoordinates))" stroke-miterlimit="10" pointer-events="all" />
                 @foreach (AreaDrawData item in AreasData)
                 {
-                    <path @onclick="@(() => MapPartId.InvokeAsync(item.Nr))" fill="@item.FillColor" stroke="@item.StrokeColor" d="@(GetCoordinatesInString(item.PolyCoordinates))" stroke-miterlimit="10" pointer-events="none" />
+                    <path @onclick="@(() => MapPartId.InvokeAsync(item.Nr))" fill="@item.FillColor" stroke="@item.StrokeColor" d="@(GetCoordinatesInString(item.PolyCoordinates))" stroke-miterlimit="10" pointer-events="all" />
                 }
 
 
@@ -68,16 +66,16 @@
             }
             @if (ShowAreaNumbers)
             {
-
+@*
                 <g fill="rgb(0, 0, 0)" font-family="Helvetica" font-weight="bold" text-anchor="middle" font-size="20px">
                     <text disabled x="@AreaData.TextCoordinates.X" y="@AreaData.TextCoordinates.Y">@AreaData.Nr</text>
                 </g>
-
+*@
 
                 @foreach (AreaDrawData item in AreasData)
                 {
                     <g fill="rgb(0, 0, 0)" font-family="Helvetica" font-weight="bold" text-anchor="middle" font-size="20px">
-                        <text disabled x="@item.TextCoordinates.X" y="@item.TextCoordinates.Y">@item.Nr</text>
+                        <text disabled x="@item.TextCoordinates.X" y="@item.TextCoordinates.Y" pointer-events="none">@item.Nr</text>
                     </g>
                 }
 
@@ -232,27 +230,27 @@
 
     protected override async Task OnInitializedAsync()
     {
-        AreaData.Id = 0;
-        AreaData.Nr = 1;
-        AreaData.FillColor = "#ffffff";
-        AreaData.StrokeColor = "#000000";
-        AreaData.TextCoordinates = new Coordinates(164, 483);
-        AreaData.PolyCoordinates = new List<Coordinates>
-        {
-            new Coordinates(209.27, 408),
-            new Coordinates(214.11, 427.95),
-            new Coordinates(222.58, 427.95),
-            new Coordinates(225,538.34 ),
-            new Coordinates(116.1, 538.34),
-            new Coordinates(104, 418.64),
-            new Coordinates(123.36, 409.33),
-            new Coordinates(177.81, 408)
-        };
+        //AreaData.Nr = 1;
+        //AreaData.FillColor = "#ffffff";
+        //AreaData.StrokeColor = "#000000";
+        //AreaData.TextCoordinates = new Coordinates(164, 483);
+        //AreaData.PolyCoordinates = new List<Coordinates>
+        //{
+        //    new Coordinates(209.27, 408),
+        //    new Coordinates(214.11, 427.95),
+        //    new Coordinates(222.58, 427.95),
+        //    new Coordinates(225,538.34 ),
+        //    new Coordinates(116.1, 538.34),
+        //    new Coordinates(104, 418.64),
+        //    new Coordinates(123.36, 409.33),
+        //    new Coordinates(177.81, 408)
+        //};
         pictureCoordinates = await _picturesService.GetPictureCoordinates(0);
-        await _zooMapService.GetMap();
-        AreasData = _zooMapService.Map.AreasData;
+        if (_zooMapService.Map != null)
+        {
+            AreasData = _zooMapService.Map.AreasData;
+        }
         loaded = true;
-
     }
 
     static string GetCoordinatesInString(List<Coordinates> cordinates)

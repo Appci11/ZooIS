@@ -1,5 +1,7 @@
 ﻿@page "/map"
-@using MudBlazor
+@using ZooIS.Client.Services.ZooMapService
+@inject IZooMapService _zooMapService
+
 <PageTitle>Map</PageTitle>
 
 <MudPaper Elevation="0">
@@ -11,20 +13,55 @@
 <MudPaper Elevation="0">
     <MudSlider @bind-Value="@zoomValue" Step="0.01" Min="0.0" Max="1.0" Size="Size.Small" />
 </MudPaper>
-
-<MudPaper Elevation="0" Style="overflow:scroll; max-height:700px; max-width:1200;">
-    <ZooMapComponent ShowMap="@showMap" ShowAreas="@showAreas" ShowAreaNumbers="@showAreaNumbers" ZoomLevel="@zoomValue" MapPartId="MapResponse"></ZooMapComponent>
-</MudPaper>
-
+@if (loaded)
+{
+    <MudPaper Elevation="0" Style="overflow:scroll; max-height:700px; max-width:1200;">
+        <ZooMapComponent ShowMap="@showMap" ShowAreas="@showAreas" ShowAreaNumbers="@showAreaNumbers" ZoomLevel="@zoomValue" MapPartId="MapResponse"></ZooMapComponent>
+    </MudPaper>
+}
+else
+{
+    <span>Žemėlapio įkėlimas...</span>
+}
 @code {
+    bool loaded;
     bool showMap = true;
     bool showAreas = true;
     bool showAreaNumbers = true;
     double zoomValue = 0.0;
 
+    protected override async Task OnInitializedAsync()
+    {
+        await _zooMapService.GetMap();
+        SetColors(1);
+        loaded = true;
+    }
+
     // informacijos lango atidarymui
     void MapResponse(int nr)
     {
         Console.WriteLine("Hello from piece nr: " + nr);
+    }
+
+    /// <summary>
+    /// Sets colors to areas shown on map
+    /// </summary>
+    /// <param name="type">0-default, 1-random</param>
+    void SetColors(int type)
+    {
+        Dictionary<int, string> colors;
+        switch (type)
+        {
+            case 1:
+                colors = AreasColorProvider.GetRandomColors(_zooMapService.Map.AreasData.Count);
+                break;
+            default:
+                colors = AreasColorProvider.GetDefaultColors(_zooMapService.Map.AreasData.Count);
+                break;
+        }
+        foreach (var item in _zooMapService.Map.AreasData)
+        {
+            item.FillColor = colors[item.Nr];
+        }
     }
 }

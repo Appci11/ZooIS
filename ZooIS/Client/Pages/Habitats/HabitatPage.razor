@@ -31,7 +31,7 @@ else
             <MudSelect @bind-Value="habitat.AreaId" T="int" Label="Priklauso zonai" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" For="@(() => habitat.AreaId)">
                 @foreach (var item in _areasService.Areas)
                 {
-                    <MudSelectItem Value="@item.Id">(@item.Id) (@item.Name)</MudSelectItem>
+                    <MudSelectItem Value="@item.Id">(@item.Nr) (@item.Name)</MudSelectItem>
                 }
             </MudSelect>
             <MudTextField @bind-Value="habitat.Description" Lines="5" Label="Buveinės aprašas" Variant="Variant.Text"></MudTextField>

@@ -8,7 +8,6 @@ namespace ZooIS.Shared.Models.MapAreaModels
 {
     public class AreaDrawData
     {
-        public int Id { get; set; }
         public int Nr { get; set; }
         public List<Coordinates> PolyCoordinates { get; set; } = new List<Coordinates>();
         public Coordinates TextCoordinates { get; set; }
