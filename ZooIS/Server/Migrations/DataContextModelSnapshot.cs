@@ -258,6 +258,21 @@ namespace ZooIS.Server.Migrations
                     b.ToTable("SpeciesTagAvoid");
                 });
 
+            modelBuilder.Entity("ZooIS.Shared.Models.SpeciesTagIs", b =>
+                {
+                    b.Property<int>("SpeciesId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TagId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("SpeciesId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("SpeciesTagIs");
+                });
+
             modelBuilder.Entity("ZooIS.Shared.Models.SpeciesTagRequire", b =>
                 {
                     b.Property<int>("SpeciesId")
@@ -449,6 +464,25 @@ namespace ZooIS.Server.Migrations
                     b.Navigation("Tag");
                 });
 
+            modelBuilder.Entity("ZooIS.Shared.Models.SpeciesTagIs", b =>
+                {
+                    b.HasOne("ZooIS.Shared.Models.Species", "Species")
+                        .WithMany("TagsIs")
+                        .HasForeignKey("SpeciesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ZooIS.Shared.Models.Tag", "Tag")
+                        .WithMany("SpeciesIs")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Species");
+
+                    b.Navigation("Tag");
+                });
+
             modelBuilder.Entity("ZooIS.Shared.Models.SpeciesTagRequire", b =>
                 {
                     b.HasOne("ZooIS.Shared.Models.Species", "Species")
@@ -494,12 +528,16 @@ namespace ZooIS.Server.Migrations
 
                     b.Navigation("TagsAvoid");
 
+                    b.Navigation("TagsIs");
+
                     b.Navigation("TagsRequire");
                 });
 
             modelBuilder.Entity("ZooIS.Shared.Models.Tag", b =>
                 {
                     b.Navigation("SpeciesAvoid");
+
+                    b.Navigation("SpeciesIs");
 
                     b.Navigation("SpeciesRequire");
                 });

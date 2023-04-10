@@ -10,7 +10,6 @@ namespace ZooIS.Shared.Models
 {
     public class SpeciesTagRequire
     {
-        //pritdet severity prop??
         //relationship
         public int SpeciesId { get; set; }
         public int TagId { get; set; }

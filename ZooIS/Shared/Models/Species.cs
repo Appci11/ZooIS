@@ -11,9 +11,10 @@ namespace ZooIS.Shared.Models
 
         //relationships
         //with Tag
+        public List<SpeciesTagIs> TagsIs { get; set; } = new List<SpeciesTagIs>();
         public List<SpeciesTagRequire> TagsRequire { get; set; } = new List<SpeciesTagRequire>();
-
         public List<SpeciesTagAvoid>? TagsAvoid { get; set; } = new List<SpeciesTagAvoid>();
+
         //with animal
         //[JsonIgnore]  //Sutvarkyt, neturetu luzt be sito, patikrinus - pasalint
         public List<Animal>? Animals { get; set; } = new List<Animal>();

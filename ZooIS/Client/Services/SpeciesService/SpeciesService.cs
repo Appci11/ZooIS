@@ -19,6 +19,10 @@ namespace ZooIS.Client.Services.SpeciesService
         {
             AddSpeciesDto dto = new AddSpeciesDto();
             dto.Name = species.Name;
+            foreach (var item in species.TagsIs)
+            {
+                dto.TagsIs.Add(item.TagId);
+            }
             foreach (var item in species.TagsRequire) 
             {
                 dto.TagsRequire.Add(item.TagId);
@@ -40,9 +44,7 @@ namespace ZooIS.Client.Services.SpeciesService
             HttpResponseMessage response = await _http.DeleteAsync($"/api/species/{id}");
             if (response.IsSuccessStatusCode)
             {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 Species species = AllSpecies.FirstOrDefault(s => s.Id == id);
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
                 if (species != null)
                 {
                     AllSpecies.Remove(species);
@@ -57,9 +59,7 @@ namespace ZooIS.Client.Services.SpeciesService
             List<Species> result = new List<Species>();
             try
             {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 result = await _http.GetFromJsonAsync<List<Species>>("/api/species");
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             }
             catch { }
             if (result != null && result.Count > 0)
@@ -75,15 +75,17 @@ namespace ZooIS.Client.Services.SpeciesService
             {
                 return result;
             }
-#pragma warning disable CS8603 // Possible null reference return.
             return null;
-#pragma warning restore CS8603 // Possible null reference return.
         }
 
         public async Task<bool> UpdateSingleSpecies(Species species)
         {
             UpdateSpeciesDto dto = new ();
             dto.Name = species.Name;
+            foreach (var item in species.TagsIs)
+            {
+                dto.TagsIs.Add(item.TagId);
+            }
             foreach (var item in species.TagsRequire)
             {
                 dto.TagsRequire.Add(item.TagId);

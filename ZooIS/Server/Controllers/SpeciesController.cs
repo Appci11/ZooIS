@@ -20,7 +20,6 @@ namespace ZooIS.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> AddSpecies(AddSpeciesDto request)
         {
-            await Console.Out.WriteLineAsync("WILL ADD SPECIESSSSS!!!!");
             var response = await _speciesService.AddSpecies(request);
             if(response != null)
             {

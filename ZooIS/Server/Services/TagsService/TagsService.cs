@@ -26,14 +26,10 @@ namespace ZooIS.Server.Services.TagsService
 
         public async Task<Tag> DeleteTag(int id)
         {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             Tag tag = await _context.Tags.FirstOrDefaultAsync(t => t.Id == id);
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
-            if(tag == null)
+            if (tag == null)
             {
-#pragma warning disable CS8603 // Possible null reference return.
                 return null;
-#pragma warning restore CS8603 // Possible null reference return.
             }
             _context.Tags.Remove(tag);
             await _context.SaveChangesAsync();
@@ -47,6 +43,7 @@ namespace ZooIS.Server.Services.TagsService
             {
                 return await _context.Tags
                 .Include(t => t.Habitats)
+                .Include(t => t.SpeciesIs)
                 .Include(t => t.SpeciesRequire)
                 .Include(t => t.SpeciesAvoid)
 
@@ -58,24 +55,16 @@ namespace ZooIS.Server.Services.TagsService
 
         public async Task<Tag> GetTag(int id)
         {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             Tag tag = await _context.Tags.FirstOrDefaultAsync(t => t.Id == id);
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
-#pragma warning disable CS8603 // Possible null reference return.
             return tag;
-#pragma warning restore CS8603 // Possible null reference return.
         }
 
         public async Task<Tag> UpdateTag(UpdateTagDto updateTagDto, int id)
         {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             Tag tag = await _context.Tags.FirstOrDefaultAsync(t => t.Id == id);
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             if(tag == null)
             {
-#pragma warning disable CS8603 // Possible null reference return.
                 return null;
-#pragma warning restore CS8603 // Possible null reference return.
             }
             tag.Name = updateTagDto.Name.ToLower();
             tag.Description= updateTagDto.Description;

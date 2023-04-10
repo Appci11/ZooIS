@@ -19,6 +19,7 @@
         <HeaderContent>
             <MudTh><MudTableSortLabel SortBy="new Func<Habitat, object>(h=>h.Name!)">Pavadinimas</MudTableSortLabel></MudTh>
             <MudTh>Gyvūnų kiekis</MudTh>
+            <MudTh>"Yra" žymos</MudTh>
             <MudTh>Pageidautinos žymos</MudTh>
             <MudTh>Vengtinos žymos</MudTh>
             <MudTh>Redaguoti / Šalinti</MudTh>
@@ -26,6 +27,7 @@
         <RowTemplate>
             <MudTd>@context.Name</MudTd>
             <MudTd>@context.Animals.Count</MudTd>
+            <MudTd>@context.TagsIs.Count</MudTd>
             <MudTd>@context.TagsRequire.Count</MudTd>
             <MudTd>@context.TagsAvoid.Count</MudTd>
             <MudTd>

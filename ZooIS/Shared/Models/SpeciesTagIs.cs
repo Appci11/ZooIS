@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -8,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ZooIS.Shared.Models
 {
-    public class SpeciesTagAvoid
+    public class SpeciesTagIs
     {
         //relationship
         public int SpeciesId { get; set; }

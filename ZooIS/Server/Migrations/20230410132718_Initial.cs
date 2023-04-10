@@ -193,6 +193,30 @@ namespace ZooIS.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SpeciesTagIs",
+                columns: table => new
+                {
+                    SpeciesId = table.Column<int>(type: "INTEGER", nullable: false),
+                    TagId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SpeciesTagIs", x => new { x.SpeciesId, x.TagId });
+                    table.ForeignKey(
+                        name: "FK_SpeciesTagIs_Species_SpeciesId",
+                        column: x => x.SpeciesId,
+                        principalTable: "Species",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SpeciesTagIs_Tags_TagId",
+                        column: x => x.TagId,
+                        principalTable: "Tags",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SpeciesTagRequire",
                 columns: table => new
                 {
@@ -331,6 +355,11 @@ namespace ZooIS.Server.Migrations
                 column: "TagId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SpeciesTagIs_TagId",
+                table: "SpeciesTagIs",
+                column: "TagId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SpeciesTagRequire_TagId",
                 table: "SpeciesTagRequire",
                 column: "TagId");
@@ -353,6 +382,9 @@ namespace ZooIS.Server.Migrations
 
             migrationBuilder.DropTable(
                 name: "SpeciesTagAvoid");
+
+            migrationBuilder.DropTable(
+                name: "SpeciesTagIs");
 
             migrationBuilder.DropTable(
                 name: "SpeciesTagRequire");

@@ -49,6 +49,20 @@ namespace ZooIS.Server.Data
                 .HasForeignKey(bt => bt.TicketId);
 
             //Jokiu papildomu lauku nera, pridet prie DbSet nebutina
+            modelBuilder.Entity<SpeciesTagIs>()
+            .HasKey(at => new { at.SpeciesId, at.TagId });
+
+            modelBuilder.Entity<SpeciesTagIs>()
+                .HasOne(at => at.Species)
+                .WithMany(a => a.TagsIs)
+                .HasForeignKey(at => at.SpeciesId);
+
+            modelBuilder.Entity<SpeciesTagIs>()
+                .HasOne(at => at.Tag)
+                .WithMany(t => t.SpeciesIs)
+                .HasForeignKey(at => at.TagId);
+
+            //Jokiu papildomu lauku nera, pridet prie DbSet nebutina
             modelBuilder.Entity<SpeciesTagRequire>()
             .HasKey(at => new { at.SpeciesId, at.TagId });
 
