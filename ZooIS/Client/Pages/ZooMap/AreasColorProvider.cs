@@ -1,4 +1,5 @@
-﻿using ZooIS.Shared.Models;
+﻿using ZooIS.Client.Models;
+using ZooIS.Shared.Models;
 using static MudBlazor.Colors;
 
 namespace ZooIS.Client.Pages.ZooMap
@@ -47,24 +48,30 @@ namespace ZooIS.Client.Pages.ZooMap
             return colors;
         }
 
-        /// <summary>
-        /// Provides string list with colors depending on species "TagsToAvoid" and habitats "HasTags" status
-        /// </summary>
-        /// <param name="Areas"></param>
-        /// <param name="Habitats"></param>
-        /// <param name="Animals"></param>
-        /// <param name="Species"></param>
-        /// <returns></returns>
-        public static Dictionary<int, string> GetColorsForTagMismatch(List<Area> Areas, List<Habitat> Habitats,
-                                                   List<Animal> Animals, List<ZooIS.Shared.Models.Species> Species)
+        // Provides string list with colors depending on species "TagsToAvoid" and habitats "HasTags" status
+        public static Dictionary<int, string> GetColorsForTagMismatch(List<AreaIds> areaIds)
         {
             Dictionary<int, string> colors = new Dictionary<int, string>();
-
-
-
-
-
-
+            int i = 0;
+            foreach (var item in areaIds)
+            {
+                i++;
+                IEnumerable<int> both = item.Existing.Intersect(item.ToAvoid);
+                int n = 0;
+                foreach (var repeating in both) n++;
+                switch (n)
+                {
+                    case 0:
+                        colors.Add(i, Green.Lighten1.ToString());
+                        break;
+                    case 1:
+                        colors.Add(i, Yellow.Lighten1.ToString() );
+                        break;
+                    default:
+                        colors.Add(i, Red.Lighten1.ToString());
+                        break;
+                }
+            }
             return colors;
         }
     }

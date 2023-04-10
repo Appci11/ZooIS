@@ -1,8 +1,6 @@
 ﻿@page "/"
-@using ZooIS.Client.Services.PicturesService
-@using ZooIS.Shared.Models.MapAreaModels;
-@inject IPicturesService _picturesService
-@inject IDialogService _dialogService
+@using ZooIS.Client.Services.ZooMapService
+@inject IZooMapService _zooMapService
 
 @if (loaded)
 {
@@ -13,8 +11,8 @@
     bool loaded = true;
 
 
-     void Kriu()
+    async void Kriu()
     {
-        Console.WriteLine(MudBlazor.Colors.Lime.Lighten1.ToString());
+        await _zooMapService.GetAreasColorsByTags();
     }
 }

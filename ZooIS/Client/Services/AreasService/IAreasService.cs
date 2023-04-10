@@ -12,6 +12,8 @@ namespace ZooIS.Client.Services.AreasService
         Task<bool> UpdateArea(Area area);
         Task<bool> DeleteArea(int id);
         Task<bool> DeleteAreaByNr(int nr);
+        Task<List<int>> GetExistingTagIds(int id);
+        Task<List<int>> GetToAvoidTagIds(int id);
 
         Task<Dictionary<int, string>> GetAreaNames();
     }

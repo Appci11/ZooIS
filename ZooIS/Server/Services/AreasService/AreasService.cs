@@ -1,4 +1,5 @@
-﻿using ZooIS.Shared.Dto;
+﻿using Microsoft.EntityFrameworkCore;
+using ZooIS.Shared.Dto;
 using ZooIS.Shared.Models;
 
 namespace ZooIS.Server.Services.AreasService
@@ -76,12 +77,28 @@ namespace ZooIS.Server.Services.AreasService
             {
                 return null;
             }
-            
+
             area.Name = updateAreaDto.Name;
 
             await _context.SaveChangesAsync();
 
             return area;
+        }
+
+        public async Task<List<int>> GetExistingAreaTags(int id)
+        {
+            List<int> ids = _context.Database
+                .SqlQuery<int>($"SELECT DISTINCT TagId FROM Areas INNER JOIN Habitats ON Habitats.AreaId = Areas.Id INNER JOIN Animals ON Animals.HabitatId = Habitats.Id INNER JOIN Species ON Animals.SpeciesId = Species.Id INNER JOIN SpeciesTagIs ON Species.Id = SpeciesTagIs.SpeciesId WHERE Areas.Id = {id} UNION ALL SELECT DISTINCT TagsId FROM Areas INNER JOIN Habitats ON Habitats.AreaId = Areas.Id INNER JOIN HabitatTag ON Habitats.Id = HabitatTag.HabitatsId WHERE Areas.Id = {id}")
+                .ToList();
+            return ids;
+        }
+
+        public async Task<List<int>> GetAreaTagsToAvoid(int id)
+        {
+            List<int> ids = _context.Database
+                .SqlQuery<int>($"SELECT DISTINCT TagId FROM Areas INNER JOIN Habitats ON Habitats.AreaId = Areas.Id INNER JOIN Animals ON Animals.HabitatId = Habitats.Id INNER JOIN Species ON Animals.SpeciesId = Species.Id INNER JOIN SpeciesTagAvoid ON Species.Id = SpeciesTagAvoid.SpeciesId WHERE Areas.Id = {id}")
+                .ToList();
+            return ids;
         }
     }
 }

@@ -11,5 +11,7 @@ namespace ZooIS.Server.Services.AreasService
         Task<Area> UpdateArea(UpdateAreaDto updateAreaDto, int id);
         Task<Area> DeleteArea(int id);
         Task<Area> DeleteAreaByNr(int Nr);
+        Task<List<int>> GetExistingAreaTags(int id);
+        Task<List<int>> GetAreaTagsToAvoid(int id);
     }
 }

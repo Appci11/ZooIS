@@ -8,6 +8,13 @@
     <MudCheckBox Class="d-inline-flex pa-4" Dense="true" DisableRipple="true" @bind-Checked="@showMap" Label="Žemėlapis"></MudCheckBox>
     <MudCheckBox Class="d-inline-flex pa-4" Dense="true" DisableRipple="true" @bind-Checked="@showAreas" Label="Zonos"></MudCheckBox>
     <MudCheckBox Class="d-inline-flex pa-4" Dense="true" DisableRipple="true" @bind-Checked="@showAreaNumbers" Label="Numeracija"></MudCheckBox>
+    <MudPaper Elevation="0" Class="d-inline-flex pa-4" Style="width:200px; margin-top:0px;">
+        <MudSelect @bind-Value="ColorValue" Label="Spalvos" AnchorOrigin="Origin.BottomCenter" Dense="true" Style="margin-top:0px;">
+            <MudSelectItem Value="0">Balta</MudSelectItem>
+            <MudSelectItem Value="1">Atsitiktinė</MudSelectItem>
+            <MudSelectItem Value="2">Pagal žymas</MudSelectItem>
+        </MudSelect>
+    </MudPaper>
 </MudPaper>
 
 <MudPaper Elevation="0">
@@ -29,11 +36,24 @@ else
     bool showAreas = true;
     bool showAreaNumbers = true;
     double zoomValue = 0.0;
+    int colorValue = 0;
+    int ColorValue
+    {
+        get
+        {
+            return colorValue;
+        }
+        set
+        {
+            colorValue = value;
+            SetColors();
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
         await _zooMapService.GetMap();
-        SetColors(1);
+        SetColors();
         loaded = true;
     }
 
@@ -43,17 +63,17 @@ else
         Console.WriteLine("Hello from piece nr: " + nr);
     }
 
-    /// <summary>
-    /// Sets colors to areas shown on map
-    /// </summary>
-    /// <param name="type">0-default, 1-random</param>
-    void SetColors(int type)
+    async void SetColors()
     {
+        Console.WriteLine("in set colors");
         Dictionary<int, string> colors;
-        switch (type)
+        switch (colorValue)
         {
             case 1:
                 colors = AreasColorProvider.GetRandomColors(_zooMapService.Map.AreasData.Count);
+                break;
+            case 2:
+                colors = await _zooMapService.GetAreasColorsByTags();
                 break;
             default:
                 colors = AreasColorProvider.GetDefaultColors(_zooMapService.Map.AreasData.Count);
@@ -62,6 +82,10 @@ else
         foreach (var item in _zooMapService.Map.AreasData)
         {
             item.FillColor = colors[item.Nr];
+        }
+        if (colorValue == 2)
+        {
+            StateHasChanged();
         }
     }
 }

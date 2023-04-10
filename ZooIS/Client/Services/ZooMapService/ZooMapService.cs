@@ -1,12 +1,7 @@
 ﻿using System.Net.Http.Json;
-using System.Text.Json;
+using ZooIS.Client.Models;
 using ZooIS.Client.Pages.ZooMap;
-using ZooIS.Client.Services.AnimalsService;
 using ZooIS.Client.Services.AreasService;
-using ZooIS.Client.Services.HabitatsService;
-using ZooIS.Client.Services.SpeciesService;
-using ZooIS.Client.Services.WorkTasksService;
-using ZooIS.Shared;
 using ZooIS.Shared.Models;
 
 namespace ZooIS.Client.Services.ZooMapService
@@ -16,30 +11,29 @@ namespace ZooIS.Client.Services.ZooMapService
         public Map Map { get; set; } = new Map();
 
         private readonly HttpClient _http;
-        private readonly IAreasService _areaService;
-        private readonly IHabitatsService _habitatsService;
-        private readonly IAnimalsService _animalsService;
-        private readonly ISpeciesService _speciesService;
+        private readonly IAreasService _areasService;
 
-        public ZooMapService(HttpClient http, IAreasService areaService, IHabitatsService habitatsService,
-                             IAnimalsService animalsService, ISpeciesService speciesService)
+
+        public ZooMapService(HttpClient http, IAreasService areasService)
         {
             _http = http;
-            _areaService = areaService;
-            _habitatsService = habitatsService;
-            _animalsService = animalsService;
-            _speciesService = speciesService;
+            _areasService = areasService;
+
         }
 
         public async Task<Dictionary<int, string>> GetAreasColorsByTags()
         {
             Dictionary<int, string> Values = new Dictionary<int, string>();
-            await _areaService.GetAreas();
-            await _habitatsService.GetHabitats();
-            await _animalsService.GetAnimals();
-            await _speciesService.GetAllSpecies();
-            Values = AreasColorProvider.GetColorsForTagMismatch(_areaService.Areas, _habitatsService.Habitats,
-                                                    _animalsService.Animals, _speciesService.AllSpecies);
+            List<AreaIds> areaIds = new List<AreaIds>();
+            await _areasService.GetAreas();
+            foreach (var item in _areasService.Areas)
+            {
+                AreaIds exisintgIds = new AreaIds();
+                exisintgIds.Existing = await _areasService.GetExistingTagIds(item.Id);
+                exisintgIds.ToAvoid = await _areasService.GetToAvoidTagIds(item.Id);
+                areaIds.Add(exisintgIds);
+            }
+            Values = AreasColorProvider.GetColorsForTagMismatch(areaIds);
             return Values;
         }
 
@@ -56,7 +50,7 @@ namespace ZooIS.Client.Services.ZooMapService
 
         public async Task<bool> GetMap()
         {
-            Map result = await _http.GetFromJsonAsync<Map>($"/api/maps/{5}");
+            Map result = await _http.GetFromJsonAsync<Map>($"/api/maps/{0}");
             if (result != null)
             {
                 Map = result;

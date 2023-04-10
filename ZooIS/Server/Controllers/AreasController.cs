@@ -40,8 +40,6 @@ namespace ZooIS.Server.Controllers
             return NoContent();
         }
 
-
-
         [HttpGet("{id}")]
         public async Task<ActionResult<Area>> GetArea(int id)
         {
@@ -85,5 +83,26 @@ namespace ZooIS.Server.Controllers
             return NotFound(new { message = "Area was not deleted" });
         }
 
+        [HttpGet("tagsexisting/{id}")]
+        public async Task<ActionResult<Area>> GetCurrentAreaTagIds(int id)
+        {
+            List<int> response = await _areasService.GetExistingAreaTags(id);
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            return NotFound(new { message = "Nothing found" });
+        }
+
+        [HttpGet("tagstoavoid/{id}")]
+        public async Task<ActionResult<Area>> GetCurrentAreadTagsToAvoidIds(int id)
+        {
+            List<int> response = await _areasService.GetAreaTagsToAvoid(id);
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            return NotFound(new { message = "Nothing found" });
+        }
     }
 }

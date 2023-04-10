@@ -98,5 +98,25 @@ namespace ZooIS.Client.Services.AreasService
             }
             return result;
         }
+
+        public async Task<List<int>> GetExistingTagIds(int id)
+        {
+            var result = await _http.GetFromJsonAsync<List<int>>($"/api/areas/tagsexisting/{id}");
+            if (result != null)
+            {
+                return result;
+            }
+            throw new Exception("Area not found");
+        }
+
+        public async Task<List<int>> GetToAvoidTagIds(int id)
+        {
+            var result = await _http.GetFromJsonAsync<List<int>>($"/api/areas/tagstoavoid/{id}");
+            if (result != null)
+            {
+                return result;
+            }
+            throw new Exception("Area not found");
+        }
     }
 }
