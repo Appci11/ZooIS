@@ -63,6 +63,16 @@ namespace ZooIS.Client.Services.BundlesService
             return null;
         }
 
+        public async Task<Bundle> GetLastUserBundle(int userId)
+        {
+            var result = await _http.GetFromJsonAsync<Bundle>($"/api/bundles/getlatestuserbundle/{userId}");
+            if (result != null)
+            {
+                return result;
+            }
+            return null;
+        }
+
         public async Task GetBundles()
         {
             List<Bundle> result = new List<Bundle>();

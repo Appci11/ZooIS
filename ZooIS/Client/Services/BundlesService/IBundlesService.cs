@@ -10,6 +10,7 @@ namespace ZooIS.Client.Services.BundlesService
         public Task GetBundles();
         public Task<Bundle> GetBundle(int id);
         public Task<Bundle> GetBundleByUserId(int id);
+        public Task<Bundle> GetLastUserBundle(int userId);
         public Task<bool> CreateBundle(AddBundleDto dto);
         public Task<bool> UpdateBundle(Bundle bundle);
         public Task<bool> DeleteBundle(int id);

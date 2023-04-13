@@ -31,20 +31,12 @@ namespace ZooIS.Server.Services.BundlesService
                 {
                     totalPrice += price * item.Quantity;
                 }
-
             }
             return totalPrice;
         }
 
         public async Task<Bundle> AddBundle(AddBundleDto addBundleDto)
         {
-            // kadangi leidziam turet tik viena egzemplioriu, jei randam ankstesni... pasalinam.
-            var result = await _context.Bundles.FirstOrDefaultAsync(b => b.RegisteredUserId == addBundleDto.RegisteredUserId);
-            if(result != null)
-            {
-                await DeleteBundle(result.Id);
-            }
-
             Bundle bundle = new Bundle();
 
             bundle.RegisteredUserId = addBundleDto.RegisteredUserId;
@@ -80,6 +72,36 @@ namespace ZooIS.Server.Services.BundlesService
                            .ThenInclude(t => t.Ticket)
                            .ToListAsync();
             return bundles;
+        }
+
+        public async Task<Bundle> GetLatestUserBundle(int userId, bool includeRelated)
+        {
+            List<Bundle> bundles;
+            if (!includeRelated)
+            {
+                bundles = await _context.Bundles
+                                           .Include(t => t.BundleTickets)
+                                           .ToListAsync();
+            }
+            bundles = await _context.Bundles
+                           .Include(b => b.BundleTickets)
+                           .ThenInclude(t => t.Ticket)
+                           .ToListAsync();
+
+            DateTime dt = DateTime.MinValue;
+            foreach(var bundle in bundles)
+            {
+                if (bundle.DateOfUse > dt)
+                {
+                    dt = bundle.DateOfUse;
+                }
+            }
+            Bundle returnValue = bundles.FirstOrDefault(b => b.DateOfUse == dt);
+            if(returnValue.DateOfUse.DayOfYear >= DateTime.Today.DayOfYear)
+            {
+                return returnValue;
+            }
+            return null;
         }
 
         public async Task<Bundle> GetBundle(int id, bool includeRelated)
@@ -152,7 +174,5 @@ namespace ZooIS.Server.Services.BundlesService
             await _context.SaveChangesAsync();
             return bundle;
         }
-
-
     }
 }

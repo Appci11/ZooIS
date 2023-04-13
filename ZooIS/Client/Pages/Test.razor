@@ -1,43 +1,7 @@
 ﻿@page "/test"
 
-@using ZooIS.Client.Dialogs;
-@inject IJSRuntime JSRuntime
-
-<PageTitle>Test</PageTitle>
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
-
-<div>
-    <button value="DeleteTest" @onclick="Delete_Click">
-        DeleteTest
-    </button>
-</div>
-
-<TestConfirmBox @ref="confirmBox" UserChoice="ConfirmDelete_Click" />
-
-<button type="button" class=" padded-button btn btn-primary" @onclick="GoBack">Go Back</button>
-
 
 
 @code{
-    protected TestConfirmBox confirmBox { get; set; }
 
-    protected void Delete_Click()
-    {
-        confirmBox.Show("Delete Button is Clicked");
-    }
-
-    protected async Task ConfirmDelete_Click(bool deleteConfirmed)
-    {
-        if(deleteConfirmed)
-        {
-            Console.WriteLine("Got value: " + deleteConfirmed);
-        }
-    }
-
-    private async void GoBack()
-    {
-        await JSRuntime.InvokeVoidAsync("history.back");
-    }
 }

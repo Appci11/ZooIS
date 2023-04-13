@@ -1,0 +1,86 @@
+﻿@page "/usersbundle"
+
+@using ZooIS.Client.Services.BundlesService
+@using ZooIS.Client.Services.TicketsService;
+@inject ILocalStorageService _localStorage
+@inject IBundlesService _bundlesService
+@inject ITicketsService _ticketsService
+
+<MudContainer MaxWidth="MaxWidth.Large" Style="margin-top:15px;">
+    <AuthorizeView>
+        <Authorized>
+            @if (loaded)
+            {
+                @if (showBundleInfo)
+                {
+                    @if (usersBundle.PurchaseFinalized == true)
+                    {
+                        <span>Uz bilietus sumoketa, qr koda galite rasti CIA</span>
+                    }
+                    else
+                    {
+                        <h3>Pasirinkti bilietai:</h3>
+                        @foreach (var item in usersBundle.BundleTickets)
+                        {
+                            <h4>@(GetTIcketName(item.TicketId)): @item.Quantity</h4>
+                        }
+                    }
+                }
+                else
+                {
+                    <h3>Nerasta pasirinktų bilietų</h3>
+                    <MudFab StartIcon="@Icons.Material.Filled.StickyNote2" Label="Pasirinkti" />
+                }
+            }
+        </Authorized>
+        <NotAuthorized>
+            <H4>Prašome prisijungti</H4>
+        </NotAuthorized>
+    </AuthorizeView>
+</MudContainer>
+@code {
+    bool loaded;
+    bool showBundleInfo;
+    int userId;
+    Bundle usersBundle;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            userId = await _localStorage.GetItemAsync<int>("userId");
+        }
+        catch { }
+        if (userId == 0)
+        {
+            loaded = true;
+            return;
+        }
+        await LoadBundle();
+        if (usersBundle != null)
+        {
+            showBundleInfo = true;
+            await _ticketsService.GetTickets();
+        }
+        loaded = true;
+    }
+
+    async Task LoadBundle()
+    {
+        try
+        {
+            usersBundle = await _bundlesService.GetBundleByUserId(userId);
+        }
+        catch { }
+    }
+
+    string GetTIcketName(int id)
+    {
+        Ticket ticket = _ticketsService.Tickets.FirstOrDefault(t => t.Id == id); //Sutvarkyt
+        if(ticket != null)
+        {
+            return ticket.Name;
+        }
+        return "Nerastas pavadinimas";
+    }
+}

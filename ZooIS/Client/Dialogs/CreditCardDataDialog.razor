@@ -1,0 +1,34 @@
+﻿<MudForm Class="justify-space-between">
+    <MudRadioGroup @bind-SelectedOption="@SelectedOption">
+        <MudRadio Option="@("Radio 1")" Color="Color.Primary"><img height="30px; width:=auto;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Mastercard_2019_logo.svg/1920px-Mastercard_2019_logo.svg.png" /></MudRadio>
+        <MudRadio Option="@("Radio 2")" Color="Color.Primary"><img height="30px; width:=auto;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Visa.svg/1920px-Visa.svg.png"></MudRadio>
+        <MudRadio Option="@("Radio 2")" Color="Color.Primary"><img height="30px; width:=auto;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Capital_One_logo.svg/1920px-Capital_One_logo.svg.png"></MudRadio>
+    </MudRadioGroup>
+</MudForm>
+<MudGrid Class="justify-space-between" Style="max-width: 400px;">
+    <MudItem xs="12">
+        <MudTextField Label="Kortelės savininko vardas"
+                      T="string" Variant="@Variant.Text" Clearable />
+    </MudItem>
+    <MudItem xs="12">
+        <MudTextField Label="Kortelės savininko pavardė"
+                      T="string" Variant="@Variant.Text" Clearable />
+    </MudItem>
+    <MudItem xs="12">
+        <MudTextField Mask="@(new PatternMask("0000 0000 0000 0000"))" Label="Kortelės numeris"
+                      T="string" Variant="@Variant.Text" Clearable />
+    </MudItem>
+    <MudItem xs="4">
+        <MudTextField Mask="@(new DateMask("MM/YY", 'Y', 'M'))" Label="Galiojimo data"
+                      T="string" Variant="@Variant.Text" Placeholder="Menuo/metai" />
+    </MudItem>
+    <MudItem xs="4" />
+    <MudItem xs="4">
+        <MudTextField Mask="@(new PatternMask("000"))" Label="CVC numeris"
+                      T="string" Variant="@Variant.Text" />
+    </MudItem>
+</MudGrid>
+
+@code {
+    public string SelectedOption { get; set; }
+}

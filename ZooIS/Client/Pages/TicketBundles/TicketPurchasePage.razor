@@ -7,6 +7,7 @@
 @inject IBundlesService _bundlesService
 @inject ILocalStorageService _localStorage
 @inject IDialogService _dialogService
+@inject NavigationManager _navigationManager
 
 @if (loaded)
 {
@@ -30,7 +31,7 @@
         }
     </MudPaper>
     <MudDatePicker Label="Apsilankymo data" @bind-Date="dateOfVisit" DateFormat="dd-MM-yyyy" Style="width:200px;" />
-    <MudButton OnClick="PurchaseStarted" Variant="Variant.Filled" Color="Color.Primary" Style="margin-top:20px;">Pirkti</MudButton>
+    <MudButton OnClick="PurchaseStarted" Variant="Variant.Filled" Color="Color.Primary" Style="margin-top:20px;">Pasirinkti</MudButton>
 }
 
 @code {
@@ -86,13 +87,12 @@
         parameters.Add("BodyText", builder.ToString());
         parameters.Add("LineAmmount", _ticketsServce.Tickets.Count + 2);
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = _dialogService.Show<ConfirmPurchaseDialog>(" Pirkimo patvirtinimas", parameters, options);
+        var dialog = _dialogService.Show<ConfirmPurchaseDialog>(" Pasirinkimo patvirtinimas", parameters, options);
 
         if (!(await dialog.Result).Canceled)
         {
             await CreateBundle();
-            Console.WriteLine("PERKAM!!");
-
+            _navigationManager.NavigateTo("usersbundle");
         }
     }
 
