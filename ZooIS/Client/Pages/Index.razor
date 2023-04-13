@@ -1,18 +1,26 @@
 ﻿@page "/"
-@using ZooIS.Client.Services.ZooMapService
-@inject IZooMapService _zooMapService
 
-@if (loaded)
+
+
+
+<MudButton OnClick="Kriu" ButtonType="ButtonType.Button">Kriu</MudButton>
+<br />
+<br />
+@if(loading)
 {
-    <MudButton OnClick="Kriu">Kriu</MudButton>
+    <MudProgressCircular Color="Color.Success" Indeterminate="true" />
 }
 
 @code {
-    bool loaded = true;
-
+    bool loading;
 
     async void Kriu()
     {
-        await _zooMapService.GetAreasColorsByTags();
+        loading = !loading;
+        StateHasChanged();
+        await Task.Delay(2000);
+        loading = !loading;
+        StateHasChanged();    
     }
+
 }

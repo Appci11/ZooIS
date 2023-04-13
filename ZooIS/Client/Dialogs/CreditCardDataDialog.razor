@@ -1,49 +1,4 @@
 ﻿@using ZooIS.Client.Models
-@*
-<MudDialog>
-    <TitleContent>
-        <MudText Typo="Typo.h4">
-            <MudIcon Class="mr-3 mb-n1" />
-            Apmokėjimas
-        </MudText>
-    </TitleContent>
-    <DialogContent>
-        <EditForm Model="@card" OnValidSubmit="Submit" Class="justify-space-between" style="margin-left:20px; margin-right:20px; height:400px;">
-            <DataAnnotationsValidator />
-            <MudRadioGroup @bind-SelectedOption="@SelectedOption">
-                <MudRadio Option="@("Radio 1")" Color="Color.Primary"><img height="30px; width:=auto;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Mastercard_2019_logo.svg/1920px-Mastercard_2019_logo.svg.png" /></MudRadio>
-                <MudRadio Option="@("Radio 2")" Color="Color.Primary"><img height="30px; width:=auto;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Visa.svg/1920px-Visa.svg.png"></MudRadio>
-                <MudRadio Option="@("Radio 3")" Color="Color.Primary"><img height="30px; width:=auto;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Capital_One_logo.svg/1920px-Capital_One_logo.svg.png"></MudRadio>
-            </MudRadioGroup>
-            <MudGrid Class="justify-space-between" Style="max-width: 500px;">
-                <MudItem xs="12">
-                    <MudTextField @bind-Value="@card.FirstName" Label="Kortelės savininko vardas" For="@(() => card.FirstName)" Required
-                                  T="string" Variant="@Variant.Text" Clearable />
-                </MudItem>
-                <MudItem xs="12">
-                    <MudTextField @bind-Value="@card.LastName" Label="Kortelės savininko pavardė" For="@(() => card.LastName)" Required
-                                  T="string" Variant="@Variant.Text" Clearable />
-                </MudItem>
-                <MudItem xs="12">
-                    <MudTextField @bind-Value="@card.CardNumber" Mask="@(new PatternMask("0000 0000 0000 0000"))" Label="Kortelės numeris" For="@(() => card.CardNumber)" Required
-                                  T="string" Variant="@Variant.Text" Clearable />
-                </MudItem>
-                <MudItem xs="4">
-                    <MudTextField @bind-Value="@card.MonthYear" Mask="@(new DateMask("MM/YY", 'Y', 'M'))" Label="Galiojimo data" For="@(() => card.MonthYear)" Required
-                                  T="string" Variant="@Variant.Text" Placeholder="Menuo/metai" />
-                    </MudItem>
-                    <MudItem xs="4" />
-                    <MudItem xs="4">
-                    <MudTextField @bind-Value="@card.CvcNumber" Mask="@(new PatternMask("000"))" Label="CVC numeris" For="@(() => card.CvcNumber)" Required
-                                  T="string" Variant="@Variant.Text" />
-                    </MudItem>
-                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Style="margin-top:10px;">Mokėti</MudButton>
-                    </MudGrid>
-                    </EditForm>
-                </DialogContent>
-                </MudDialog>
-*@
-
 <MudDialog>
     <TitleContent>
         <MudText Typo="Typo.h4">
@@ -81,7 +36,13 @@
                     <MudTextField @bind-Value="@card.CvcNumber" Mask="@(new PatternMask("000"))" Label="CVC numeris" For="@(() => card.CvcNumber)"
                                   T="string" Variant="@Variant.Text" />
                 </MudItem>
-                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Style="margin-top:10px;">Mokėti</MudButton>
+                <MudPaper Class="d-flex flex-row">
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Style="margin-top:10px;">Mokėti</MudButton>
+                    @if (loading)
+                    {
+                        <MudProgressCircular Color="Color.Success" Indeterminate="true" Style="margin-left:20px;" />
+                    }
+                </MudPaper>
             </MudGrid>
         </EditForm>
     </DialogContent>
@@ -90,7 +51,7 @@
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     public string SelectedOption { get; set; }
-
+    bool loading;
     CreditCardData card = new();
 
     protected override void OnInitialized()
@@ -101,12 +62,23 @@
 
     void Cancel() => MudDialog.Cancel();
 
-    void Submit()
+    async void Submit()
     {
-        if (card.FirstName != string.Empty && card.LastName != string.Empty && card.CardNumber != string.Empty &&
-            card.MonthYear != string.Empty && card.CvcNumber != string.Empty)
-        {
-            MudDialog.Close(DialogResult.Ok(card));
-        }
+        loading = !loading;
+        StateHasChanged();
+        await Task.Delay(2000);
+        loading = !loading;
+        StateHasChanged();
+        MudDialog.Close(DialogResult.Ok(card));
+
     }
+    async void ShowLoading()
+    {
+        loading = !loading;
+        StateHasChanged();
+        await Task.Delay(2000);
+        loading = !loading;
+        StateHasChanged();
+    }
+
 }
