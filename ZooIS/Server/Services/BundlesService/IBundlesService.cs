@@ -10,7 +10,7 @@ namespace ZooIS.Server.Services.BundlesService
         Task<Bundle> GetBundle(int id, bool includeRelated);
         Task<Bundle> GetLatestUserBundle(int userId, bool includeRelated);
         Task<Bundle> GetBundleByUserId(int id, bool includeRelated);
-        Task<Bundle> UpdateBundle(AddBundleDto addBundleDto, int id);
+        Task<Bundle> UpdateBundle(UpdateBundleDto updateBundleDto, int id);
         Task<Bundle> DeleteBundle(int id);
     }
 }

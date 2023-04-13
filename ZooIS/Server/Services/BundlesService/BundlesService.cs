@@ -142,25 +142,17 @@ namespace ZooIS.Server.Services.BundlesService
             return bundle;
         }
 
-        public async Task<Bundle> UpdateBundle(AddBundleDto addBundleDto, int id)
+        public async Task<Bundle> UpdateBundle(UpdateBundleDto updateBundleDto, int id)
         {
-            Bundle bundle = await _context.Bundles.FirstOrDefaultAsync(i => i.Id == id);
-            // kol bilietu rusiu nedaug(taip kol kas tikimasi)
-            // tol turetu buti greiciau senuosius saraso irasus pasalinti
-            // ir uzpildyti naujais
-            bundle.BundleTickets.Clear();
-            foreach (var item in addBundleDto.BundleTickets)
+            // redaguot bilietu po pirkimo nebegalima
+            Bundle? bundle = await _context.Bundles.FirstOrDefaultAsync(i => i.Id == id);
+            if (bundle != null)
             {
-                BundleTicket toAdd = new BundleTicket();
-                toAdd.TicketId = item.TicketId;
-                toAdd.Quantity = item.Quantity;
-                bundle.BundleTickets.Add(toAdd);
+                bundle.PurchaseFinalized = updateBundleDto.PurchaseFinalized;
+                await _context.SaveChangesAsync();
+                return bundle;
             }
-            await _context.SaveChangesAsync();
-            bundle.Price = await CalculatePrice(bundle);
-            await _context.SaveChangesAsync();
-
-            return bundle;
+            return null;
         }
 
         public async Task<Bundle> DeleteBundle(int id)

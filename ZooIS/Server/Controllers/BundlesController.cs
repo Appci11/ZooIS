@@ -61,7 +61,7 @@ namespace ZooIS.Server.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateBundle(AddBundleDto request, int id)
+        public async Task<IActionResult> UpdateBundle(UpdateBundleDto request, int id)
         {
             Bundle response = await _bundlesService.UpdateBundle(request, id);
             if (response == null)

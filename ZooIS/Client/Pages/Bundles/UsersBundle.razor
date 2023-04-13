@@ -1,10 +1,12 @@
 ﻿@page "/usersbundle"
 
+@using QRCoder;
 @using ZooIS.Client.Services.BundlesService
 @using ZooIS.Client.Services.TicketsService;
 @inject ILocalStorageService _localStorage
 @inject IBundlesService _bundlesService
 @inject ITicketsService _ticketsService
+@inject IDialogService _dialogService
 
 <MudContainer MaxWidth="MaxWidth.Large" Style="margin-top:15px;">
     <AuthorizeView>
@@ -15,7 +17,16 @@
                 {
                     @if (usersBundle.PurchaseFinalized == true)
                     {
-                        <span>Uz bilietus sumoketa, qr koda galite rasti CIA</span>
+                        <h3>Turimi bilietai:</h3>
+                        @foreach (var item in usersBundle.BundleTickets)
+                        {
+                            <h4>@(GetTIcketName(item.TicketId)): @item.Quantity</h4>
+                        }
+                        <br />
+                        <h4>Įsigijimą patvirtinsite žemiau esančiu QR kodu.</h4>
+                        <br />
+                        <br />
+                        <img src="@QRCodeText" style="max-height:300px;"/>                        
                     }
                     else
                     {
@@ -24,17 +35,18 @@
                         {
                             <h4>@(GetTIcketName(item.TicketId)): @item.Quantity</h4>
                         }
+                        <MudFab OnClick="OpenPaymentDialog" Size="Size.Small" Label="Apmokėti" Style="margin-top:10px;" />
                     }
                 }
                 else
                 {
                     <h3>Nerasta pasirinktų bilietų</h3>
-                    <MudFab StartIcon="@Icons.Material.Filled.StickyNote2" Label="Pasirinkti" />
+                    <MudFab Size="Size.Small" Href="tickets/purchase" Label="Pasirinkti" Style="margin-top:10px;" />
                 }
             }
         </Authorized>
         <NotAuthorized>
-            <H4>Prašome prisijungti</H4>
+            <H4>Galima tik prisijungus</H4>
         </NotAuthorized>
     </AuthorizeView>
 </MudContainer>
@@ -43,6 +55,7 @@
     bool showBundleInfo;
     int userId;
     Bundle usersBundle;
+    string QRCodeText = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -60,6 +73,8 @@
         if (usersBundle != null)
         {
             showBundleInfo = true;
+
+            GenerateQRCode();
             await _ticketsService.GetTickets();
         }
         loaded = true;
@@ -77,10 +92,33 @@
     string GetTIcketName(int id)
     {
         Ticket ticket = _ticketsService.Tickets.FirstOrDefault(t => t.Id == id); //Sutvarkyt
-        if(ticket != null)
+        if (ticket != null)
         {
             return ticket.Name;
         }
         return "Nerastas pavadinimas";
+    }
+
+    async void OpenPaymentDialog()
+    {
+        var dialog = await _dialogService.ShowAsync<CreditCardDataDialog>();
+        var result = await dialog.Result;
+        if (!result.Canceled)
+        {
+            usersBundle.PurchaseFinalized = true;
+            await _bundlesService.UpdateBundle(usersBundle);
+            StateHasChanged();
+        }
+    }
+
+    void GenerateQRCode()
+    {        
+        QRCodeGenerator qrGenerator = new QRCodeGenerator();
+        string qrText = usersBundle.RegisteredUserId.ToString() + " " + usersBundle.DateOfUse.ToString();
+        QRCodeData qRCodeData = qrGenerator.CreateQrCode(qrText, QRCodeGenerator.ECCLevel.Q);
+        BitmapByteQRCode qrCode = new BitmapByteQRCode(qRCodeData);
+        byte[] qrCodeAsByteArr = qrCode.GetGraphic(20);
+        var ms = new MemoryStream(qrCodeAsByteArr);
+        QRCodeText = "data:image/png;base64," + Convert.ToBase64String(ms.ToArray());
     }
 }
