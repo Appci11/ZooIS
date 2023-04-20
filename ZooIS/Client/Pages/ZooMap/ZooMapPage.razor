@@ -11,8 +11,9 @@
     <MudPaper Elevation="0" Class="d-inline-flex pa-4" Style="width:200px; margin-top:0px;">
         <MudSelect @bind-Value="ColorValue" Label="Spalvos" AnchorOrigin="Origin.BottomCenter" Dense="true" Style="margin-top:0px;">
             <MudSelectItem Value="0">Balta</MudSelectItem>
-            <MudSelectItem Value="1">Atsitiktinė</MudSelectItem>
+            @*<MudSelectItem Value="1">Atsitiktinė</MudSelectItem>*@
             <MudSelectItem Value="2">Pagal žymas</MudSelectItem>
+            <MudSelectItem Value="3">Pagal darbų svarbą</MudSelectItem>
         </MudSelect>
     </MudPaper>
 </MudPaper>
@@ -65,7 +66,6 @@ else
 
     async void SetColors()
     {
-        Console.WriteLine("in set colors");
         Dictionary<int, string> colors;
         switch (colorValue)
         {
@@ -75,6 +75,9 @@ else
             case 2:
                 colors = await _zooMapService.GetAreasColorsByTags();
                 break;
+            case 3:
+                colors = await _zooMapService.GetAreasColorsByWorkTasks();
+                break;
             default:
                 colors = AreasColorProvider.GetDefaultColors(_zooMapService.Map.AreasData.Count);
                 break;
@@ -83,7 +86,7 @@ else
         {
             item.FillColor = colors[item.Nr];
         }
-        if (colorValue == 2)
+        if (colorValue == 2 || colorValue == 3)
         {
             StateHasChanged();
         }

@@ -1,11 +1,13 @@
 ﻿@page "/worktasks"
 @attribute [Authorize]
 
+@using ZooIS.Client.Services.AreasService;
 @using ZooIS.Client.Services.WorkTasksService;
 @inject IDialogService _dialogService
 @inject ILocalStorageService _localStorage
 @inject IWorkTasksService _workTasksService
 @inject ISnackbar _snackbar
+@inject IAreasService _areasService
 
 <PageTitle>Darbai</PageTitle>
 
@@ -83,9 +85,33 @@
     bool loadOnlyPersonal = false;
 
     HashSet<int> SavedTasks = new HashSet<int>();
+    Dictionary<int, string> Areas = new();
     bool showOnlySaved;
     int selectedSubject = -1;
     bool sortAscending = false;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await _workTasksService.GetWorkTasks();
+        await _areasService.GetAreas();
+        AddAreasToDictionary();
+        try
+        {
+            SavedTasks.UnionWith(await _localStorage.GetItemAsync<HashSet<int>>("savedWorkTaskIds"));
+        }
+        catch { }
+        SortSavedTasks();
+        loaded = true;
+    }
+
+    void AddAreasToDictionary()
+    {
+        foreach(Area item in _areasService.Areas)
+        {
+            Areas.Add(item.Id, item.Name);
+        }
+    }
 
     string GetIcon
     {
@@ -94,18 +120,6 @@
             if (loadOnlyPersonal) return Icons.Material.Filled.Check;
             return Icons.Material.Filled.Close;
         }
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        await _workTasksService.GetWorkTasks();
-        try
-        {
-            SavedTasks.UnionWith(await _localStorage.GetItemAsync<HashSet<int>>("savedWorkTaskIds"));
-        }
-        catch { }
-        SortSavedTasks();
-        loaded = true;
     }
 
     void SortSavedTasks()
@@ -132,7 +146,9 @@
 
     async void OpenDialog()
     {
-        var dialog = await _dialogService.ShowAsync<WorkTaskDataFormDialog>();
+        var parameters = new DialogParameters();
+        parameters.Add("Areas", Areas);
+        var dialog = await _dialogService.ShowAsync<WorkTaskDataFormDialog>("Anything...",parameters);
         var result = await dialog.Result;
 
         if (!result.Canceled)
@@ -154,6 +170,7 @@
             request.Name = workTask.Name;
             request.Description = workTask.Description;
             request.CreatorId = userId;
+            request.AreaId = workTask.AreaId;
             await _workTasksService.CreateWorkTask(request);
             StateHasChanged();
         }

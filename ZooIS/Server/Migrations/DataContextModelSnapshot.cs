@@ -331,6 +331,9 @@ namespace ZooIS.Server.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("AreaId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("CreatorId")
                         .HasColumnType("INTEGER");
 

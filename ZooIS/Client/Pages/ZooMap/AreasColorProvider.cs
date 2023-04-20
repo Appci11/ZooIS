@@ -1,4 +1,5 @@
-﻿using ZooIS.Client.Models;
+﻿using MudBlazor;
+using ZooIS.Client.Models;
 using ZooIS.Shared.Models;
 using static MudBlazor.Colors;
 
@@ -48,7 +49,11 @@ namespace ZooIS.Client.Pages.ZooMap
             return colors;
         }
 
-        // Provides string list with colors depending on species "TagsToAvoid" and habitats "HasTags" status
+        /// <summary>
+        /// Provides string list with colors depending on Habitat/Animal tags in certain area
+        /// </summary>
+        /// <param name="areaIds"></param>
+        /// <returns></returns>
         public static Dictionary<int, string> GetColorsForTagMismatch(List<AreaIds> areaIds)
         {
             Dictionary<int, string> colors = new Dictionary<int, string>();
@@ -65,11 +70,52 @@ namespace ZooIS.Client.Pages.ZooMap
                         colors.Add(i, Green.Lighten1.ToString());
                         break;
                     case 1:
-                        colors.Add(i, Yellow.Lighten1.ToString() );
+                        colors.Add(i, Yellow.Lighten1.ToString());
                         break;
                     default:
                         colors.Add(i, Red.Lighten1.ToString());
                         break;
+                }
+            }
+            return colors;
+        }
+        /// <summary>
+        /// Provides string list with colors depending on work task importance
+        /// </summary>
+        /// <param name="AreasIdName"></param>
+        /// <param name="areasCount"></param>
+        /// <returns></returns>
+        public static Dictionary<int, string> GetColorsFromWorkTasks(List<WorkTask> WorkTasks, int areasCount)
+        {
+            Dictionary<int, string> colors = new Dictionary<int, string>();
+            
+            for(int i = 1; i < areasCount + 1; i++)
+            {
+                colors.Add(i, "#ffffff");
+            }
+
+            foreach (var item in WorkTasks)
+            {
+                if(item.AreaId == 0)    // 0 - sutartine reiksme, kad nepriskirta jokiai zonai
+                    continue;
+                if (item.Severity == 2)
+                {
+                    colors[item.AreaId] = DeepOrange.Lighten1;
+                    continue;
+                }
+                if(item.Severity == 1)
+                {
+                    if (colors[item.AreaId] == DeepOrange.Lighten1)
+                        continue;   // jei jau yra svarbesne spalva - skip
+                    colors[item.AreaId] = Lime.Lighten1;
+                    continue;
+                }
+                if (item.Severity == 0)
+                {
+                    if (colors[item.AreaId] == DeepOrange.Lighten1 || colors[item.AreaId] == Lime.Lighten1)
+                        continue;   // jei egzistuoja svarbesne praleidziam
+                    colors[item.AreaId] = Teal.Lighten1;
+                    continue;
                 }
             }
             return colors;

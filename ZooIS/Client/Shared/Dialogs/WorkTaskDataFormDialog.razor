@@ -21,6 +21,13 @@
                         <MudSelectItem Value="item">@((WorkTaskSubject)@item)</MudSelectItem>
                     }
                 </MudSelect>
+                <MudSelect @bind-Value="dto.AreaId" T="int" Label="Zonos pavadinimas" AnchorOrigin="Origin.BottomCenter">
+                        @foreach (var item in Areas)
+                        {
+                            <MudSelectItem Value="@item.Key">@item.Value</MudSelectItem>
+                        }                   
+                        <MudSelectItem Value="0">Nepriklauso zonai</MudSelectItem>
+                </MudSelect>
                 <MudTextField @bind-Value="@dto.Name" Label="Pavadinimas" For="@(() => dto.Name)" />
                 <MudTextField @bind-Value="@dto.Description" Label="Aprašymas" Lines="5" For="@(() => dto.Description)" />
                 <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Style="margin-top:10px;">Kurti</MudButton>
@@ -30,12 +37,15 @@
 </MudDialog>
 
 @code {
-    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+    [Parameter]
+    public Dictionary<int, string> Areas { get; set; }
     AddWorkTaskDto dto = new();
 
     protected override void OnInitialized()
     {
+
         DialogOptions options = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true };
         MudDialog.SetOptions(options);
     }

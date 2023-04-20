@@ -117,7 +117,8 @@ namespace ZooIS.Server.Migrations
                     CreatorId = table.Column<int>(type: "INTEGER", nullable: false),
                     IsCompleted = table.Column<bool>(type: "INTEGER", nullable: false),
                     Severity = table.Column<int>(type: "INTEGER", nullable: false),
-                    Subject = table.Column<int>(type: "INTEGER", nullable: false)
+                    Subject = table.Column<int>(type: "INTEGER", nullable: false),
+                    AreaId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {

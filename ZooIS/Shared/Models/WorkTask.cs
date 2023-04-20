@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ZooIS.Shared.Enums;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ZooIS.Shared.Models
 {
@@ -22,6 +16,7 @@ namespace ZooIS.Shared.Models
         public bool IsCompleted { get; set; }
         public int Severity { get; set; }
         public int Subject { get; set; }
+        public int AreaId { get; set; }
 
         public int CompareTo(WorkTask? other)
         {

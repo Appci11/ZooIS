@@ -17,5 +17,6 @@ namespace ZooIS.Shared.Dto
         public int CreatorId { get; set; }  //irgi reikalinga, bet sita, eigoje prides sistema
         public int Severity { get; set; }
         public int Subject { get; set; }
+        public int AreaId { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using ZooIS.Client.Models;
 using ZooIS.Client.Pages.ZooMap;
 using ZooIS.Client.Services.AreasService;
+using ZooIS.Client.Services.WorkTasksService;
 using ZooIS.Shared.Models;
 
 namespace ZooIS.Client.Services.ZooMapService
@@ -12,29 +13,13 @@ namespace ZooIS.Client.Services.ZooMapService
 
         private readonly HttpClient _http;
         private readonly IAreasService _areasService;
+        private readonly IWorkTasksService _workTasksService;
 
-
-        public ZooMapService(HttpClient http, IAreasService areasService)
+        public ZooMapService(HttpClient http, IAreasService areasService, IWorkTasksService workTasksService)
         {
             _http = http;
             _areasService = areasService;
-
-        }
-
-        public async Task<Dictionary<int, string>> GetAreasColorsByTags()
-        {
-            Dictionary<int, string> Values = new Dictionary<int, string>();
-            List<AreaIds> areaIds = new List<AreaIds>();
-            await _areasService.GetAreas();
-            foreach (var item in _areasService.Areas)
-            {
-                AreaIds exisintgIds = new AreaIds();
-                exisintgIds.Existing = await _areasService.GetExistingTagIds(item.Id);
-                exisintgIds.ToAvoid = await _areasService.GetToAvoidTagIds(item.Id);
-                areaIds.Add(exisintgIds);
-            }
-            Values = AreasColorProvider.GetColorsForTagMismatch(areaIds);
-            return Values;
+            _workTasksService = workTasksService;
         }
 
         public async Task<bool> AddMap(Map map)
@@ -57,6 +42,31 @@ namespace ZooIS.Client.Services.ZooMapService
                 return true;
             }
             return false;
+        }
+
+        public async Task<Dictionary<int, string>> GetAreasColorsByTags()
+        {
+            Dictionary<int, string> Values = new Dictionary<int, string>();
+            List<AreaIds> areaIds = new List<AreaIds>();
+            await _areasService.GetAreas();
+            foreach (var item in _areasService.Areas)
+            {
+                AreaIds exisintgIds = new AreaIds();
+                exisintgIds.Existing = await _areasService.GetExistingTagIds(item.Id);
+                exisintgIds.ToAvoid = await _areasService.GetToAvoidTagIds(item.Id);
+                areaIds.Add(exisintgIds);
+            }
+            Values = AreasColorProvider.GetColorsForTagMismatch(areaIds);
+            return Values;
+        }
+
+        public async Task<Dictionary<int, string>> GetAreasColorsByWorkTasks()
+        {
+            Dictionary<int, string> Values = new Dictionary<int, string>();
+            int n = _areasService.Areas.Count;
+            await _workTasksService.GetWorkTasks();
+            Values = AreasColorProvider.GetColorsFromWorkTasks(_workTasksService.WorkTasks, n);
+            return Values;
         }
     }
 }

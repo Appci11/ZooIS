@@ -20,6 +20,7 @@ namespace ZooIS.Server.Services.WorkTasksService
             workTask.CreatorId = workTaskDto.CreatorId;
             workTask.Severity = workTaskDto.Severity;
             workTask.Subject = workTaskDto.Subject;
+            workTask.AreaId = workTaskDto.AreaId;
 
             _context.WorkTasks.Add(workTask);
             await _context.SaveChangesAsync();
