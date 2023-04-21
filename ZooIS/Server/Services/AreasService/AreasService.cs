@@ -66,7 +66,9 @@ namespace ZooIS.Server.Services.AreasService
 
         public async Task<Area> GetArea(int id)
         {
-            Area? area = await _context.Areas.FirstOrDefaultAsync(_x => _x.Id == id);
+            Area? area = await _context.Areas
+                .Include(a => a.Habitats)
+                .FirstOrDefaultAsync(_x => _x.Id == id);
             return area;
         }
 

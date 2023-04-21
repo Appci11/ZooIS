@@ -1,94 +1,38 @@
 ﻿@page "/map"
+@using ZooIS.Client.Services.AreasService
 @using ZooIS.Client.Services.ZooMapService
+@inject IDialogService _dialogService
 @inject IZooMapService _zooMapService
+@inject IAreasService _areasService
 
 <PageTitle>Map</PageTitle>
 
-<MudPaper Elevation="0">
-    <MudCheckBox Class="d-inline-flex pa-4" Dense="true" DisableRipple="true" @bind-Checked="@showMap" Label="Žemėlapis"></MudCheckBox>
-    <MudCheckBox Class="d-inline-flex pa-4" Dense="true" DisableRipple="true" @bind-Checked="@showAreas" Label="Zonos"></MudCheckBox>
-    <MudCheckBox Class="d-inline-flex pa-4" Dense="true" DisableRipple="true" @bind-Checked="@showAreaNumbers" Label="Numeracija"></MudCheckBox>
-    <MudPaper Elevation="0" Class="d-inline-flex pa-4" Style="width:200px; margin-top:0px;">
-        <MudSelect @bind-Value="ColorValue" Label="Spalvos" AnchorOrigin="Origin.BottomCenter" Dense="true" Style="margin-top:0px;">
-            <MudSelectItem Value="0">Balta</MudSelectItem>
-            @*<MudSelectItem Value="1">Atsitiktinė</MudSelectItem>*@
-            <MudSelectItem Value="2">Pagal žymas</MudSelectItem>
-            <MudSelectItem Value="3">Pagal darbų svarbą</MudSelectItem>
-        </MudSelect>
-    </MudPaper>
-</MudPaper>
-
-<MudPaper Elevation="0">
-    <MudSlider @bind-Value="@zoomValue" Step="0.01" Min="0.0" Max="1.0" Size="Size.Small" />
-</MudPaper>
 @if (loaded)
 {
-    <MudPaper Elevation="0" Style="overflow:scroll; max-height:700px; max-width:1200;">
-        <ZooMapComponent ShowMap="@showMap" ShowAreas="@showAreas" ShowAreaNumbers="@showAreaNumbers" ZoomLevel="@zoomValue" MapPartId="MapResponse"></ZooMapComponent>
+    <MudPaper Elevation="0" Style="overflow:scroll; ">
+        <ZooMapComponent MapPartId="MapResponse"></ZooMapComponent>
     </MudPaper>
 }
 else
 {
     <span>Žemėlapio įkėlimas...</span>
 }
+
 @code {
     bool loaded;
-    bool showMap = true;
-    bool showAreas = true;
-    bool showAreaNumbers = true;
-    double zoomValue = 0.0;
-    int colorValue = 0;
-    int ColorValue
-    {
-        get
-        {
-            return colorValue;
-        }
-        set
-        {
-            colorValue = value;
-            SetColors();
-        }
-    }
 
     protected override async Task OnInitializedAsync()
     {
         await _zooMapService.GetMap();
-        SetColors();
         loaded = true;
     }
 
     // informacijos lango atidarymui
-    void MapResponse(int nr)
+    async void MapResponse(int nr)
     {
-        Console.WriteLine("Hello from piece nr: " + nr);
-    }
-
-    async void SetColors()
-    {
-        Dictionary<int, string> colors;
-        switch (colorValue)
-        {
-            case 1:
-                colors = AreasColorProvider.GetRandomColors(_zooMapService.Map.AreasData.Count);
-                break;
-            case 2:
-                colors = await _zooMapService.GetAreasColorsByTags();
-                break;
-            case 3:
-                colors = await _zooMapService.GetAreasColorsByWorkTasks();
-                break;
-            default:
-                colors = AreasColorProvider.GetDefaultColors(_zooMapService.Map.AreasData.Count);
-                break;
-        }
-        foreach (var item in _zooMapService.Map.AreasData)
-        {
-            item.FillColor = colors[item.Nr];
-        }
-        if (colorValue == 2 || colorValue == 3)
-        {
-            StateHasChanged();
-        }
+        Area area = await _areasService.GetArea(nr);
+        var parameters = new DialogParameters();
+        parameters.Add("Area", area);
+        await _dialogService.ShowAsync<AreaInfoDialog>("AnyTitle", parameters);
     }
 }

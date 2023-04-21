@@ -35,9 +35,6 @@ else
                 }
             </MudSelect>
             <MudTextField @bind-Value="habitat.Description" Lines="5" Label="Buveinės aprašas" Variant="Variant.Text"></MudTextField>
-
-
-
             <MudDropContainer Context="dropContext" T="DropItem" Items="_items" ItemsSelector="@((item,dropzone) => item.Identifier == dropzone)" ItemDropped="ItemUpdated" Class="d-flex flex-wrap flex-grow-1">
                 <ChildContent>
                     <MudDropZone T="DropItem" Identifier="Drop Zone 1" Class="rounded mud-background-gray pa-6 ma-8 flex-grow-1">

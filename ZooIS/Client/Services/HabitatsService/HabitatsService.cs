@@ -81,7 +81,6 @@ namespace ZooIS.Client.Services.HabitatsService
             }
             HttpResponseMessage response = await _http.PutAsJsonAsync($"/api/habitats/{habitat.Id}", dto);
 
-            await Console.Out.WriteLineAsync("AAAAAAAAA");
             return response.IsSuccessStatusCode;
         }
     }
