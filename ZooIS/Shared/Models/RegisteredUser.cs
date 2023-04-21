@@ -14,7 +14,7 @@ namespace ZooIS.Shared.Models
         public string Email { get; set; } = string.Empty;
         // using BCrypt.net-Next for PasswordHash, turi hash + salt sudeta i viena
         public string PasswordHash { get; set; } = string.Empty;
-        public string Role { get; set; } = UserRoles.Visitor.ToString();
+        public string Role { get; set; } = UserRoles.Lankytojas.ToString();
         public DateTime DateCreated { get; set; } = DateTime.Now;
         public DateTime LastLoginDate { get; set; } = DateTime.Now;
         public DateTime PassChangeTime { get; set; } = DateTime.MinValue;

@@ -12,6 +12,6 @@ namespace ZooIS.Shared.Dto
     {
         public required string? Username { get; set; }
         public string Email { get; set; } = string.Empty;
-        public string Role { get; set; } = UserRoles.Visitor.ToString();
+        public string Role { get; set; } = UserRoles.Lankytojas.ToString();
     }
 }

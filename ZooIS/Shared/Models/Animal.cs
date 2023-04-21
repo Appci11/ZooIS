@@ -12,7 +12,7 @@ namespace ZooIS.Shared.Models
         public DateTime? DateAquired { get; set; }
         public DateTime? DateOfDeparture { get; set; }
         public DateTime? DateOfBirth { get; set; } = DateTime.Now;
-        public string State { get; set; } = SpeciesState.Healthy.ToString();
+        public string State { get; set; } = SpeciesState.Sveikas.ToString();
 
         //relationships
         //with habitat

@@ -14,6 +14,6 @@ namespace ZooIS.Shared.Models
         // totally planned feature
         public DateTime? DateOfEmployment { get; set; }
         public DateTime? DateOfDismissal { get; set; }
-        new public string Role { get; set; } = UserRoles.Employee.ToString();
+        new public string Role { get; set; } = UserRoles.Darbuotojas.ToString();
     }
 }
