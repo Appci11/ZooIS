@@ -2,9 +2,9 @@
 {
     public enum UserRoles
     {
-        SysAdmin,
-        Administrator,
-        Employee,
-        Visitor
+        SistemosAdministratorius,
+        Administratorius,
+        Darbuotojas,
+        Lankytojas
     }
 }

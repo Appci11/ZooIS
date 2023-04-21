@@ -2,8 +2,8 @@
 {
     public enum SpeciesState
     {
-        Healthy,
-        LightlySick,
-        Sick
+        Sveikas,
+        NestipriaiSergantis,
+        Sergantis
     }
 }

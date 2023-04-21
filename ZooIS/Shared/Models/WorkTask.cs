@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace ZooIS.Shared.Models
 {
@@ -17,6 +18,12 @@ namespace ZooIS.Shared.Models
         public int Severity { get; set; }
         public int Subject { get; set; }
         public int AreaId { get; set; }
+
+        //relationships
+        [JsonIgnore]
+        public Area? Area { get; set; }
+        [JsonIgnore]
+        public Employee? Employee { get; set; }
 
         public int CompareTo(WorkTask? other)
         {

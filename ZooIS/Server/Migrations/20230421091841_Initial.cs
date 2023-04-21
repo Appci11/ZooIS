@@ -106,26 +106,6 @@ namespace ZooIS.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "WorkTasks",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Description = table.Column<string>(type: "TEXT", nullable: false),
-                    TimeCreated = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    CreatorId = table.Column<int>(type: "INTEGER", nullable: false),
-                    IsCompleted = table.Column<bool>(type: "INTEGER", nullable: false),
-                    Severity = table.Column<int>(type: "INTEGER", nullable: false),
-                    Subject = table.Column<int>(type: "INTEGER", nullable: false),
-                    AreaId = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_WorkTasks", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Habitats",
                 columns: table => new
                 {
@@ -167,6 +147,38 @@ namespace ZooIS.Server.Migrations
                         principalTable: "RegisteredUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WorkTasks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
+                    TimeCreated = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    CreatorId = table.Column<int>(type: "INTEGER", nullable: false),
+                    IsCompleted = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Severity = table.Column<int>(type: "INTEGER", nullable: false),
+                    Subject = table.Column<int>(type: "INTEGER", nullable: false),
+                    AreaId = table.Column<int>(type: "INTEGER", nullable: false),
+                    EmployeeId = table.Column<int>(type: "INTEGER", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WorkTasks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WorkTasks_Areas_AreaId",
+                        column: x => x.AreaId,
+                        principalTable: "Areas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_WorkTasks_RegisteredUsers_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "RegisteredUsers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -364,6 +376,16 @@ namespace ZooIS.Server.Migrations
                 name: "IX_SpeciesTagRequire_TagId",
                 table: "SpeciesTagRequire",
                 column: "TagId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WorkTasks_AreaId",
+                table: "WorkTasks",
+                column: "AreaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WorkTasks_EmployeeId",
+                table: "WorkTasks",
+                column: "EmployeeId");
         }
 
         /// <inheritdoc />

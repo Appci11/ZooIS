@@ -341,6 +341,9 @@ namespace ZooIS.Server.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("EmployeeId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("INTEGER");
 
@@ -358,6 +361,10 @@ namespace ZooIS.Server.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AreaId");
+
+                    b.HasIndex("EmployeeId");
 
                     b.ToTable("WorkTasks");
                 });
@@ -503,6 +510,23 @@ namespace ZooIS.Server.Migrations
                     b.Navigation("Species");
 
                     b.Navigation("Tag");
+                });
+
+            modelBuilder.Entity("ZooIS.Shared.Models.WorkTask", b =>
+                {
+                    b.HasOne("ZooIS.Shared.Models.Area", "Area")
+                        .WithMany()
+                        .HasForeignKey("AreaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ZooIS.Shared.Models.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId");
+
+                    b.Navigation("Area");
+
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("ZooIS.Shared.Models.Area", b =>
