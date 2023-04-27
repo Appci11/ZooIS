@@ -3,7 +3,48 @@
 
 <MudNavMenu>
     <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Pradinis</MudNavLink>
-    
+
+    <AuthorizeView Roles="SistemosAdministratorius">
+        <Authorized>
+            <MudNavLink Href="users" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.SupervisedUserCircle">Sistemos naudotojai</MudNavLink>
+            <MudNavGroup Icon="@Icons.Material.Filled.Map" Title="Žemėlapis">
+                <MudNavLink Href="map/edit" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Map">Žemėlapio redagavimas</MudNavLink>
+                <MudNavLink Href="map/v2" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Map">Žemėlapis darbuotojams</MudNavLink>                
+            </MudNavGroup>
+            <MudNavLink Href="tickets" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.StickyNote2">Bilietų rūšys</MudNavLink>
+        </Authorized>
+    </AuthorizeView>
+
+    <AuthorizeView Roles="Administratorius">
+        <Authorized>
+            <MudNavLink Href="employees" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Contacts">Darbuotojai</MudNavLink>
+            <MudNavLink Href="map/v2" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Map">Sodo žemėlapis</MudNavLink>
+            <MudNavLink Href="areas" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Žemėlapio zonos</MudNavLink>
+            <MudNavLink Href="habitats" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Buveinės</MudNavLink>
+            <MudNavLink Href="allspecies" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Pageview">Gyvūnų rūšys</MudNavLink>
+            <MudNavLink Href="animals" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.List">Gyvūnai</MudNavLink>
+            <MudNavLink Href="tags" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Tag">Žymos</MudNavLink>
+            <MudNavLink Href="worktasks/edit" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.List">Darbų sąrašas</MudNavLink>
+            <MudNavLink Href="worktasks" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.List">Darbai</MudNavLink>            
+            <MudNavLink Href="bundles" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.StickyNote2">Bilietai (rinkiniai)</MudNavLink>
+        </Authorized>
+    </AuthorizeView>
+
+    <AuthorizeView Roles="Darbuotojas">
+        <Authorized>
+            <MudNavLink Href="map/v2" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Map">Žemėlapis</MudNavLink>
+            <MudNavLink Href="worktasks" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.List">Darbai</MudNavLink>
+        </Authorized>
+    </AuthorizeView>
+
+    <AuthorizeView Roles="Lankytojas">
+        <Authorized>
+            <MudNavLink Href="map" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Map">Žemėlapis</MudNavLink>
+            <MudNavLink Href="usersbundle" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.StickyNote2">Bilietai</MudNavLink>
+        </Authorized>
+    </AuthorizeView>
+
+@*
     <MudNavLink Href="users" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.SupervisedUserCircle">Vartotojai</MudNavLink>
     <MudNavLink Href="map" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Map">Žemėlapis lankytojams</MudNavLink>
     <MudNavLink Href="map/v2" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Map">Žemėlapis darbuotojams</MudNavLink>
@@ -19,16 +60,11 @@
     <MudNavLink Href="usersbundle" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.StickyNote2">Bilietai</MudNavLink>
     <MudNavLink Href="bundles" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.StickyNote2">Bilietų rinkiniai</MudNavLink>
     <MudNavLink Href="employees" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Contacts">Darbuotojai</MudNavLink>
-
-    
-
-
-    <MudNavLink Href="counter" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Add">Counter</MudNavLink>
-    <MudNavLink Href="fetchdata" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.List">Fetch data</MudNavLink>
+*@
 </MudNavMenu>
 
 @code {
-    // Sutvarkyt. Veikia, bet jei bus laiko idet refresh token - pakeist
+    // Sutvarkyt. Veikia, jei bus laiko, refresh token'o sistema sutvarkyt
     async Task Logout()
     {
         await LocalStorage.RemoveItemAsync("token");
