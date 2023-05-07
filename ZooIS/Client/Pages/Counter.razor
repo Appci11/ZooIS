@@ -4,25 +4,14 @@
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
-<AuthorizeView>
-    <Authorized>
-        authorized
-    </Authorized>   
-    <NotAuthorized>
-        Unauthorized
-    </NotAuthorized>
-</AuthorizeView>
+<p>Text: @currentCount</p>
 
 @code {
-    private int currentCount = 0;
+    [Parameter]
+    public int currentCount { get; set; } = 0;
 
     private async void IncrementCount()
     {
-        await _http.PostAsJsonAsync("/api/register", new {message = "asdf"});
-    }
-
-    protected override void OnAfterRender(bool firstRender)
-    {
-        base.OnAfterRender(firstRender);
+        currentCount++;
     }
 }

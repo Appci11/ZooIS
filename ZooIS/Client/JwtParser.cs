@@ -13,11 +13,7 @@ namespace SaitynoLab.Client
             var payload = jwt.Split('.')[1];
             var jsonBytes = ParseBase64WithoutPadding(payload);
             var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
-#pragma warning disable CS8604 // Possible null reference argument.
-#pragma warning disable CS8604 // Possible null reference argument.
             return keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString()));
-#pragma warning restore CS8604 // Possible null reference argument.
-#pragma warning restore CS8604 // Possible null reference argument.
         }
         private static byte[] ParseBase64WithoutPadding(string base64)
         {

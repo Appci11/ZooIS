@@ -14,16 +14,9 @@
 </AuthorizeView>
 
 @code {
-    // Potencialiai nebereikia, nepamirst istrint
-    //void Login()
-    //{
-    //    _navigationManager.NavigateTo("login");
-    //}
-
     async Task Logout()
     {
         await _authService.Logout();
-        //await _authStateProvider.GetAuthenticationStateAsync();  // pasikeitimui "onLogout" nebereikia lyg ir
         _navigationManager.NavigateTo("/");
     }
 }

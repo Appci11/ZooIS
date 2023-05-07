@@ -34,9 +34,7 @@ namespace ZooIS.Server.Services.UsersService
             RegisteredUser? user = await _context.RegisteredUsers.FirstOrDefaultAsync(u => u.Id == id);
             if (user == null)
             {
-#pragma warning disable CS8603 // Possible null reference return.
                 return null;
-#pragma warning restore CS8603 // Possible null reference return.
             }
 
             _context.RegisteredUsers.Remove(user);
@@ -54,49 +52,31 @@ namespace ZooIS.Server.Services.UsersService
         {
             RegisteredUser? user = await _context.RegisteredUsers.FirstOrDefaultAsync(u => u.Id == id);
             
-#pragma warning disable CS8603 // Possible null reference return.
             return user;
-#pragma warning restore CS8603 // Possible null reference return.
         }
 
         public async Task<RegisteredUser> UpdateRegisteredUserVVisitor(int id, UpdateUserInfoVisitorDto userUpdateDto)
         {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             RegisteredUser dbUser = await _context.RegisteredUsers.FirstOrDefaultAsync(u => u.Id == id);
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             if (dbUser == null)
             {
-#pragma warning disable CS8603 // Possible null reference return.
                 return null;
-#pragma warning restore CS8603 // Possible null reference return.
             }
-#pragma warning disable CS8601 // Possible null reference assignment.
             dbUser.Username = userUpdateDto.Username;
-#pragma warning restore CS8601 // Possible null reference assignment.
-#pragma warning disable CS8601 // Possible null reference assignment.
             dbUser.Email = userUpdateDto.Email;
-#pragma warning restore CS8601 // Possible null reference assignment.
             await _context.SaveChangesAsync();
            
             return dbUser;
         }
         public async Task<RegisteredUser> UpdateRegisteredUserVAdmin(int id, UpdateUserInfoAdminDto userUpdateDto)
         {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             RegisteredUser dbUser = await _context.RegisteredUsers.FirstOrDefaultAsync(u => u.Id == id);
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             if (dbUser == null)
             {
-#pragma warning disable CS8603 // Possible null reference return.
                 return null;
-#pragma warning restore CS8603 // Possible null reference return.
             }
-#pragma warning disable CS8601 // Possible null reference assignment.
             dbUser.Username = userUpdateDto.Username;
-#pragma warning restore CS8601 // Possible null reference assignment.
-#pragma warning disable CS8601 // Possible null reference assignment.
             dbUser.Email = userUpdateDto.Email;
-#pragma warning restore CS8601 // Possible null reference assignment.
             dbUser.RequestPasswordReset = userUpdateDto.RequestPasswordReset;
             dbUser.DeletionRequested = userUpdateDto.DeletionRequested;
             dbUser.IsDeleted = userUpdateDto.IsDeleted;
@@ -108,9 +88,7 @@ namespace ZooIS.Server.Services.UsersService
 
         public async Task<int> ChangePassword(UpdatePasswordDto UpdatePasswordDto)
         {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             RegisteredUser dbUser = await _context.RegisteredUsers.FirstOrDefaultAsync(u => u.Username == UpdatePasswordDto.Username);
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             if (dbUser == null)
             {
                 return 0;

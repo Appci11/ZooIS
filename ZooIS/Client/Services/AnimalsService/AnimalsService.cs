@@ -26,9 +26,7 @@ namespace ZooIS.Client.Services.AnimalsService
             HttpResponseMessage response = await _http.DeleteAsync($"/api/animals/{id}");
             if (response.IsSuccessStatusCode)
             {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 Animal animal = Animals.FirstOrDefault(a => a.Id == id);
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
                 if (animal != null)
                 {
                     Animals.Remove(animal);
@@ -45,9 +43,7 @@ namespace ZooIS.Client.Services.AnimalsService
             {
                 return result;
             }
-#pragma warning disable CS8603 // Possible null reference return.
             return null;
-#pragma warning restore CS8603 // Possible null reference return.
         }
 
         public async Task GetAnimals()
@@ -55,9 +51,7 @@ namespace ZooIS.Client.Services.AnimalsService
             List<Animal> result = new List<Animal>();
             try
             {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 result = await _http.GetFromJsonAsync<List<Animal>>("/api/animals");
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             }
             catch { }
             if (result != null && result.Count > 0)
