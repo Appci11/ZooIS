@@ -20,7 +20,8 @@ namespace ZooIS.Server.Services.EmployeesService
             employee.Role= addEmployeeDto.Role;
             employee.DateOfEmployment = addEmployeeDto.DateOfEmployment;
             employee.DateOfDismissal = addEmployeeDto.DateOfDismissal;
-            employee.RequestPasswordReset = true;
+            // Sutvarkyt .. gal i true geriau pakeist
+            employee.RequestPasswordReset = false;
             // "aaa" slaptazodi i settings iskelt ir is ten naudot
             employee.PasswordHash = BCrypt.Net.BCrypt.HashPassword("aaa");
 
