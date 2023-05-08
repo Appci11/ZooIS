@@ -1,26 +1,78 @@
 ﻿@page "/"
 
-<MudButton OnClick="Kriu" ButtonType="ButtonType.Button">Kriu</MudButton>
-<br />
-<br />
-
-
-
-@if(loading)
-{
-    <MudProgressCircular Color="Color.Success" Indeterminate="true" />
-}
+<MudGrid Style="margin-top:20px;">
+    <MudItem xs="12" Class="mud-width-full">
+        <MudCarousel Class="mud-width-full" Style="height:200px;" ShowArrows="true" ShowBullets="true" EnableSwipeGesture="true" AutoCycle="true" TData="object" AutoCycleTime="@cycleTime">
+            <MudCarouselItem Transition="Transition.Slide" Style="background-color:#FFF3E0">
+                <div class="d-flex" style="height:100%; align-self:center;">
+                    <img src="banner1.png" />
+                </div>
+            </MudCarouselItem>
+            <MudCarouselItem Transition="Transition.Slide" Style="background-color:#FFFDE7">
+                <div class="d-flex" style="height:100%; align-self:center;">
+                    <img src="banner2.png" />
+                </div>
+            </MudCarouselItem>
+            <MudCarouselItem Transition="Transition.Slide" Style="background-color:#FFF8E1">
+                <div class="d-flex" style="height:100%; align-self:center;">
+                    <img src="banner3.png" />
+                </div>
+            </MudCarouselItem>
+        </MudCarousel>
+    </MudItem>
+    <MudItem xs="12" sm="6" Class="mud-width-full">
+        <MudContainer Class="d-flex justify-center">
+            <MudImage Src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2F3.bp.blogspot.com%2F-kKRmWENDZi4%2FT0CgqFLgxPI%2FAAAAAAAAAyo%2FSdpfERnfYLg%2Fs1600%2Fwild-animal-27-beautifulfreepictures.jpg&f=1&nofb=1&ipt=481d56684e06e96a8810cf9c81dea4e2e47b2c638bcda5ad08faedbe9ac8f969&ipo=images"
+                      Alt="Katinas" Elevation="0"
+                      ObjectFit="ObjectFit.ScaleDown"
+                      Class="rounded-lg"
+                      Style="max-width:600px;" />
+        </MudContainer>
+        <MudContainer Class="d-flex justify-center" Style="margin-top:15px;">
+            <MudText Typo="Typo.body1">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ornare arcu odio ut sem nulla pharetra diam sit. Pellentesque id nibh tortor id aliquet lectus proin nibh nisl. Sed id semper risus in hendrerit gravida rutrum quisque. Elit sed vulputate mi sit amet mauris. At augue eget arcu dictum varius duis. Nunc eget lorem dolor sed. Massa vitae tortor condimentum lacinia quis. Pellentesque pulvinar pellentesque habitant morbi tristique senectus et netus. Egestas tellus rutrum tellus pellentesque eu tincidunt tortor. Orci sagittis eu volutpat odio facilisis mauris sit. Magnis dis parturient montes nascetur ridiculus mus mauris vitae ultricies. Egestas diam in arcu cursus euismod quis viverra. Nunc pulvinar sapien et ligula ullamcorper. Scelerisque in dictum non consectetur a erat. Pharetra diam sit amet nisl suscipit adipiscing bibendum est ultricies. Fermentum et sollicitudin ac orci phasellus egestas. Est ultricies integer quis auctor elit sed vulputate. Pretium quam vulputate dignissim suspendisse in est ante in.
+            </MudText>
+            <MudText Typo="Typo.body1">
+                Elit ullamcorper dignissim cras tincidunt lobortis feugiat vivamus. Cras adipiscing enim eu turpis egestas pretium. Cursus vitae congue mauris rhoncus. Faucibus nisl tincidunt eget nullam non nisi est sit amet. Erat velit scelerisque in dictum non consectetur a erat nam. Risus viverra adipiscing at in. Quis viverra nibh cras pulvinar mattis. Auctor urna nunc id cursus metus aliquam eleifend. Lectus urna duis convallis convallis tellus id. Est pellentesque elit ullamcorper dignissim cras tincidunt lobortis feugiat vivamus. Laoreet suspendisse interdum consectetur libero id faucibus nisl tincidunt. Sollicitudin tempor id eu nisl nunc mi ipsum faucibus. Ultrices tincidunt arcu non sodales neque sodales ut etiam. Lacus vestibulum sed arcu non odio euismod lacinia at quis. Amet risus nullam eget felis eget nunc lobortis. In ornare quam viverra orci sagittis eu. Viverra nibh cras pulvinar mattis nunc sed blandit libero. Tempus egestas sed sed risus pretium quam vulputate.
+            </MudText>
+        </MudContainer>
+    </MudItem>
+    <MudItem xs="12" sm="6" Class="mud-width-full">
+        <MudContainer Class="d-flex justify-center">
+            <MudImage Src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2F4.bp.blogspot.com%2F-IQSEQkypaOw%2FTbrD89tY4RI%2FAAAAAAAAFOk%2Fx8R65-0UuAI%2Fs1600%2Fgoat_free_wallpapers.jpg&f=1&nofb=1&ipt=567e6d1f4629813e30f156771e40a6f2d321936c948467115b68fe47bcf86b5a&ipo=images"
+                      Alt="Katinas" Elevation="0"
+                      ObjectFit="ObjectFit.ScaleDown"
+                      Class="rounded-lg"
+                      Style="max-width:300px;" />
+        </MudContainer>
+        <MudText Typo="Typo.body1" Style="margin-top:15px; margin-bottom:15px;">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Diam donec adipiscing tristique risus. Venenatis a condimentum vitae sapien. In dictum non consectetur a erat nam at lectus. Feugiat nibh sed pulvinar proin gravida. Scelerisque in dictum non consectetur. Ac turpis egestas integer eget aliquet nibh praesent tristique magna. Malesuada nunc vel risus commodo. Porttitor massa id neque aliquam vestibulum morbi blandit. Vestibulum sed arcu non odio euismod lacinia at quis. Diam sit amet nisl suscipit adipiscing bibendum est. Venenatis urna cursus eget nunc scelerisque viverra mauris. Neque aliquam vestibulum morbi blandit cursus risus at ultrices mi.
+        </MudText>
+        <MudContainer Class="d-flex justify-center">
+            <MudImage Src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpixnio.com%2Ffree-images%2F2017%2F10%2F22%2F2017-10-22-10-06-07.jpg&f=1&nofb=1&ipt=714c7bcc5513401ea1d30581ae046abcd5e5ee59ee35165009c160e26fbd4d46&ipo=images"
+                      Alt="Katinas" Elevation="0"
+                      ObjectFit="ObjectFit.ScaleDown"
+                      Class="rounded-lg"
+                      Style="max-width:270px;" />
+        </MudContainer>
+        <MudText Typo="Typo.body1" Style="margin-top:15px;">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Diam donec adipiscing tristique risus. Venenatis a condimentum vitae sapien. In dictum non consectetur a erat nam at lectus. Feugiat nibh sed pulvinar proin gravida. Scelerisque in dictum non consectetur. Ac turpis egestas integer eget aliquet nibh praesent tristique magna. Malesuada nunc vel risus commodo. Porttitor massa id neque aliquam vestibulum morbi blandit. Vestibulum sed arcu non odio euismod lacinia at quis. Diam sit amet nisl suscipit adipiscing bibendum est. Venenatis urna cursus eget nunc scelerisque viverra mauris. Neque aliquam vestibulum morbi blandit cursus risus at ultrices mi.
+        </MudText>
+    </MudItem>
+    <MudItem xs="12" Class="mud-width-full" Style="background-color:#CFD8DC">
+        <MudLink Href="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2F3.bp.blogspot.com%2F-kKRmWENDZi4%2FT0CgqFLgxPI%2FAAAAAAAAAyo%2FSdpfERnfYLg%2Fs1600%2Fwild-animal-27-beautifulfreepictures.jpg&f=1&nofb=1&ipt=481d56684e06e96a8810cf9c81dea4e2e47b2c638bcda5ad08faedbe9ac8f969&ipo=images" Typo="Typo.body2">Pirmo paveikslėlio šaltinis</MudLink>
+        <br />
+        <MudLink Href="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2F4.bp.blogspot.com%2F-IQSEQkypaOw%2FTbrD89tY4RI%2FAAAAAAAAFOk%2Fx8R65-0UuAI%2Fs1600%2Fgoat_free_wallpapers.jpg&f=1&nofb=1&ipt=567e6d1f4629813e30f156771e40a6f2d321936c948467115b68fe47bcf86b5a&ipo=images" Typo="Typo.body2">Antro paveikslėlio šaltinis</MudLink>
+        <br />
+        <MudLink Href="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpixnio.com%2Ffree-images%2F2017%2F10%2F22%2F2017-10-22-10-06-07.jpg&f=1&nofb=1&ipt=714c7bcc5513401ea1d30581ae046abcd5e5ee59ee35165009c160e26fbd4d46&ipo=images" Typo="Typo.body2">Antro paveikslėlio šaltinis</MudLink>
+        <MudText Typo="Typo.body2">
+            Kaunas, 2023
+        </MudText>
+    </MudItem>
+</MudGrid>
 
 @code {
     bool loading;
 
-    async void Kriu()
-    {
-        loading = !loading;
-        StateHasChanged();
-        await Task.Delay(2000);
-        loading = !loading;
-        StateHasChanged();    
-    }
-
+    System.TimeSpan cycleTime = new(0, 0, 10);
 }
