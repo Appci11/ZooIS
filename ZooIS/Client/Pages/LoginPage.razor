@@ -7,30 +7,31 @@
 @inject IAuthService _authService
 @inject IUsersService _usersService
 
-<MudItem xs="12" sm="7" Style="padding-bottom:5px;">
-    <EditForm Model="@user" OnValidSubmit="HandleLogin">
-        <MudTextField @bind-Value="user.Username" T="string" Label="Vartotojo vardas" Required="true" RequiredError="Neįvestas vartotojo vardas." @ref="focusTarget" />
-        <MudTextField @bind-Value="user.Password" T="string" Label="Slaptažodis" InputType="InputType.Password" Required="true" RequiredError="Neįvestas slaptažodis." @ref="focusTarget2" />
-        <br />
-        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Prisijungti</MudButton>
-    </EditForm>
-    <MudText Color="errorMsgColor" Style="padding-top:10px;">@errorMsg</MudText>
-</MudItem>
-
-@if (passChange)
-{
-    <MudItem xs="12" sm="7">
-        <MudForm @bind-IsValid="@success2">
-            <MudTextField @bind-Value="pass2_1" T="string" Label="Naujas slaptažodis" InputType="InputType.Password" Required="true" RequiredError="Neįvestas slaptažodis pakeitimui."
-                      Validation="@(new Func<string, IEnumerable<string>>(PasswordCheck))" @ref="focusTarget3" />
-            <MudTextField @bind-Value="pass2_2" T="string" Label="Naujo slaptažodžio pakartojimas" InputType="InputType.Password" Required="true" RequiredError="Neįvestas pakartotinis slaptažodis."
-                      Validation="@(new Func<string, string>(PasswordMatch))" />
+<MudContainer MaxWidth="MaxWidth.Small" Style="margin-top:15px;">
+    <MudItem xs="12" sm="7" Style="padding-bottom:5px;">
+        <EditForm Model="@user" OnValidSubmit="HandleLogin">
+            <MudTextField @bind-Value="user.Username" T="string" Label="Vartotojo vardas" Required="true" RequiredError="Neįvestas vartotojo vardas." @ref="focusTarget" />
+            <MudTextField @bind-Value="user.Password" T="string" Label="Slaptažodis" InputType="InputType.Password" Required="true" RequiredError="Neįvestas slaptažodis." @ref="focusTarget2" />
             <br />
-            <MudButton OnClick="HandlePassChange" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success2)" Class="ml-auto" Style="padding-bottom:10px;">Keisti slaptažodį</MudButton>
-        </MudForm>
-        <MudText Color="@Color.Error">@errorMsg2</MudText>
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Prisijungti</MudButton>
+        </EditForm>
+        <MudText Color="errorMsgColor" Style="padding-top:10px;">@errorMsg</MudText>
     </MudItem>
-}
+    @if (passChange)
+    {
+        <MudItem xs="12" sm="7">
+            <MudForm @bind-IsValid="@success2">
+                <MudTextField @bind-Value="pass2_1" T="string" Label="Naujas slaptažodis" InputType="InputType.Password" Required="true" RequiredError="Neįvestas slaptažodis pakeitimui."
+                          Validation="@(new Func<string, IEnumerable<string>>(PasswordCheck))" @ref="focusTarget3" />
+                <MudTextField @bind-Value="pass2_2" T="string" Label="Naujo slaptažodžio pakartojimas" InputType="InputType.Password" Required="true" RequiredError="Neįvestas pakartotinis slaptažodis."
+                          Validation="@(new Func<string, string>(PasswordMatch))" />
+                <br />
+                <MudButton OnClick="HandlePassChange" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success2)" Class="ml-auto" Style="padding-bottom:10px;">Keisti slaptažodį</MudButton>
+            </MudForm>
+            <MudText Color="@Color.Error">@errorMsg2</MudText>
+        </MudItem>
+    }
+</MudContainer>
 @code {
     AuthUserDto user = new AuthUserDto();
     MudTextField<string>? focusTarget;

@@ -7,23 +7,25 @@
 @inject NavigationManager _navigationManager
 @inject IAuthService _authService
 
-<MudItem xs="12" sm="7">
-    <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@formErrors">
-        <MudTextField @bind-Value="user.Username" T="string" Label="Vartotojo vardas" Required="true" RequiredError="Neįvestas vartotojo vardas." @ref="focusTarget" />
-        <MudTextField @bind-Value="user.Email" T="string" Label="Elektroninis paštas" Required="true" RequiredError="Neįvestas el pašto adresas."
-                      Validation="@(new EmailAddressAttribute() {ErrorMessage = "Netaisyklingas el pašto adresas"})" />
-        <MudTextField @bind-Value="user.Password" T="string" Label="Slaptažodis" @ref="pass1" InputType="InputType.Password"
-                      Validation="@(new Func<string, IEnumerable<string>>(PasswordCheck))" Required="true"
-                      RequiredError="Neįvestas slaptažodis." />
-        <MudTextField T="string"
-                      Label="Pakartotas slaptažodis" InputType="InputType.Password"
-                      Validation="@(new Func<string, string>(PasswordMatch))"
-                      Required="true" RequiredError="Neįvestas pakartotas slaptažodis." />
-        <br />
-        <MudButton OnClick="HandleRegister" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto">Registruotis</MudButton>
-    </MudForm>
-    <MudText Color="@Color.Error">@registrationError</MudText>
-</MudItem>
+<MudContainer MaxWidth="MaxWidth.Small" Style="margin-top:15px;">
+    <MudItem xs="12" sm="7">
+        <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@formErrors">
+            <MudTextField @bind-Value="user.Username" T="string" Label="Vartotojo vardas" Required="true" RequiredError="Neįvestas vartotojo vardas." @ref="focusTarget" />
+            <MudTextField @bind-Value="user.Email" T="string" Label="Elektroninis paštas" Required="true" RequiredError="Neįvestas el pašto adresas."
+                          Validation="@(new EmailAddressAttribute() {ErrorMessage = "Netaisyklingas el pašto adresas"})" />
+            <MudTextField @bind-Value="user.Password" T="string" Label="Slaptažodis" @ref="pass1" InputType="InputType.Password"
+                          Validation="@(new Func<string, IEnumerable<string>>(PasswordCheck))" Required="true"
+                          RequiredError="Neįvestas slaptažodis." />
+            <MudTextField T="string"
+                          Label="Pakartotas slaptažodis" InputType="InputType.Password"
+                          Validation="@(new Func<string, string>(PasswordMatch))"
+                          Required="true" RequiredError="Neįvestas pakartotas slaptažodis." />
+            <br />
+            <MudButton OnClick="HandleRegister" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto">Registruotis</MudButton>
+        </MudForm>
+        <MudText Color="@Color.Error">@registrationError</MudText>
+    </MudItem>
+</MudContainer>
 
 @code {
     bool success;
@@ -72,7 +74,7 @@
         if (result)
         {
             registrationError = string.Empty;
-            _navigationManager.NavigateTo("/");          
+            _navigationManager.NavigateTo("/");
         }
         else
         {
