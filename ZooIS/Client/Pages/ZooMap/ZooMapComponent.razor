@@ -79,21 +79,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        //AreaData.Nr = 1;
-        //AreaData.FillColor = "#ffffff";
-        //AreaData.StrokeColor = "#000000";
-        //AreaData.TextCoordinates = new Coordinates(164, 483);
-        //AreaData.PolyCoordinates = new List<Coordinates>
-        //{
-        //    new Coordinates(209.27, 408),
-        //    new Coordinates(214.11, 427.95),
-        //    new Coordinates(222.58, 427.95),
-        //    new Coordinates(225,538.34 ),
-        //    new Coordinates(116.1, 538.34),
-        //    new Coordinates(104, 418.64),
-        //    new Coordinates(123.36, 409.33),
-        //    new Coordinates(177.81, 408)
-        //};
         pictureCoordinates = await _picturesService.GetPictureCoordinates(0);
         if (_zooMapService.Map != null)
         {

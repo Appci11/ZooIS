@@ -6,19 +6,19 @@
 @inject IDialogService _dialogService
 @inject ITagsService _tagsService
 
-<PageTitle>Žymės</PageTitle>
+<PageTitle>Žymos</PageTitle>
 
 @if (loaded)
 {
     <MudTable Items="@_tagsService.Tags" Dense="true" Filter="new Func<Tag, bool>(FilterFunc)">
         <ToolBarContent>
-            <MudText Typo="Typo.h6">Gyvūnų ir jų buveinių žymės</MudText>
+            <MudText Typo="Typo.h6">Gyvūnų ir jų buveinių žymos</MudText>
             <MudIconButton Href="/tag" Icon="@Icons.Material.Filled.AddCircleOutline" Color="Color.Primary" />
             <MudSpacer />
             <MudTextField @bind-Value="searchString" Placeholder="Ieškoti" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
         <HeaderContent>
-            <MudTh><MudTableSortLabel SortBy="new Func<Tag, object>(t=>t.Name)">Žymės</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<Tag, object>(t=>t.Name)">Žymos</MudTableSortLabel></MudTh>
             <MudTh>Naudotojų kiekis</MudTh>
             <MudTh>Redaguoti / Šalinti</MudTh>
         </HeaderContent>

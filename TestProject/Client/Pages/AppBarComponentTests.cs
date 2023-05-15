@@ -1,13 +1,14 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ZooIS.Client.Pages;
 using ZooIS.Client.Services.AuthService;
+using ZooIS.Client.Shared;
 
 namespace TestProject.Client.Pages
 {
-    public class RegisterPageTests : TestContext
+    public class AppBarComponentTests : TestContext
     {
         [Fact]
-        public void RegisterPageShouldRender()
+        public void AppBarComponentTestsShouldRender()
         {
             // Arrange
             Services.AddSingleton<IAuthService, MockAuth>();

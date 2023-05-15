@@ -4,10 +4,10 @@ using ZooIS.Client.Services.AuthService;
 
 namespace TestProject.Client.Pages
 {
-    public class RegisterPageTests : TestContext
+    public class ZooMapComponent : TestContext
     {
         [Fact]
-        public void RegisterPageShouldRender()
+        public void ZooMapComponentShouldRender()
         {
             // Arrange
             Services.AddSingleton<IAuthService, MockAuth>();
